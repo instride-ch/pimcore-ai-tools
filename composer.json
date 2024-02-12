@@ -1,0 +1,46 @@
+{
+  "name": "instride/pimcore-ai-bundle",
+  "type": "pimcore-bundle",
+  "license": "GPL-3.0-or-later",
+  "description": "AI Bundle for Pimcore",
+  "keywords": [
+    "pimcore",
+    "pimcore-bundle"
+  ],
+  "homepage": "https://github.com/instride/PimcoreAiBundle",
+  "minimum-stability": "dev",
+  "authors": [
+    {
+      "name": "instride AG",
+      "email": "connect@instride.ch",
+      "homepage": "https://instride.ch",
+      "role": "Digital Agency"
+    }
+  ],
+  "require": {
+    "php": ">=8.1",
+    "pimcore/pimcore": "^10.5",
+    "openai-php/client": "dev-main",
+    "guzzlehttp/guzzle": "7.9.x-dev"
+  },
+  "require-dev": {
+    "phpstan/phpstan": "^1.9",
+    "phpstan/phpstan-symfony": "^1.2",
+    "symplify/easy-coding-standard": "^11.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Instride\\Bundle\\PimcoreAiBundle\\": "src/PimcoreAiBundle/"
+    }
+  },
+  "extra": {
+    "pimcore": {
+      "bundles": [
+        "Instride\\Bundle\\PimcoreAiBundle\\PimcoreAiBundle"
+      ]
+    },
+    "branch-alias": {
+      "dev-master": "main"
+    }
+  }
+}
