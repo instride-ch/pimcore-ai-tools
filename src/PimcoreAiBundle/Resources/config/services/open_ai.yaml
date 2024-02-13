@@ -1,0 +1,6 @@
+services:
+
+    # ChatGPT Service
+    Instride\Bundle\PimcoreAiBundle\Service\ChatGptService:
+        tags:
+            - { name: pimcore_ai.chat_gpt, alias: open_ai_chat_gpt }

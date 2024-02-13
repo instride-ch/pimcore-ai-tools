@@ -19,18 +19,34 @@ use OpenAI;
 
 class ChatGptService
 {
-    public function createChat()
+    public function createChat(string $message): ?string
     {
-        $apiKey = getenv('OPEN_AI_API_KEY');
+        $apiKey = $_ENV['OPEN_AI_API_KEY'];
         $client = OpenAI::client($apiKey);
 
         $result = $client->chat()->create([
             'model' => 'gpt-4',
             'messages' => [
-                ['role' => 'user', 'content' => 'Hello!'],
+                ['role' => 'user', 'content' => $message],
             ],
         ]);
 
-        dd($result->choices[0]->message->content);
+        return $result->choices[0]->message->content;
+    }
+
+    public function createImage(string $prompt)
+    {
+        $apiKey = $_ENV['OPEN_AI_API_KEY'];
+        $client = OpenAI::client($apiKey);
+
+        $response = $client->images()->create([
+            'model' => 'dall-e-3',
+            'prompt' => $prompt,
+            'n' => 1,
+            'size' => '1024x1024',
+            'response_format' => 'url',
+        ]);
+
+        return $response->toArray();
     }
 }

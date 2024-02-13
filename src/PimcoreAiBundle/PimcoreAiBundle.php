@@ -43,26 +43,6 @@ class PimcoreAiBundle extends AbstractPimcoreBundle
     /**
      * {@inheritDoc}
      */
-    public function getCssPaths(): array
-    {
-        return [
-            '/bundles/pimcoreai/pimcore/css/icons.css',
-        ];
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getJsPaths(): array
-    {
-        return [
-            '/bundles/pimcoreai/pimcore/js/startup.js',
-        ];
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     protected function getComposerPackageName(): string
     {
         return 'instride/pimcore-ai-bundle';
