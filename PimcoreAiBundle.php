@@ -15,7 +15,7 @@ declare(strict_types=1);
  * @license    https://github.com/instride-ch/PimcoreAiBundle?tab=GPL-3.0-1-ov-file#readme GNU General Public License version 3 (GPLv3)
  */
 
-namespace Instride\Bundle\PimcoreAiBundle;
+namespace Instride\PimcoreAiBundle;
 
 use Pimcore\Extension\Bundle\AbstractPimcoreBundle;
 use Pimcore\Extension\Bundle\Traits\PackageVersionTrait;
@@ -29,7 +29,7 @@ class PimcoreAiBundle extends AbstractPimcoreBundle
      */
     public function getNiceName(): string
     {
-        return 'Pimcore Ai Bundle';
+        return 'Pimcore AI Bundle';
     }
 
     /**
@@ -38,13 +38,5 @@ class PimcoreAiBundle extends AbstractPimcoreBundle
     public function getDescription(): string
     {
         return 'AI Bundle for Pimcore';
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function getComposerPackageName(): string
-    {
-        return 'instride/pimcore-ai-bundle';
     }
 }

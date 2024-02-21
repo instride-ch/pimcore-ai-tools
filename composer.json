@@ -25,19 +25,20 @@
     "ediasoft/midjourney-api-php": "^1.1"
   },
   "require-dev": {
+    "roave/security-advisories": "dev-latest",
     "phpstan/phpstan": "^1.9",
     "phpstan/phpstan-symfony": "^1.2",
     "symplify/easy-coding-standard": "^11.2"
   },
   "autoload": {
     "psr-4": {
-      "Instride\\Bundle\\PimcoreAiBundle\\": "src/PimcoreAiBundle/"
+      "Instride\\PimcoreAiBundle\\": "src/PimcoreAiBundle"
     }
   },
   "extra": {
     "pimcore": {
       "bundles": [
-        "Instride\\Bundle\\PimcoreAiBundle\\PimcoreAiBundle"
+        "Instride\\PimcoreAiBundle\\PimcoreAiBundle"
       ]
     },
     "branch-alias": {

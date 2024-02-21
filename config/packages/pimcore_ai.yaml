@@ -1,0 +1,7 @@
+pimcore_ai:
+    open_ai:
+        api_key: '%env(OPEN_AI_API_KEY)%'
+
+    midjourney:
+        channel_id: '%env(MIDJOURNEY_CHANNEL_ID)%'
+        auth_token: '%env(MIDJOURNEY_AUTH_TOKEN)%'
