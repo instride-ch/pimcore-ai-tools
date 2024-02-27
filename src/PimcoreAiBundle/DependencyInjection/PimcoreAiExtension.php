@@ -30,14 +30,20 @@ class PimcoreAiExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container): void
     {
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../config'));
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yaml');
 
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $container->setParameter('pimcore_ai.open_ai.api_key', $config['open_ai']['api_key']);
-        $container->setParameter('pimcore_ai.midjourney.channel_id', $config['midjourney']['channel_id']);
-        $container->setParameter('pimcore_ai.midjourney.auth_token', $config['midjourney']['auth_token']);
+        // Register parameters
+        foreach ($config as $configName => $aiConfig) {
+            foreach ($aiConfig as $subConfigName => $confValue) {
+                $container->setParameter(
+                    \sprintf('pimcore_monitor.checks.%s.%s', $configName, $subConfigName),
+                    $confValue
+                );
+            }
+        }
     }
 }

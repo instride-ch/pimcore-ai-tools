@@ -15,8 +15,8 @@ declare(strict_types=1);
 
 namespace Instride\PimcoreAiBundle\Provider;
 
-use eDiasoft\Midjourney\Exceptions\MidjourneyException;
-use eDiasoft\Midjourney\MidjourneyApiClient;
+use Exception;
+use Ferranfg\MidjourneyPhp\Midjourney;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class MidjourneyProvider extends AbstractProvider
@@ -36,39 +36,55 @@ class MidjourneyProvider extends AbstractProvider
         $this->container = $container;
     }
 
-    public function getClient(): MidjourneyApiClient
+    public function getClient(): Midjourney
     {
-        $channel_id = $this->container->getParameter('pimcore_ai.midjourney.channel_id');
-        $authorization = $this->container->getParameter('pimcore_ai.midjourney.auth_key');
+//        $discordChannelId = $this->container->getParameter('pimcore_ai.midjourney.channel_id');
+//        $discordUserToken = $this->container->getParameter('pimcore_ai.midjourney.auth_key');
+        $discordChannelId = (int)$_ENV['MIDJOURNEY_CHANNEL_ID'];
+        $discordUserToken = $_ENV['MIDJOURNEY_AUTH_TOKEN'];
 
-        return new MidjourneyApiClient($channel_id, $authorization);
+        return new Midjourney($discordChannelId, $discordUserToken);
     }
 
-    public function getImage(array $options): mixed
+    public function getImage(array $options): ?object
     {
-        if (!array_key_exists('prompt', $options)) {
+        if (!\array_key_exists('prompt', $options)) {
             throw new \RuntimeException('No image prompt given.');
         }
 
-        return $this->getClient()->imagine($options['prompt'])->send();
+        $prompt = $this->getPromptString($options);
+
+        return $this->getClient()->imagine($prompt);
     }
 
     /**
-     * @throws MidjourneyException
+     * @throws Exception
      */
-    public function getUpscaleImage(mixed $imageResult): mixed
+    public function getUpscaleImage(array $options, int $numberIndex = 0): mixed
     {
-        $messageId = "1234";
-        $upscaleImageId = "MJ::JOB::upsample::1::xxxxx";
-        $interactionId = $imageResult->interactionId(); //You can retrieve this ID after the imagine interaction is performed, this is a identifier for the specific job request.
+        if (!\array_key_exists('prompt', $options)) {
+            throw new \RuntimeException('No image prompt given.');
+        }
 
-        $upscale_builder = $this->getClient()->upscale($messageId, $upscaleImageId, $interactionId);
+        $prompt = $this->getPromptString($options);
 
-        return $upscale_builder->send();
+        $imagineObject = $this->getClient()->getImagine($prompt);
+        return $this->getClient()->upscale($imagineObject, $numberIndex);
     }
 
     public function getText(array $options): mixed
     {
         throw new \RuntimeException('No text generation for midjourney available.');
+    }
+
+    private function getPromptString(array $options): string
+    {
+        $seed = 1000;
+        if (\array_key_exists('seed', $options)) {
+            $seed = $options['seed'];
+        }
+
+        $prompt = $options['prompt'];
+        return $prompt .' --seed='. $seed;
     }
 }

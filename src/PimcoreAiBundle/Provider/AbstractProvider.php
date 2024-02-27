@@ -15,7 +15,6 @@ declare(strict_types=1);
 
 namespace Instride\PimcoreAiBundle\Provider;
 
-
 abstract class AbstractProvider implements ProviderInterface
 {
 }

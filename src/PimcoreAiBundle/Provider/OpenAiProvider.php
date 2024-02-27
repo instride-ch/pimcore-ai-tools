@@ -24,30 +24,33 @@ class OpenAiProvider extends AbstractProvider
 
     public function getClient(): OpenAI\Client
     {
-        $apiKey = $this->container->getParameter('pimcore_ai.open_ai.api_key');
+        $apiKey = $_ENV['OPEN_AI_API_KEY'];
+//        $apiKey = $this->container->getParameter('pimcore_ai.open_ai.api_key');
         return OpenAI::client($apiKey);
     }
 
     public function getText(array $options): OpenAI\Responses\Chat\CreateResponse
     {
-        if (!array_key_exists('prompt', $options)) {
+        if (!\array_key_exists('prompt', $options)) {
             throw new \RuntimeException('No text prompt given.');
         }
 
+        $messages = $options['messages'] ?? null;
+
+        $messages[] = [
+            'role' => $options['role'] ?? 'user',
+            'content' => $options['prompt']
+        ];
+
         return $this->getClient()->chat()->create([
             'model' => $options['model'] ?? 'gpt-4',
-            'messages' => [
-                [
-                    'role' => $options['role'] ?? 'user',
-                    'content' => $options['prompt'],
-                ],
-            ],
+            'messages' => $messages,
         ]);
     }
 
     public function getImage(array $options): OpenAI\Responses\Images\CreateResponse
     {
-        if (!array_key_exists('prompt', $options)) {
+        if (!\array_key_exists('prompt', $options)) {
             throw new \RuntimeException('No image prompt given.');
         }
 
