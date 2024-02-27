@@ -54,22 +54,32 @@ class MidjourneyProvider extends AbstractProvider
 
         $prompt = $this->getPromptString($options);
 
+        $existingImage = $this->getClient()->getImagine($prompt);
+        if ($existingImage) {
+            return $existingImage;
+        }
+
         return $this->getClient()->imagine($prompt);
     }
 
     /**
      * @throws Exception
      */
-    public function getUpscaleImage(array $options, int $numberIndex = 0): mixed
+    public function getUpscaleImage(array $options, int $imageIndex = 0): mixed
     {
         if (!\array_key_exists('prompt', $options)) {
             throw new \RuntimeException('No image prompt given.');
         }
 
         $prompt = $this->getPromptString($options);
-
         $imagineObject = $this->getClient()->getImagine($prompt);
-        return $this->getClient()->upscale($imagineObject, $numberIndex);
+
+        $existingImage = $this->getClient()->getUpscale($imagineObject, $imageIndex);
+        if ($existingImage) {
+            return $existingImage;
+        }
+
+        return $this->getClient()->upscale($imagineObject, $imageIndex);
     }
 
     public function getText(array $options): mixed
@@ -79,12 +89,13 @@ class MidjourneyProvider extends AbstractProvider
 
     private function getPromptString(array $options): string
     {
-        $seed = 1000;
-        if (\array_key_exists('seed', $options)) {
-            $seed = $options['seed'];
-        }
+//        $seed = $options['seed'] ?? null;
 
         $prompt = $options['prompt'];
-        return $prompt .' --seed='. $seed;
+//        if ($seed) {
+//            $prompt .= ' --seed '. $seed;
+//        }
+
+        return $prompt;
     }
 }
