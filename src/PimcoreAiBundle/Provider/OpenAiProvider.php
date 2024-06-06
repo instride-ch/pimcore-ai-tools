@@ -5,28 +5,18 @@ namespace Instride\Bundle\PimcoreAiBundle\Provider;
 use OpenAI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class OpenAiProvider extends AbstractProvider
+class OpenAiProvider extends AbstractProvider implements TextProviderInterface, ImageProviderInterface
 {
-    /**
-     * @var ContainerInterface
-     */
-    private ContainerInterface $container;
+    private string $apiKey;
 
-    /**
-     * Constructor
-     *
-     * @param ContainerInterface $container
-     */
-    public function __construct(ContainerInterface $container)
+    public function __construct(string $apiKey)
     {
-        $this->container = $container;
+        $this->apiKey = $apiKey;
     }
 
     public function getClient(): OpenAI\Client
     {
-        $apiKey = $_ENV['OPEN_AI_API_KEY'];
-//        $apiKey = $this->container->getParameter('pimcore_ai.open_ai.api_key');
-        return OpenAI::client($apiKey);
+        return OpenAI::client($this->apiKey);
     }
 
     public function getText(array $options): OpenAI\Responses\Chat\CreateResponse

@@ -6,7 +6,9 @@ This bundle provides nothing
 
 ## Features
 - new Pimcore object data type "AiTextWizard"
-- new Symfony form type "AiTextWizard"
+- new Symfony form field type "AiTextWizard"
+- new Document editable "AiTextWizard"
+- list of all used data/field types and editables and possibility to configure prompt and AI provider 
 
 ## License
 **instride AG**, Sandgruebestrasse 4, 6210 Sursee, Switzerland  

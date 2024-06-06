@@ -5,11 +5,12 @@ services:
         tags:
             - { name: pimcore_ai.provider.open_ai, alias: open_ai_provider }
         arguments:
-            - '@service_container'
+            - '%pimcore_ai.open_ai.api_key%'
 
     # Midjourney Provider
     Instride\Bundle\PimcoreAiBundle\Provider\MidjourneyProvider:
         tags:
             - { name: pimcore_ai.provider.midjourney, alias: midjourney_provider }
         arguments:
-            - '@service_container'
+            - '%pimcore_ai.midjourney.channel_id%'
+            - '%pimcore_ai.midjourney.auth_key%'

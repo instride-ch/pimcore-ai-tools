@@ -17,33 +17,21 @@ namespace Instride\Bundle\PimcoreAiBundle\Provider;
 
 use Exception;
 use Ferranfg\MidjourneyPhp\Midjourney;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class MidjourneyProvider extends AbstractProvider
+class MidjourneyProvider extends AbstractProvider implements ImageProviderInterface
 {
-    /**
-     * @var ContainerInterface
-     */
-    private ContainerInterface $container;
+    private int $channelId;
+    private string $authKey;
 
-    /**
-     * Constructor
-     *
-     * @param ContainerInterface $container
-     */
-    public function __construct(ContainerInterface $container)
+    public function __construct(int $channelId, string $authKey)
     {
-        $this->container = $container;
+        $this->channelId = $channelId;
+        $this->authKey = $authKey;
     }
 
     public function getClient(): Midjourney
     {
-//        $discordChannelId = $this->container->getParameter('pimcore_ai.midjourney.channel_id');
-//        $discordUserToken = $this->container->getParameter('pimcore_ai.midjourney.auth_key');
-        $discordChannelId = (int)$_ENV['MIDJOURNEY_CHANNEL_ID'];
-        $discordUserToken = $_ENV['MIDJOURNEY_AUTH_TOKEN'];
-
-        return new Midjourney($discordChannelId, $discordUserToken);
+        return new Midjourney($this->channelId, $this->authKey);
     }
 
     public function getImage(array $options): ?object
@@ -82,19 +70,14 @@ class MidjourneyProvider extends AbstractProvider
         return $this->getClient()->upscale($imagineObject, $imageIndex);
     }
 
-    public function getText(array $options): mixed
-    {
-        throw new \RuntimeException('No text generation for midjourney available.');
-    }
-
     private function getPromptString(array $options): string
     {
-//        $seed = $options['seed'] ?? null;
+        $seed = $options['seed'] ?? null;
 
         $prompt = $options['prompt'];
-//        if ($seed) {
-//            $prompt .= ' --seed '. $seed;
-//        }
+        if ($seed) {
+            $prompt .= ' --seed '. $seed;
+        }
 
         return $prompt;
     }

@@ -40,7 +40,7 @@ class PimcoreAiExtension extends Extension
         foreach ($config as $configName => $aiConfig) {
             foreach ($aiConfig as $subConfigName => $confValue) {
                 $container->setParameter(
-                    \sprintf('pimcore_monitor.checks.%s.%s', $configName, $subConfigName),
+                    \sprintf('pimcore_ai.%s.%s', $configName, $subConfigName),
                     $confValue
                 );
             }
