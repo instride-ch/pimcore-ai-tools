@@ -1,6 +1,6 @@
 <?php
 
-namespace Instride\PimcoreAiBundle\Provider;
+namespace Instride\Bundle\PimcoreAiBundle\Provider;
 
 interface ProviderInterface
 {

@@ -30,13 +30,13 @@
   },
   "autoload": {
     "psr-4": {
-      "Instride\\PimcoreAiBundle\\": "src/PimcoreAiBundle"
+      "Instride\\Bundle\\PimcoreAiBundle\\": "src/PimcoreAiBundle/"
     }
   },
   "extra": {
     "pimcore": {
       "bundles": [
-        "Instride\\PimcoreAiBundle\\PimcoreAiBundle"
+        "Instride\\Bundle\\PimcoreAiBundle\\PimcoreAiBundle"
       ]
     },
     "branch-alias": {

@@ -13,7 +13,7 @@ declare(strict_types=1);
  * @copyright Copyright (c) 2024 instride AG (https://instride.ch)
  */
 
-namespace Instride\PimcoreAiBundle\Provider;
+namespace Instride\Bundle\PimcoreAiBundle\Provider;
 
 use Exception;
 use Ferranfg\MidjourneyPhp\Midjourney;

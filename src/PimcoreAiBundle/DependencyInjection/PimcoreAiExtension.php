@@ -14,7 +14,7 @@ declare(strict_types=1);
  * @copyright  2024 instride AG (https://instride.ch)
  */
 
-namespace Instride\PimcoreAiBundle\DependencyInjection;
+namespace Instride\Bundle\PimcoreAiBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;

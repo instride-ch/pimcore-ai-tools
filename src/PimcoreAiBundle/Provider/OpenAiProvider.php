@@ -1,6 +1,6 @@
 <?php
 
-namespace Instride\PimcoreAiBundle\Provider;
+namespace Instride\Bundle\PimcoreAiBundle\Provider;
 
 use OpenAI;
 use Symfony\Component\DependencyInjection\ContainerInterface;

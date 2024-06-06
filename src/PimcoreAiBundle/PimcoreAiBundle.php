@@ -15,7 +15,7 @@ declare(strict_types=1);
  * @license    https://github.com/instride-ch/PimcoreAiBundle?tab=GPL-3.0-1-ov-file#readme GNU General Public License version 3 (GPLv3)
  */
 
-namespace Instride\PimcoreAiBundle;
+namespace Instride\Bundle\PimcoreAiBundle;
 
 use Pimcore\Extension\Bundle\AbstractPimcoreBundle;
 use Pimcore\Extension\Bundle\Traits\PackageVersionTrait;

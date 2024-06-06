@@ -1,6 +1,6 @@
 <?php
 
-namespace Instride\PimcoreAiBundle\DependencyInjection;
+namespace Instride\Bundle\PimcoreAiBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;

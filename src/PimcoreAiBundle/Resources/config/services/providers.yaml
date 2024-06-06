@@ -1,14 +1,14 @@
 services:
 
     # Open AI Provider
-    Instride\PimcoreAiBundle\Provider\OpenAiProvider:
+    Instride\Bundle\PimcoreAiBundle\Provider\OpenAiProvider:
         tags:
             - { name: pimcore_ai.provider.open_ai, alias: open_ai_provider }
         arguments:
             - '@service_container'
 
     # Midjourney Provider
-    Instride\PimcoreAiBundle\Provider\MidjourneyProvider:
+    Instride\Bundle\PimcoreAiBundle\Provider\MidjourneyProvider:
         tags:
             - { name: pimcore_ai.provider.midjourney, alias: midjourney_provider }
         arguments:
