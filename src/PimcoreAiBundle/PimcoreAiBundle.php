@@ -46,6 +46,7 @@ class PimcoreAiBundle extends AbstractPimcoreBundle implements PimcoreBundleAdmi
     public function getCssPaths(): array
     {
         return [
+          '/bundles/pimcoreai/css/pimcore/admin.css',
           '/bundles/pimcoreai/css/pimcore/icons.css'
         ];
     }

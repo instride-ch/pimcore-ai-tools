@@ -27,23 +27,6 @@ pimcore.object.tags.aiWysiwyg = Class.create(pimcore.object.tags.abstract, {
         this.dirty = false;
     },
 
-    /**
-     * @extjs since HTMLEditor seems not working properly in grid, this feature is deactivated for now
-     */
-    /*getGridColumnEditor: function(field) {
-        if (field.layout.noteditable) {
-            return null;
-        }
-        // WYSIWYG
-        if (field.type == 'wysiwyg') {
-            return Ext.create('Ext.form.HtmlEditor', {
-                width: 500,
-                height: 300
-            });
-        }
-    },*/
-
-
     getGridColumnConfig: function (field) {
         var renderer = function (key, value, metaData, record) {
             this.applyPermissionStyle(key, value, metaData, record);
@@ -65,13 +48,11 @@ pimcore.object.tags.aiWysiwyg = Class.create(pimcore.object.tags.abstract, {
         };
     },
 
-
     getGridColumnFilter: function (field) {
         return {type: 'string', dataIndex: field.key};
     },
 
     getLayout: function () {
-
         var iconCls = null;
         if(this.fieldConfig.noteditable == false) {
             iconCls = "pimcore_ai_icon_ai_wysiwyg";
@@ -132,7 +113,6 @@ pimcore.object.tags.aiWysiwyg = Class.create(pimcore.object.tags.abstract, {
     },
 
     startWysiwygEditor: function () {
-
         if(this.ddWysiwyg) {
             return;
         }
@@ -193,20 +173,24 @@ pimcore.object.tags.aiWysiwyg = Class.create(pimcore.object.tags.abstract, {
         // Add AI button
         Ext.create('Ext.button.Split', {
             text: t('pimcore_ai_button'),
-            renderTo: Ext.get(this.editableDivId).parent(),
-            // handler: function() {},
+            iconCls: 'pimcore_ai_icon_ai_wysiwyg',
+            renderTo: Ext.get(this.editableDivId).parent().parent().parent().parent(),
+            cls: 'pimcore_ai_button_menu_container',
             menu: new Ext.menu.Menu({
                items: [
                    {
                        text: t('pimcore_ai_button_text_create'),
+                       iconCls: 'pimcore_ai_icon_ai_wysiwyg',
                        handler: this.startTextCreation.bind(this)
                    },
                    {
                        text: t('pimcore_ai_button_text_correction'),
+                       iconCls: 'pimcore_ai_icon_ai_wysiwyg',
                        handler: this.startTextCorrection.bind(this)
                    },
                    {
                        text: t('pimcore_ai_button_text_optimize'),
+                       iconCls: 'pimcore_ai_icon_ai_wysiwyg',
                        handler: this.startTextOptimization.bind(this)
                    }
                ]
@@ -285,7 +269,7 @@ pimcore.object.tags.aiWysiwyg = Class.create(pimcore.object.tags.abstract, {
     },
 
     startTextCorrection: function() {
-        console.log('startTextCorrection');
+        console.log(this.data);
     },
 
     startTextOptimization: function() {
