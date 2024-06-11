@@ -5,9 +5,9 @@
 This bundle provides nothing
 
 ## Features
-- new Pimcore object data type "AiTextWizard"
-- new Symfony form field type "AiTextWizard"
-- new Document editable "AiTextWizard"
+- new Pimcore object data type "AiWysiwyg???"
+- new Symfony form field type "AiTextWizard???"
+- new Document editable "AiTextWizard???"
 - list of all used data/field types and editables and possibility to configure prompt and AI provider 
 
 ## License

@@ -18,10 +18,13 @@ declare(strict_types=1);
 namespace Instride\Bundle\PimcoreAiBundle;
 
 use Pimcore\Extension\Bundle\AbstractPimcoreBundle;
+use Pimcore\Extension\Bundle\PimcoreBundleAdminClassicInterface;
+use Pimcore\Extension\Bundle\Traits\BundleAdminClassicTrait;
 use Pimcore\Extension\Bundle\Traits\PackageVersionTrait;
 
-class PimcoreAiBundle extends AbstractPimcoreBundle
+class PimcoreAiBundle extends AbstractPimcoreBundle implements PimcoreBundleAdminClassicInterface
 {
+    use BundleAdminClassicTrait;
     use PackageVersionTrait;
 
     /**
@@ -38,5 +41,20 @@ class PimcoreAiBundle extends AbstractPimcoreBundle
     public function getDescription(): string
     {
         return 'AI Bundle for Pimcore';
+    }
+
+    public function getCssPaths(): array
+    {
+        return [
+          '/bundles/pimcoreai/css/pimcore/icons.css'
+        ];
+    }
+
+    public function getJsPaths(): array
+    {
+        return [
+          '/bundles/pimcoreai/js/pimcore/object/classes/data/aiWysiwyg.js',
+          '/bundles/pimcoreai/js/pimcore/object/tags/aiWysiwyg.js'
+        ];
     }
 }
