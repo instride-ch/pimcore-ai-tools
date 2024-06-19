@@ -1,8 +1,15 @@
+pimcore_ai_settings_editable_configuration:
+    path: /settings/editable-configuration
+    defaults: { _controller: Instride\Bundle\PimcoreAiBundle\Controller\Admin\SettingsController::editableConfigurationAction }
+    methods:
+        - POST
+
 pimcore_ai_settings_object_configuration:
     path: /settings/object-configuration
     defaults: { _controller: Instride\Bundle\PimcoreAiBundle\Controller\Admin\SettingsController::objectConfigurationAction }
     methods:
         - POST
+
 
 pimcore_ai_text_create:
     path: /text-create

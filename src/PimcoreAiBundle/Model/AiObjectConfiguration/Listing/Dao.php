@@ -28,8 +28,6 @@ final class Dao extends Model\Listing\Dao\AbstractDao
     protected string $tableName = 'pimcore_ai_object_configuration';
 
     /**
-     * Loads a list of static routes for the specicifies parameters, returns an array of Staticroute elements
-     *
      * @return AiObjectConfiguration[]
      * @throws Exception
      */

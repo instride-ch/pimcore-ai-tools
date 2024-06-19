@@ -13,35 +13,35 @@ declare(strict_types=1);
  * @copyright Copyright (c) 2024 instride AG (https://instride.ch)
  */
 
-namespace Instride\Bundle\PimcoreAiBundle\Model\AiObjectConfiguration;
+namespace Instride\Bundle\PimcoreAiBundle\Model\AiEditableConfiguration;
 
-use Instride\Bundle\PimcoreAiBundle\Model\AiObjectConfiguration;
+use Instride\Bundle\PimcoreAiBundle\Model\AiEditableConfiguration;
 use Pimcore\Model\Listing\AbstractListing;
 
 /**
  * @method Listing\Dao getDao()
- * @method AiObjectConfiguration[] load()
- * @method AiObjectConfiguration|false current()
+ * @method AiEditableConfiguration[] load()
+ * @method AiEditableConfiguration|false current()
  * @method int getTotalCount()
  * @method list<array<string,mixed>> getDataArray()
  */
 final class Listing extends AbstractListing
 {
     /**
-     * @return AiObjectConfiguration[]
+     * @return AiEditableConfiguration[]
      */
-    public function getObjectConfigurations(): array
+    public function getEditableConfigurations(): array
     {
         return $this->getData();
     }
 
     /**
-     * @param AiObjectConfiguration[]|null $objectConfigurations
+     * @param AiEditableConfiguration[]|null $editableConfigurations
      *
      * @return $this
      */
-    public function setObjectConfigurations(?array $objectConfigurations): static
+    public function setEditableConfigurations(?array $editableConfigurations): static
     {
-        return $this->setData($objectConfigurations);
+        return $this->setData($editableConfigurations);
     }
 }

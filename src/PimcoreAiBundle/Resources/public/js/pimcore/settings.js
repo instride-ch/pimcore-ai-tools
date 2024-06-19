@@ -29,16 +29,22 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
                 id: "pimcore_pimcore_ai",
                 iconCls: "pimcore_ai_nav_icon",
                 title: t("pimcore_ai_configuration"),
-                border: false,
-                layout: "fit",
+                border: false,layout: {
+                    type: 'vbox',
+                    align: 'stretch',
+                    padding: 4
+                },
                 closable: true,
-                items: [this.getObjectRowEditor()]
+                items: [
+                    this.getEditableRowEditor(),
+                    { xtype: 'splitter' },
+                    this.getObjectRowEditor(),
+                ]
             });
 
             var tabPanel = Ext.getCmp("pimcore_panel_tabs");
             tabPanel.add(this.panel);
             tabPanel.setActiveItem("pimcore_pimcore_ai");
-
 
             this.panel.on("destroy", function () {
                 pimcore.globalmanager.remove("bundle_pimcore_ai");
@@ -48,6 +54,129 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
         }
 
         return this.panel;
+    },
+
+    getEditableRowEditor: function () {
+
+        var itemsPerPage = pimcore.helpers.grid.getDefaultPageSize();
+        this.editableStore = pimcore.helpers.grid.buildDefaultStore(
+            '/admin/pimcore-ai/settings/editable-configuration',
+            [
+                'id', 'editableId', 'type', {name: 'prompt', allowBlank: true},
+                {name: 'options', allowBlank: true}, {name: 'provider', allowBlank: true}
+            ],
+            itemsPerPage,
+        );
+
+        this.editableFilterField = Ext.create("Ext.form.TextField", {
+            width: 200,
+            style: "margin: 0 10px 0 0;",
+            enableKeyEvents: true,
+            listeners: {
+                "keydown" : function (field, key) {
+                    if (key.getKey() == key.ENTER) {
+                        var input = field;
+                        var proxy = this.editableStore.getProxy();
+                        proxy.extraParams.filter = input.getValue();
+                        this.editableStore.load();
+                    }
+                }.bind(this)
+            }
+        });
+
+        this.pagingtoolbar = pimcore.helpers.grid.buildDefaultPagingToolbar(this.editableStore);
+
+        var typesColumns = [
+            {text: t("pimcore_ai_editableId"), flex: 100, sortable: true, dataIndex: 'editableId', editable: false},
+            {text: t("pimcore_ai_type"), flex: 100, sortable: true, dataIndex: 'type', editable: false, editor: new Ext.form.TextField({})},
+            {text: t("pimcore_ai_prompt"), flex: 300, sortable: true, dataIndex: 'prompt', editor: new Ext.form.TextField({})},
+            {text: t("pimcore_ai_options"), flex: 300, sortable: true, dataIndex: 'options', editor: new Ext.form.TextField({})},
+            {text: t("pimcore_ai_provider"), flex: 100, sortable: true, dataIndex: 'provider', editor: new Ext.form.TextField({})},
+        ];
+
+        this.editableRowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
+            clicksToEdit: 1,
+            clicksToMoveEditor: 1,
+        });
+
+        var updateEditablesButton = Ext.create('Ext.Button', {
+            text: t("pimcore_ai_update_editables"),
+            handler: this.updateEditables.bind(this)
+        });
+
+        var toolbar = Ext.create('Ext.Toolbar', {
+            cls: 'pimcore_main_toolbar',
+            items: [
+                {
+                    text: t("filter") + "/" + t("search"),
+                    xtype: "tbtext",
+                    style: "margin: 0 10px 0 0;"
+                },
+                this.editableFilterField,
+            ]
+        });
+
+        this.editableGrid = Ext.create('Ext.grid.Panel', {
+            title: t("pimcore_ai_editable_configuration"),
+            autoScroll: true,
+            store: this.editableStore,
+            columns: {
+                items: typesColumns,
+                defaults: {
+                    renderer: Ext.util.Format.htmlEncode
+                },
+            },
+            selModel: Ext.create('Ext.selection.RowModel', {}),
+            plugins: [
+                this.editableRowEditing
+            ],
+            trackMouseOver: true,
+            columnLines: true,
+            bbar: this.pagingtoolbar,
+            bodyCls: "pimcore_editable_grid",
+            stripeRows: true,
+            tbar: toolbar,
+            flex: 1,
+            viewConfig: {
+                forceFit: true,
+                listeners: {
+                    rowupdated: this.updateEditableRows.bind(this),
+                    refresh: this.updateEditableRows.bind(this)
+                }
+            }
+        });
+
+        this.editableStore.on("update", this.updateEditableRows.bind(this));
+        this.editableGrid.on("viewready", this.updateEditableRows.bind(this));
+
+        this.editableStore.load();
+
+        return this.editableGrid;
+    },
+
+    updateEditableRows: function () {
+        var rows = Ext.get(this.editableGrid.getEl().dom).query(".x-grid-row");
+
+        for (var i = 0; i < rows.length; i++) {
+
+            let dd = new Ext.dd.DropZone(rows[i], {
+                ddGroup: "element",
+
+                getTargetFromEvent: function(e) {
+                    return this.getEl();
+                },
+            });
+        }
+    },
+
+    updateEditables: function () {
+        Ext.Ajax.request({
+            url: '/admin/pimcore-ai/settings/sync-editables',
+            method: 'POST',
+            success: function(){
+                this.editableStore.sync();
+            }
+        })
     },
 
     getObjectRowEditor: function () {
@@ -62,7 +191,7 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
             itemsPerPage,
         );
 
-        this.filterField = Ext.create("Ext.form.TextField", {
+        this.objectFilterField = Ext.create("Ext.form.TextField", {
             width: 200,
             style: "margin: 0 10px 0 0;",
             enableKeyEvents: true,
@@ -89,9 +218,14 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
             {text: t("pimcore_ai_provider"), flex: 100, sortable: true, dataIndex: 'provider', editor: new Ext.form.TextField({})},
         ];
 
-        this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
+        this.objectRowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
             clicksToEdit: 1,
             clicksToMoveEditor: 1,
+        });
+
+        var updateObjectsButton = Ext.create('Ext.Button', {
+            text: t("pimcore_ai_update_objects"),
+            handler: this.updateObjects.bind(this)
         });
 
         var toolbar = Ext.create('Ext.Toolbar', {
@@ -102,11 +236,12 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
                     xtype: "tbtext",
                     style: "margin: 0 10px 0 0;"
                 },
-                this.filterField
+                this.objectFilterField
             ]
         });
 
         this.objectGrid = Ext.create('Ext.grid.Panel', {
+            title: t("pimcore_ai_object_configuration"),
             autoScroll: true,
             store: this.objectStore,
             columns: {
@@ -117,15 +252,15 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
             },
             selModel: Ext.create('Ext.selection.RowModel', {}),
             plugins: [
-                this.rowEditing
+                this.objectRowEditing
             ],
-
             trackMouseOver: true,
             columnLines: true,
             bbar: this.pagingtoolbar,
             bodyCls: "pimcore_editable_grid",
             stripeRows: true,
             tbar: toolbar,
+            flex: 1,
             viewConfig: {
                 forceFit: true,
                 listeners: {
@@ -144,7 +279,6 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
     },
 
     updateObjectRows: function () {
-
         var rows = Ext.get(this.objectGrid.getEl().dom).query(".x-grid-row");
 
         for (var i = 0; i < rows.length; i++) {
@@ -157,6 +291,15 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
                 },
             });
         }
+    },
 
+    updateObjects: function () {
+        Ext.Ajax.request({
+            url: '/admin/pimcore-ai/settings/sync-objects',
+            method: 'POST',
+            success: function(){
+                this.objectStore.sync();
+            }
+        })
     },
 });
