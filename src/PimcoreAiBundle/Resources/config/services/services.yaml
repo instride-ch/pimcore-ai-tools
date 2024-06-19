@@ -1,0 +1,9 @@
+services:
+
+    # Ai Service
+    Instride\Bundle\PimcoreAiBundle\Services\AiService:
+        tags:
+            - { name: pimcore_ai.services.ai, alias: ai_service }
+        arguments:
+            - '@Instride\Bundle\PimcoreAiBundle\Provider\OpenAiProvider'
+

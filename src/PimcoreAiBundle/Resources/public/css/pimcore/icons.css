@@ -1,3 +1,7 @@
 .pimcore_ai_icon_ai_wysiwyg {
     background: url('../../img/pimcore/ai_wysiwyg.svg') center center no-repeat !important;
 }
+
+.pimcore_ai_nav_icon {
+    background: url('../../img/pimcore/pimcore_ai_nav.svg') center center no-repeat !important;
+}

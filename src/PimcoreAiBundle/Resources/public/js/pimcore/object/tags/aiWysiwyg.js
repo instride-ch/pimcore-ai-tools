@@ -196,7 +196,6 @@ pimcore.object.tags.aiWysiwyg = Class.create(pimcore.object.tags.abstract, {
                ]
             })
         });
-        console.log('hello');
     },
 
     onNodeDrop: function (target, dd, e, data) {
@@ -269,7 +268,17 @@ pimcore.object.tags.aiWysiwyg = Class.create(pimcore.object.tags.abstract, {
     },
 
     startTextCorrection: function() {
-        console.log(this.data);
+        Ext.Ajax.request({
+            url: '/admin/pimcore-ai/text-correction',
+            method: 'POST',
+            params: {
+                text: this.data
+            },
+            success: function(response){
+                var text = response.responseText;
+                console.log(text);
+            }
+        });
     },
 
     startTextOptimization: function() {

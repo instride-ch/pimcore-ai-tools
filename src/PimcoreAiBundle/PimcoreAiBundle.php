@@ -54,6 +54,8 @@ class PimcoreAiBundle extends AbstractPimcoreBundle implements PimcoreBundleAdmi
     public function getJsPaths(): array
     {
         return [
+          '/bundles/pimcoreai/js/pimcore/startup.js',
+          '/bundles/pimcoreai/js/pimcore/settings.js',
           '/bundles/pimcoreai/js/pimcore/object/classes/data/aiWysiwyg.js',
           '/bundles/pimcoreai/js/pimcore/object/tags/aiWysiwyg.js'
         ];
