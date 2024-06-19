@@ -31,8 +31,8 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
                 title: t("pimcore_ai_configuration"),
                 border: false,
                 layout: "fit",
-                closable:true,
-                items: [this.getRowEditor()]
+                closable: true,
+                items: [this.getObjectRowEditor()]
             });
 
             var tabPanel = Ext.getCmp("pimcore_panel_tabs");
@@ -50,12 +50,11 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
         return this.panel;
     },
 
-    getRowEditor: function () {
+    getObjectRowEditor: function () {
 
         var itemsPerPage = pimcore.helpers.grid.getDefaultPageSize();
-        this.store = pimcore.helpers.grid.buildDefaultStore(
-            // Routing.generate('pimcore_ai_settings_object_configuration'),
-            '/admin/pimcore-ai/object-configuration',
+        this.objectStore = pimcore.helpers.grid.buildDefaultStore(
+            '/admin/pimcore-ai/settings/object-configuration',
             [
                 'id', 'className', 'fieldName', 'type', {name: 'prompt', allowBlank: true},
                 {name: 'options', allowBlank: true}, {name: 'provider', allowBlank: true}
@@ -71,15 +70,15 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
                 "keydown" : function (field, key) {
                     if (key.getKey() == key.ENTER) {
                         var input = field;
-                        var proxy = this.store.getProxy();
+                        var proxy = this.objectStore.getProxy();
                         proxy.extraParams.filter = input.getValue();
-                        this.store.load();
+                        this.objectStore.load();
                     }
                 }.bind(this)
             }
         });
 
-        this.pagingtoolbar = pimcore.helpers.grid.buildDefaultPagingToolbar(this.store);
+        this.pagingtoolbar = pimcore.helpers.grid.buildDefaultPagingToolbar(this.objectStore);
 
         var typesColumns = [
             {text: t("pimcore_ai_className"), flex: 100, sortable: true, dataIndex: 'className', editable: false},
@@ -88,23 +87,6 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
             {text: t("pimcore_ai_prompt"), flex: 300, sortable: true, dataIndex: 'prompt', editor: new Ext.form.TextField({})},
             {text: t("pimcore_ai_options"), flex: 300, sortable: true, dataIndex: 'options', editor: new Ext.form.TextField({})},
             {text: t("pimcore_ai_provider"), flex: 100, sortable: true, dataIndex: 'provider', editor: new Ext.form.TextField({})},
-            {
-                xtype: 'actioncolumn',
-                menuText: t('delete'),
-                width: 30,
-                items: [{
-                    tooltip: t('delete'),
-                    icon: "/bundles/pimcoreadmin/img/flat-color-icons/delete.svg",
-                    handler: function (grid, rowIndex) {
-                        let data = grid.getStore().getAt(rowIndex);
-                        pimcore.helpers.deleteConfirm(t('pimcore_ai'), data.data.id, function () {
-                            grid.getStore().removeAt(rowIndex);
-                            this.updateRows();
-                        }.bind(this));
-
-                    }.bind(this)
-                }]
-            }
         ];
 
         this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
@@ -124,9 +106,9 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
             ]
         });
 
-        this.grid = Ext.create('Ext.grid.Panel', {
+        this.objectGrid = Ext.create('Ext.grid.Panel', {
             autoScroll: true,
-            store: this.store,
+            store: this.objectStore,
             columns: {
                 items: typesColumns,
                 defaults: {
@@ -147,24 +129,23 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
             viewConfig: {
                 forceFit: true,
                 listeners: {
-                    rowupdated: this.updateRows.bind(this),
-                    refresh: this.updateRows.bind(this)
+                    rowupdated: this.updateObjectRows.bind(this),
+                    refresh: this.updateObjectRows.bind(this)
                 }
             }
         });
 
-        this.store.on("update", this.updateRows.bind(this));
-        this.grid.on("viewready", this.updateRows.bind(this));
+        this.objectStore.on("update", this.updateObjectRows.bind(this));
+        this.objectGrid.on("viewready", this.updateObjectRows.bind(this));
 
-        this.store.load();
-        console.log(this.store.data.items);
+        this.objectStore.load();
 
-        return this.grid;
+        return this.objectGrid;
     },
 
-    updateRows: function () {
+    updateObjectRows: function () {
 
-        var rows = Ext.get(this.grid.getEl().dom).query(".x-grid-row");
+        var rows = Ext.get(this.objectGrid.getEl().dom).query(".x-grid-row");
 
         for (var i = 0; i < rows.length; i++) {
 

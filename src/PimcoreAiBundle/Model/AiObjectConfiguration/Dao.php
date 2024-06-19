@@ -15,20 +15,22 @@ declare(strict_types=1);
 
 namespace Instride\Bundle\PimcoreAiBundle\Model\AiObjectConfiguration;
 
-use Doctrine\DBAL\Exception;
+use Instride\Bundle\PimcoreAiBundle\Model\AiObjectConfiguration;
 use Pimcore\Model\Dao\AbstractDao;
 use Pimcore\Model\Exception\NotFoundException;
 
+/**
+ * @property AiObjectConfiguration $model
+ */
 class Dao extends AbstractDao
 {
     protected string $tableName = 'pimcore_ai_object_configuration';
 
     /**
-     * get object configuration by id
+     * Get the data for the object from database for the given id, or from the ID which is set in the object
      *
-     * @param int|null $id
      *
-     * @throws Exception
+     * @throws NotFoundException
      */
     public function getById(?int $id = null): void
     {
@@ -39,7 +41,7 @@ class Dao extends AbstractDao
         $data = $this->db->fetchAssociative('SELECT * FROM '.$this->tableName.' WHERE id = ?', [$this->model->getId()]);
 
         if (!$data) {
-            throw new NotFoundException("Object with the ID " . $this->model->getId() . " doesn't exists");
+            throw new NotFoundException(\sprintf('Unable to load object configuration with ID `%s`', $this->model->getId()));
         }
 
         $this->assignVariablesToModel($data);
@@ -47,46 +49,16 @@ class Dao extends AbstractDao
 
     public function save(): void
     {
-        $vars = \get_object_vars($this->model);
-
-        $buffer = [];
-
-        $validColumns = $this->getValidTableColumns($this->tableName);
-
-        if (\count($vars)) {
-            foreach ($vars as $k => $v) {
-                if (!\in_array($k, $validColumns)) {
-                    continue;
-                }
-
-                $getter = "get" . \ucfirst($k);
-
-                if (!\is_callable([$this->model, $getter])) {
-                    continue;
-                }
-
-                $value = $this->model->$getter();
-
-                if (\is_bool($value)) {
-                    $value = (int)$value;
-                }
-
-                $buffer[$k] = $value;
-            }
+        if (!$this->model->getId()) {
+            $this->create();
         }
 
-        if ($this->model->getId() !== null) {
-            $this->db->update($this->tableName, $buffer, ["id" => $this->model->getId()]);
-            return;
-        }
-
-        $this->db->insert($this->tableName, $buffer);
-        $this->model->setId($this->db->lastInsertId());
+        $this->update();
     }
 
     public function delete(): void
     {
-        $this->db->delete($this->tableName, ["id" => $this->model->getId()]);
+        $this->db->delete($this->tableName, ['id' => $this->model->getId()]);
     }
 
     /**
@@ -95,7 +67,7 @@ class Dao extends AbstractDao
     public function update(): void
     {
         $data = [];
-        $type = $this->model->getObjectVars();
+        $type = $this->model->getData();
 
         foreach ($type as $key => $value) {
             if (\in_array($key, $this->getValidTableColumns($this->tableName), true)) {
@@ -109,4 +81,10 @@ class Dao extends AbstractDao
         $this->db->update($this->tableName, $data, ['id' => $this->model->getId()]);
     }
 
+    public function create(): void
+    {
+        $this->db->insert($this->tableName, []);
+
+        $this->model->setId((int) $this->db->lastInsertId());
+    }
 }

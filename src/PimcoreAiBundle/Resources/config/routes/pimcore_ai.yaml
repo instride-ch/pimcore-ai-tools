@@ -1,5 +1,5 @@
 pimcore_ai_settings_object_configuration:
-    path: /object-configuration
+    path: /settings/object-configuration
     defaults: { _controller: Instride\Bundle\PimcoreAiBundle\Controller\Admin\SettingsController::objectConfigurationAction }
     methods:
         - POST

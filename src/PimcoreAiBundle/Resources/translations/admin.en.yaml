@@ -6,6 +6,7 @@ pimcore_ai_navigation: AI Settings
 pimcore_ai_configuration: AI Configuration
 pimcore_ai_className: Class Name
 pimcore_ai_fieldName: Field Name
+pimcore_ai_type: Type
 pimcore_ai_prompt: Prompt
 pimcore_ai_options: Options
 pimcore_ai_provider: Provider

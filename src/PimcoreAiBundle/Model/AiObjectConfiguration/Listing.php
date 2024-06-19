@@ -18,6 +18,14 @@ namespace Instride\Bundle\PimcoreAiBundle\Model\AiObjectConfiguration;
 use Instride\Bundle\PimcoreAiBundle\Model\AiObjectConfiguration;
 use Pimcore\Model\Listing\AbstractListing;
 
+
+/**
+ * @method Listing\Dao getDao()
+ * @method AiObjectConfiguration[] load()
+ * @method AiObjectConfiguration|false current()
+ * @method int getTotalCount()
+ * @method list<array<string,mixed>> getDataArray()
+ */
 final class Listing extends AbstractListing
 {
     /**

@@ -15,10 +15,15 @@ declare(strict_types=1);
 
 namespace Instride\Bundle\PimcoreAiBundle\Model;
 
-use Pimcore\Logger;
+use Instride\Bundle\PimcoreAiBundle\Model\AiObjectConfiguration\Dao;
 use Pimcore\Model\AbstractModel;
 use Pimcore\Model\Exception\NotFoundException;
 
+/**
+ * @method Dao getDao()
+ * @method void delete()
+ * @method void save()
+ */
 class AiObjectConfiguration extends AbstractModel
 {
     private ?int $id = null;
@@ -40,19 +45,34 @@ class AiObjectConfiguration extends AbstractModel
     {
         try {
             $obj = new self;
-            $obj->getDao()->getById($id);
+            $obj->setId($id);
+            $obj->getDao()->getById();
+
             return $obj;
         }
-        catch (NotFoundException $ex) {
-            Logger::warn("Object Configuration with id $id not found");
+        catch (NotFoundException $e) {
+            return null;
         }
-
-        return null;
     }
 
-    public static function getList(): ?AiObjectConfiguration\Listing
+    public static function create(): self
     {
-        return new AiObjectConfiguration\Listing();
+        $obj = new self();
+        $obj->save();
+
+        return $obj;
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function setId(?int $id): static
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     public function getClassName(): ?string
@@ -115,13 +135,16 @@ class AiObjectConfiguration extends AbstractModel
         $this->provider = $provider;
     }
 
-    public function getId(): ?int
+    public function getData(): array
     {
-        return $this->id;
-    }
-
-    public function setId(?int $id): void
-    {
-        $this->id = $id;
+        return [
+            'id' => $this->getId(),
+            'className' => $this->getClassName(),
+            'fieldName' => $this->getFieldName(),
+            'type' => $this->getType(),
+            'prompt' => $this->getPrompt(),
+            'options' => $this->getOptions(),
+            'provider' => $this->getProvider(),
+        ];
     }
 }
