@@ -32,7 +32,6 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
                 border: false,layout: {
                     type: 'vbox',
                     align: 'stretch',
-                    padding: 4
                 },
                 closable: true,
                 items: [
@@ -57,7 +56,6 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
     },
 
     getEditableRowEditor: function () {
-
         var itemsPerPage = pimcore.helpers.grid.getDefaultPageSize();
         this.editableStore = pimcore.helpers.grid.buildDefaultStore(
             '/admin/pimcore-ai/settings/editable-configuration',
@@ -66,6 +64,7 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
                 {name: 'options', allowBlank: true}, {name: 'provider', allowBlank: true}
             ],
             itemsPerPage,
+            { storeId: 'pimcoreAiEditableStore' }
         );
 
         this.editableFilterField = Ext.create("Ext.form.TextField", {
@@ -88,7 +87,7 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
 
         var typesColumns = [
             {text: t("pimcore_ai_editableId"), flex: 100, sortable: true, dataIndex: 'editableId', editable: false},
-            {text: t("pimcore_ai_type"), flex: 100, sortable: true, dataIndex: 'type', editable: false, editor: new Ext.form.TextField({})},
+            {text: t("pimcore_ai_type"), flex: 100, sortable: true, dataIndex: 'type', editable: false},
             {text: t("pimcore_ai_prompt"), flex: 300, sortable: true, dataIndex: 'prompt', editor: new Ext.form.TextField({})},
             {text: t("pimcore_ai_options"), flex: 300, sortable: true, dataIndex: 'options', editor: new Ext.form.TextField({})},
             {text: t("pimcore_ai_provider"), flex: 100, sortable: true, dataIndex: 'provider', editor: new Ext.form.TextField({})},
@@ -100,7 +99,9 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
         });
 
         var updateEditablesButton = Ext.create('Ext.Button', {
-            text: t("pimcore_ai_update_editables"),
+            text: t("pimcore_ai_sync_editables"),
+            scale: 'medium',
+            iconCls: 'pimcore_icon_update',
             handler: this.updateEditables.bind(this)
         });
 
@@ -113,6 +114,8 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
                     style: "margin: 0 10px 0 0;"
                 },
                 this.editableFilterField,
+                '->',
+                updateEditablesButton,
             ]
         });
 
@@ -171,7 +174,7 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
 
     updateEditables: function () {
         Ext.Ajax.request({
-            url: '/admin/pimcore-ai/settings/sync-editables',
+            url: '/admin/pimcore-ai/sync-editables',
             method: 'POST',
             success: function(){
                 this.editableStore.sync();
@@ -189,6 +192,7 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
                 {name: 'options', allowBlank: true}, {name: 'provider', allowBlank: true}
             ],
             itemsPerPage,
+            { storeId: 'pimcoreAiObjectStore' }
         );
 
         this.objectFilterField = Ext.create("Ext.form.TextField", {
@@ -212,7 +216,7 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
         var typesColumns = [
             {text: t("pimcore_ai_className"), flex: 100, sortable: true, dataIndex: 'className', editable: false},
             {text: t("pimcore_ai_fieldName"), flex: 100, sortable: true, dataIndex: 'fieldName', editable: false},
-            {text: t("pimcore_ai_type"), flex: 100, sortable: true, dataIndex: 'type', editable: false, editor: new Ext.form.TextField({})},
+            {text: t("pimcore_ai_type"), flex: 100, sortable: true, dataIndex: 'type', editable: false},
             {text: t("pimcore_ai_prompt"), flex: 300, sortable: true, dataIndex: 'prompt', editor: new Ext.form.TextField({})},
             {text: t("pimcore_ai_options"), flex: 300, sortable: true, dataIndex: 'options', editor: new Ext.form.TextField({})},
             {text: t("pimcore_ai_provider"), flex: 100, sortable: true, dataIndex: 'provider', editor: new Ext.form.TextField({})},
@@ -224,7 +228,9 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
         });
 
         var updateObjectsButton = Ext.create('Ext.Button', {
-            text: t("pimcore_ai_update_objects"),
+            text: t("pimcore_ai_sync_objects"),
+            scale: 'medium',
+            iconCls: 'pimcore_icon_update',
             handler: this.updateObjects.bind(this)
         });
 
@@ -236,7 +242,9 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
                     xtype: "tbtext",
                     style: "margin: 0 10px 0 0;"
                 },
-                this.objectFilterField
+                this.objectFilterField,
+                '->',
+                updateObjectsButton,
             ]
         });
 
@@ -295,10 +303,10 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
 
     updateObjects: function () {
         Ext.Ajax.request({
-            url: '/admin/pimcore-ai/settings/sync-objects',
+            url: '/admin/pimcore-ai/sync-objects',
             method: 'POST',
             success: function(){
-                this.objectStore.sync();
+                Ext.getStore('pimcoreAiObjectStore').reload();
             }
         })
     },

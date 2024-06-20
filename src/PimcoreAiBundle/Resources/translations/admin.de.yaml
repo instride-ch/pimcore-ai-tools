@@ -12,3 +12,5 @@ pimcore_ai_options: Optionen
 pimcore_ai_provider: Provider
 pimcore_ai_editable_configuration: Module konfigurieren
 pimcore_ai_object_configuration: Datenobjekte konfigurieren
+pimcore_ai_sync_editables: Module synchronisieren
+pimcore_ai_sync_objects: Datenobjekte synchronisieren
