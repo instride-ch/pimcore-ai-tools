@@ -1,16 +1,34 @@
 pimcore_ai_button: KI Helfer
-pimcore_ai_button_text_create: Text erstellen
 pimcore_ai_button_text_correction: Text korrigieren
+pimcore_ai_button_text_create: Text erstellen
 pimcore_ai_button_text_optimize: Text optimieren
-pimcore_ai_navigation: KI Konfiguration
-pimcore_ai_configuration: KI Konfiguration
 pimcore_ai_className: Objekt
+pimcore_ai_configuration: KI Konfiguration
+pimcore_ai_editable_configuration: Module
 pimcore_ai_fieldName: Feld
-pimcore_ai_type: Typ
-pimcore_ai_prompt: Prompt
+pimcore_ai_navigation: KI Konfiguration
+pimcore_ai_object_configuration: Datenobjekte
 pimcore_ai_options: Optionen
+pimcore_ai_prompt: Prompt
 pimcore_ai_provider: Provider
-pimcore_ai_editable_configuration: Module konfigurieren
-pimcore_ai_object_configuration: Datenobjekte konfigurieren
+pimcore_ai_provider_default: Standard
 pimcore_ai_sync_editables: Module synchronisieren
 pimcore_ai_sync_objects: Datenobjekte synchronisieren
+pimcore_ai_type: Typ
+pimcore_ai_type_text_correction: Text korrigieren
+pimcore_ai_type_text_create: Text erstellen
+pimcore_ai_type_text_optimize: Text optimieren
+pimcore_ai_editableId: Modul-Name
+pimcore_ai_prompt_default: Standard
+pimcore_ai_options_default: Standard
+pimcore_ai_defaults_configuration: Standardwerte
+pimcore_ai_defaults_provider: Standard-Provider
+pimcore_ai_defaults_module_text_create: Standard Prompt Module [Text erstellen]
+pimcore_ai_defaults_module_text_optimize: Standard Prompt Module [Text optimieren]
+pimcore_ai_defaults_module_text_correct: Standard Prompt Module [Text korrigieren]
+pimcore_ai_defaults_object_text_create: Standard Prompt Datenobjekt [Text erstellen]
+pimcore_ai_defaults_object_text_optimize: Standard Prompt Datenobjekt [Text optimieren]
+pimcore_ai_defaults_object_text_correct: Standard Prompt Datenobjekt [Text korrigieren]
+pimcore_ai_defaults_form_submit: Speichern
+pimcore_ai_defaults_form_success: Erfolgreich
+pimcore_ai_defaults_form_failure: Fehler

@@ -80,9 +80,9 @@ final class ConfigurationController extends UserAwareController
         // Create new configs
         foreach ($configsToCreate as $className => $fields) {
             foreach ($fields as $fieldName) {
-                $this->createAiObjectConfiguration($className, $fieldName, 'textCreate');
-                $this->createAiObjectConfiguration($className, $fieldName, 'textOptimize');
-                $this->createAiObjectConfiguration($className, $fieldName, 'textCorrection');
+                $this->createAiObjectConfiguration($className, $fieldName, 'text_create');
+                $this->createAiObjectConfiguration($className, $fieldName, 'text_optimize');
+                $this->createAiObjectConfiguration($className, $fieldName, 'text_correction');
             }
         }
 

@@ -1,16 +1,33 @@
 pimcore_ai_button: AI Helper
-pimcore_ai_button_text_create: Create Text
 pimcore_ai_button_text_correction: Correct Text
+pimcore_ai_button_text_create: Create Text
 pimcore_ai_button_text_optimize: Optimize Text
-pimcore_ai_navigation: AI Settings
-pimcore_ai_configuration: AI Configuration
 pimcore_ai_className: Object
+pimcore_ai_configuration: AI Configuration
+pimcore_ai_editable_configuration: modules
 pimcore_ai_fieldName: Field
-pimcore_ai_type: Type
-pimcore_ai_prompt: Prompt
+pimcore_ai_navigation: AI Settings
+pimcore_ai_object_configuration: data objects
 pimcore_ai_options: Options
+pimcore_ai_prompt: Prompt
 pimcore_ai_provider: Provider
-pimcore_ai_editable_configuration: Configure modules
-pimcore_ai_object_configuration: Configure data objects
+pimcore_ai_provider_default: Default
 pimcore_ai_sync_editables: Synchronize modules
 pimcore_ai_sync_objects: Synchronize data objects
+pimcore_ai_type: Type
+pimcore_ai_type_text_correction: Correct Text
+pimcore_ai_type_text_create: Create Text
+pimcore_ai_type_text_optimize: Optimize Text
+pimcore_ai_editableId: Module name
+pimcore_ai_prompt_default: Default
+pimcore_ai_options_default: Default
+pimcore_ai_defaults_configuration: Default configuration
+pimcore_ai_defaults_module_text_create: Default prompt modules [Create text]
+pimcore_ai_defaults_module_text_optimize: Default prompt modules [Optimize text]
+pimcore_ai_defaults_module_text_correct: Default prompt modules [Correct text]
+pimcore_ai_defaults_object_text_create: Default prompt data object [Create text]
+pimcore_ai_defaults_object_text_optimize: Default prompt data object [Optimize text]
+pimcore_ai_defaults_object_text_correct: Default prompt data object [Correct text]
+pimcore_ai_defaults_form_submit: Save
+pimcore_ai_defaults_form_success: Success
+pimcore_ai_defaults_form_failure: Failure

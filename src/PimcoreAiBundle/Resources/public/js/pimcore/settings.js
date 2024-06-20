@@ -34,11 +34,13 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
                     align: 'stretch',
                 },
                 closable: true,
-                items: [
-                    this.getEditableRowEditor(),
-                    { xtype: 'splitter' },
-                    this.getObjectRowEditor(),
-                ]
+                items: [Ext.create('Ext.tab.Panel', {
+                    items: [
+                        this.getDefaultsEditor(),
+                        this.getEditableRowEditor(),
+                        this.getObjectRowEditor(),
+                    ]
+                })]
             });
 
             var tabPanel = Ext.getCmp("pimcore_panel_tabs");
@@ -53,6 +55,63 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
         }
 
         return this.panel;
+    },
+
+    getDefaultsEditor: function () {
+        this.defaultsForm = Ext.create('Ext.form.Panel', {
+            title: t("pimcore_ai_defaults_configuration"),
+            bodyPadding: 20,
+            labelWidth: 300,
+            layout: 'form',
+            items: [{
+                fieldLabel: t("pimcore_ai_defaults_provider"),
+                xtype: 'textfield',
+                name: 'provider',
+            },{
+                fieldLabel: t("pimcore_ai_defaults_module_text_create"),
+                xtype: 'textareafield',
+                name: 'module_text_create',
+            },{
+                fieldLabel: t("pimcore_ai_defaults_module_text_optimize"),
+                xtype: 'textareafield',
+                name: 'module_text_optimize',
+            },{
+                fieldLabel: t("pimcore_ai_defaults_module_text_correct"),
+                xtype: 'textareafield',
+                name: 'module_text_correct',
+            },{
+                fieldLabel: t("pimcore_ai_defaults_object_text_create"),
+                xtype: 'textareafield',
+                name: 'object_text_create',
+            },{
+                fieldLabel: t("pimcore_ai_defaults_object_text_optimize"),
+                xtype: 'textareafield',
+                name: 'object_text_optimize',
+            },{
+                fieldLabel: t("pimcore_ai_defaults_object_text_correct"),
+                xtype: 'textareafield',
+                name: 'object_text_correct',
+            }],
+            buttons: [{
+                text: t("pimcore_ai_defaults_form_submit"),
+                formBind: true,
+                handler: function() {
+                    var form = this.up('form').getForm();
+                    if (form.isValid()) {
+                        form.submit({
+                            success: function(form, action) {
+                               Ext.Msg.alert(t("pimcore_ai_defaults_form_success"), action.result.msg);
+                            },
+                            failure: function(form, action) {
+                                Ext.Msg.alert(t("pimcore_ai_defaults_form_failure"), action.result.msg);
+                            }
+                        });
+                    }
+                }
+            }],
+        });
+
+        return this.defaultsForm;
     },
 
     getEditableRowEditor: function () {
@@ -88,9 +147,12 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
         var typesColumns = [
             {text: t("pimcore_ai_editableId"), flex: 100, sortable: true, dataIndex: 'editableId', editable: false},
             {text: t("pimcore_ai_type"), flex: 100, sortable: true, dataIndex: 'type', editable: false},
-            {text: t("pimcore_ai_prompt"), flex: 300, sortable: true, dataIndex: 'prompt', editor: new Ext.form.TextField({})},
-            {text: t("pimcore_ai_options"), flex: 300, sortable: true, dataIndex: 'options', editor: new Ext.form.TextField({})},
-            {text: t("pimcore_ai_provider"), flex: 100, sortable: true, dataIndex: 'provider', editor: new Ext.form.TextField({})},
+            {text: t("pimcore_ai_prompt"), flex: 300, sortable: true, dataIndex: 'prompt',
+                editor: new Ext.form.TextField({})},
+            {text: t("pimcore_ai_options"), flex: 300, sortable: true, dataIndex: 'options',
+                editor: new Ext.form.TextField({})},
+            {text: t("pimcore_ai_provider"), flex: 100, sortable: true, dataIndex: 'provider',
+                emptyCellText: t("pimcore_ai_provider_default"), editor: new Ext.form.TextField({})},
         ];
 
         this.editableRowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
@@ -213,13 +275,31 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
 
         this.pagingtoolbar = pimcore.helpers.grid.buildDefaultPagingToolbar(this.objectStore);
 
+        var providerStore = new Ext.data.Store({
+            fields: ['value', 'name'],
+            data: [
+                {"value": "", "name": t("pimcore_ai_provider_default")},
+                {"value": "openAi", "name": "OpenAi"},
+            ],
+        });
+        var providerEditor = new Ext.form.ComboBox({
+            store: providerStore,
+            displayField: 'name',
+            valueField: 'value',
+            emptyText: t("pimcore_ai_provider_default"),
+        });
+
         var typesColumns = [
             {text: t("pimcore_ai_className"), flex: 100, sortable: true, dataIndex: 'className', editable: false},
             {text: t("pimcore_ai_fieldName"), flex: 100, sortable: true, dataIndex: 'fieldName', editable: false},
-            {text: t("pimcore_ai_type"), flex: 100, sortable: true, dataIndex: 'type', editable: false},
-            {text: t("pimcore_ai_prompt"), flex: 300, sortable: true, dataIndex: 'prompt', editor: new Ext.form.TextField({})},
-            {text: t("pimcore_ai_options"), flex: 300, sortable: true, dataIndex: 'options', editor: new Ext.form.TextField({})},
-            {text: t("pimcore_ai_provider"), flex: 100, sortable: true, dataIndex: 'provider', editor: new Ext.form.TextField({})},
+            {text: t("pimcore_ai_type"), flex: 100, sortable: true, dataIndex: 'type', editable: false,
+                renderer: (value) => {return t(`pimcore_ai_type_${value}`)}},
+            {text: t("pimcore_ai_prompt"), flex: 300, sortable: true, dataIndex: 'prompt',
+                emptyCellText: t("pimcore_ai_prompt_default"), editor: Ext.form.field.TextArea()},
+            {text: t("pimcore_ai_options"), flex: 300, sortable: true, dataIndex: 'options',
+                emptyCellText: t("pimcore_ai_options_default"), editor: Ext.form.field.TextArea()},
+            {text: t("pimcore_ai_provider"), flex: 100, sortable: true, dataIndex: 'provider',
+                emptyCellText: t("pimcore_ai_provider_default"), editor: providerEditor},
         ];
 
         this.objectRowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
