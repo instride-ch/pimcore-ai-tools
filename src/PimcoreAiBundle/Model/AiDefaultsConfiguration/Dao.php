@@ -13,18 +13,18 @@ declare(strict_types=1);
  * @copyright Copyright (c) 2024 instride AG (https://instride.ch)
  */
 
-namespace Instride\Bundle\PimcoreAiBundle\Model\AiEditableConfiguration;
+namespace Instride\Bundle\PimcoreAiBundle\Model\AiDefaultsConfiguration;
 
-use Instride\Bundle\PimcoreAiBundle\Model\AiEditableConfiguration;
+use Instride\Bundle\PimcoreAiBundle\Model\AiDefaultsConfiguration;
 use Pimcore\Model\Dao\AbstractDao;
 use Pimcore\Model\Exception\NotFoundException;
 
 /**
- * @property AiEditableConfiguration $model
+ * @property AiDefaultsConfiguration $model
  */
 class Dao extends AbstractDao
 {
-    protected string $tableName = 'pimcore_ai_editable_configuration';
+    protected string $tableName = 'pimcore_ai_defaults_configuration';
 
     public function getById(?int $id = null): void
     {
@@ -35,7 +35,7 @@ class Dao extends AbstractDao
         $data = $this->db->fetchAssociative('SELECT * FROM '.$this->tableName.' WHERE id = ?', [$this->model->getId()]);
 
         if (!$data) {
-            throw new NotFoundException(\sprintf('Unable to load editable configuration with ID `%s`', $this->model->getId()));
+            throw new NotFoundException(\sprintf('Unable to load defaults configuration with ID `%s`', $this->model->getId()));
         }
 
         $this->assignVariablesToModel($data);
@@ -55,9 +55,6 @@ class Dao extends AbstractDao
         $this->db->delete($this->tableName, ['id' => $this->model->getId()]);
     }
 
-    /**
-     * @throws \Exception
-     */
     public function update(): void
     {
         $data = [];

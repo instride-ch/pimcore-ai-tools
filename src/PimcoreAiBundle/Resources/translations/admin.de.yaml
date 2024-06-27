@@ -22,13 +22,17 @@ pimcore_ai_editableId: Modul-Name
 pimcore_ai_prompt_default: Standard
 pimcore_ai_options_default: Standard
 pimcore_ai_defaults_configuration: Standardwerte
-pimcore_ai_defaults_provider: Standard-Provider
-pimcore_ai_defaults_module_text_create: Standard Prompt Module [Text erstellen]
-pimcore_ai_defaults_module_text_optimize: Standard Prompt Module [Text optimieren]
-pimcore_ai_defaults_module_text_correct: Standard Prompt Module [Text korrigieren]
-pimcore_ai_defaults_object_text_create: Standard Prompt Datenobjekt [Text erstellen]
-pimcore_ai_defaults_object_text_optimize: Standard Prompt Datenobjekt [Text optimieren]
-pimcore_ai_defaults_object_text_correct: Standard Prompt Datenobjekt [Text korrigieren]
+pimcore_ai_defaults_text_provider: Standard-Provider
+pimcore_ai_defaults_text_module_create: Text erstellen
+pimcore_ai_defaults_text_module_optimize: Text optimieren
+pimcore_ai_defaults_text_module_correct: Text korrigieren
+pimcore_ai_defaults_text_object_create: Text erstellen
+pimcore_ai_defaults_text_object_optimize: Text optimieren
+pimcore_ai_defaults_text_object_correct: Text korrigieren
+pimcore_ai_defaults_text_modules: Module
+pimcore_ai_defaults_text_objects: Datenobjekte
 pimcore_ai_defaults_form_submit: Speichern
 pimcore_ai_defaults_form_success: Erfolgreich
+pimcore_ai_defaults_form_success_text: Deine Änderungen wurden gespeichert.
 pimcore_ai_defaults_form_failure: Fehler
+pimcore_ai_defaults_form_failure_text: Deine Änderungen konnten nicht gespeichert werden.

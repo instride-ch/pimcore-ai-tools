@@ -1,27 +1,6 @@
-pimcore_ai_sync_editables:
-    path: /sync-editables
-    defaults: { _controller: Instride\Bundle\PimcoreAiBundle\Controller\Admin\ConfigurationController::syncEditablesAction }
-    methods:
-        - POST
-
-pimcore_ai_sync_objects:
-    path: /sync-objects
-    defaults: { _controller: Instride\Bundle\PimcoreAiBundle\Controller\Admin\ConfigurationController::syncObjectsAction }
-    methods:
-        - POST
-
-
-pimcore_ai_settings_editable_configuration:
-    path: /settings/editable-configuration
-    defaults: { _controller: Instride\Bundle\PimcoreAiBundle\Controller\Admin\SettingsController::editableConfigurationAction }
-    methods:
-        - POST
-
-pimcore_ai_settings_object_configuration:
-    path: /settings/object-configuration
-    defaults: { _controller: Instride\Bundle\PimcoreAiBundle\Controller\Admin\SettingsController::objectConfigurationAction }
-    methods:
-        - POST
+pimcore_ai_settings:
+    resource: 'settings.yaml'
+    prefix: 'settings'
 
 
 pimcore_ai_text_create:

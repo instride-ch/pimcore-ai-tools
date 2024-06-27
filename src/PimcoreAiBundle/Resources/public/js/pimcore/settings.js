@@ -29,7 +29,10 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
                 id: "pimcore_pimcore_ai",
                 iconCls: "pimcore_ai_nav_icon",
                 title: t("pimcore_ai_configuration"),
-                border: false,layout: {
+                border: false,
+                autoScroll: true,
+                flex: 1,
+                layout: {
                     type: 'vbox',
                     align: 'stretch',
                 },
@@ -58,57 +61,90 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
     },
 
     getDefaultsEditor: function () {
+        var textProviderStore = new Ext.data.Store({
+            fields: ['value', 'name'],
+            data: [
+                {"value": "openAi", "name": "OpenAi"},
+            ],
+        });
+
         this.defaultsForm = Ext.create('Ext.form.Panel', {
             title: t("pimcore_ai_defaults_configuration"),
+            url: '/admin/pimcore-ai/settings/save-defaults',
             bodyPadding: 20,
-            labelWidth: 300,
-            layout: 'form',
+            labelWidth: 150,
+            autoScroll: true,
+            flex: 1,
+            layout: {
+                type: 'container',
+            },
+            defaults: {anchor: '100%', labelWidth: 150},
             items: [{
-                fieldLabel: t("pimcore_ai_defaults_provider"),
-                xtype: 'textfield',
-                name: 'provider',
+                fieldLabel: t("pimcore_ai_defaults_text_provider"),
+                name: 'textProvider',
+                xtype: 'combobox',
+                store: textProviderStore,
+                displayField: 'name',
+                valueField: 'value',
             },{
-                fieldLabel: t("pimcore_ai_defaults_module_text_create"),
-                xtype: 'textareafield',
-                name: 'module_text_create',
+                xtype: 'fieldset',
+                title: t("pimcore_ai_defaults_text_modules"),
+                layout: 'anchor',
+                defaults: {anchor: '100%', labelWidth: 150},
+                items: [{
+                    fieldLabel: t("pimcore_ai_defaults_text_module_create"),
+                    xtype: 'textareafield',
+                    name: 'textModuleCreate',
+                },{
+                    fieldLabel: t("pimcore_ai_defaults_text_module_optimize"),
+                    xtype: 'textareafield',
+                    name: 'textModuleOptimize',
+                },{
+                    fieldLabel: t("pimcore_ai_defaults_text_module_correct"),
+                    xtype: 'textareafield',
+                    name: 'textModuleCorrect',
+                }],
             },{
-                fieldLabel: t("pimcore_ai_defaults_module_text_optimize"),
-                xtype: 'textareafield',
-                name: 'module_text_optimize',
-            },{
-                fieldLabel: t("pimcore_ai_defaults_module_text_correct"),
-                xtype: 'textareafield',
-                name: 'module_text_correct',
-            },{
-                fieldLabel: t("pimcore_ai_defaults_object_text_create"),
-                xtype: 'textareafield',
-                name: 'object_text_create',
-            },{
-                fieldLabel: t("pimcore_ai_defaults_object_text_optimize"),
-                xtype: 'textareafield',
-                name: 'object_text_optimize',
-            },{
-                fieldLabel: t("pimcore_ai_defaults_object_text_correct"),
-                xtype: 'textareafield',
-                name: 'object_text_correct',
+                xtype: 'fieldset',
+                title: t("pimcore_ai_defaults_text_objects"),
+                layout: 'anchor',
+                defaults: {anchor: '100%', labelWidth: 150},
+                items: [{
+                    fieldLabel: t("pimcore_ai_defaults_text_object_create"),
+                    xtype: 'textareafield',
+                    name: 'textObjectCreate',
+                },{
+                    fieldLabel: t("pimcore_ai_defaults_text_object_optimize"),
+                    xtype: 'textareafield',
+                    name: 'textObjectOptimize',
+                },{
+                    fieldLabel: t("pimcore_ai_defaults_text_object_correct"),
+                    xtype: 'textareafield',
+                    name: 'textObjectCorrect',
+                }],
             }],
             buttons: [{
                 text: t("pimcore_ai_defaults_form_submit"),
                 formBind: true,
                 handler: function() {
                     var form = this.up('form').getForm();
+
                     if (form.isValid()) {
                         form.submit({
                             success: function(form, action) {
-                               Ext.Msg.alert(t("pimcore_ai_defaults_form_success"), action.result.msg);
+                               Ext.Msg.alert(t("pimcore_ai_defaults_form_success"), t("pimcore_ai_defaults_form_success_text"));
                             },
                             failure: function(form, action) {
-                                Ext.Msg.alert(t("pimcore_ai_defaults_form_failure"), action.result.msg);
+                                Ext.Msg.alert(t("pimcore_ai_defaults_form_failure"), t("pimcore_ai_defaults_form_failure_text"));
                             }
                         });
                     }
                 }
             }],
+        });
+
+        this.defaultsForm.getForm().load({
+            url: '/admin/pimcore-ai/settings/load-defaults',
         });
 
         return this.defaultsForm;
@@ -119,8 +155,12 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
         this.editableStore = pimcore.helpers.grid.buildDefaultStore(
             '/admin/pimcore-ai/settings/editable-configuration',
             [
-                'id', 'editableId', 'type', {name: 'prompt', allowBlank: true},
-                {name: 'options', allowBlank: true}, {name: 'provider', allowBlank: true}
+                'id',
+                'editableId',
+                'type',
+                {name: 'prompt', allowBlank: true},
+                {name: 'options', allowBlank: true},
+                {name: 'provider', allowBlank: true}
             ],
             itemsPerPage,
             { storeId: 'pimcoreAiEditableStore' }
@@ -145,13 +185,13 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
         this.pagingtoolbar = pimcore.helpers.grid.buildDefaultPagingToolbar(this.editableStore);
 
         var typesColumns = [
-            {text: t("pimcore_ai_editableId"), flex: 100, sortable: true, dataIndex: 'editableId', editable: false},
-            {text: t("pimcore_ai_type"), flex: 100, sortable: true, dataIndex: 'type', editable: false},
-            {text: t("pimcore_ai_prompt"), flex: 300, sortable: true, dataIndex: 'prompt',
+            {text: t("pimcore_ai_editableId"), flex: 1, sortable: true, dataIndex: 'editableId', editable: false},
+            {text: t("pimcore_ai_type"), flex: 1, sortable: true, dataIndex: 'type', editable: false},
+            {text: t("pimcore_ai_prompt"), flex: 3, sortable: true, dataIndex: 'prompt',
                 editor: new Ext.form.TextField({})},
-            {text: t("pimcore_ai_options"), flex: 300, sortable: true, dataIndex: 'options',
+            {text: t("pimcore_ai_options"), flex: 3, sortable: true, dataIndex: 'options',
                 editor: new Ext.form.TextField({})},
-            {text: t("pimcore_ai_provider"), flex: 100, sortable: true, dataIndex: 'provider',
+            {text: t("pimcore_ai_provider"), flex: 1, sortable: true, dataIndex: 'provider',
                 emptyCellText: t("pimcore_ai_provider_default"), editor: new Ext.form.TextField({})},
         ];
 
@@ -236,7 +276,7 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
 
     updateEditables: function () {
         Ext.Ajax.request({
-            url: '/admin/pimcore-ai/sync-editables',
+            url: '/admin/pimcore-ai/settings/sync-editables',
             method: 'POST',
             success: function(){
                 this.editableStore.sync();
@@ -250,8 +290,13 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
         this.objectStore = pimcore.helpers.grid.buildDefaultStore(
             '/admin/pimcore-ai/settings/object-configuration',
             [
-                'id', 'className', 'fieldName', 'type', {name: 'prompt', allowBlank: true},
-                {name: 'options', allowBlank: true}, {name: 'provider', allowBlank: true}
+                'id',
+                'className',
+                'fieldName',
+                'type',
+                {name: 'prompt', allowBlank: true},
+                {name: 'options', allowBlank: true},
+                {name: 'provider', allowBlank: true}
             ],
             itemsPerPage,
             { storeId: 'pimcoreAiObjectStore' }
@@ -290,15 +335,15 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
         });
 
         var typesColumns = [
-            {text: t("pimcore_ai_className"), flex: 100, sortable: true, dataIndex: 'className', editable: false},
-            {text: t("pimcore_ai_fieldName"), flex: 100, sortable: true, dataIndex: 'fieldName', editable: false},
-            {text: t("pimcore_ai_type"), flex: 100, sortable: true, dataIndex: 'type', editable: false,
+            {text: t("pimcore_ai_className"), flex: 1, sortable: true, dataIndex: 'className', editable: false},
+            {text: t("pimcore_ai_fieldName"), flex: 1, sortable: true, dataIndex: 'fieldName', editable: false},
+            {text: t("pimcore_ai_type"), flex: 1, sortable: true, dataIndex: 'type', editable: false,
                 renderer: (value) => {return t(`pimcore_ai_type_${value}`)}},
-            {text: t("pimcore_ai_prompt"), flex: 300, sortable: true, dataIndex: 'prompt',
+            {text: t("pimcore_ai_prompt"), flex: 3, sortable: true, dataIndex: 'prompt',
                 emptyCellText: t("pimcore_ai_prompt_default"), editor: Ext.form.field.TextArea()},
-            {text: t("pimcore_ai_options"), flex: 300, sortable: true, dataIndex: 'options',
+            {text: t("pimcore_ai_options"), flex: 3, sortable: true, dataIndex: 'options',
                 emptyCellText: t("pimcore_ai_options_default"), editor: Ext.form.field.TextArea()},
-            {text: t("pimcore_ai_provider"), flex: 100, sortable: true, dataIndex: 'provider',
+            {text: t("pimcore_ai_provider"), flex: 1, sortable: true, dataIndex: 'provider',
                 emptyCellText: t("pimcore_ai_provider_default"), editor: providerEditor},
         ];
 
@@ -383,7 +428,7 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
 
     updateObjects: function () {
         Ext.Ajax.request({
-            url: '/admin/pimcore-ai/sync-objects',
+            url: '/admin/pimcore-ai/settings/sync-objects',
             method: 'POST',
             success: function(){
                 Ext.getStore('pimcoreAiObjectStore').reload();

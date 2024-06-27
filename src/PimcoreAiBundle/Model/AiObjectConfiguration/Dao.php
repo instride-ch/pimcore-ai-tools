@@ -26,12 +26,6 @@ class Dao extends AbstractDao
 {
     protected string $tableName = 'pimcore_ai_object_configuration';
 
-    /**
-     * Get the data for the object from database for the given id, or from the ID which is set in the object
-     *
-     *
-     * @throws NotFoundException
-     */
     public function getById(?int $id = null): void
     {
         if ($id !== null)  {

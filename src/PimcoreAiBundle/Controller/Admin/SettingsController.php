@@ -15,13 +15,16 @@ declare(strict_types=1);
 
 namespace Instride\Bundle\PimcoreAiBundle\Controller\Admin;
 
+use Instride\Bundle\PimcoreAiBundle\Model\AiDefaultsConfiguration;
 use Instride\Bundle\PimcoreAiBundle\Model\AiEditableConfiguration;
 use Instride\Bundle\PimcoreAiBundle\Model\AiObjectConfiguration;
+use Instride\Bundle\PimcoreAiBundle\Model\DataObject\ClassDefinition\Data\AiWysiwyg;
 use Pimcore\Bundle\AdminBundle\Helper\QueryParams;
 use Pimcore\Cache;
 use Pimcore\Controller\Traits\JsonHelperTrait;
 use Pimcore\Controller\UserAwareController;
 use Pimcore\Extension\Bundle\Exception\AdminClassicBundleNotFoundException;
+use Pimcore\Model\DataObject\ClassDefinition;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
@@ -34,14 +37,115 @@ final class SettingsController extends UserAwareController
     use JsonHelperTrait;
 
     /**
-     * @Route("/editable-configuration", name="pimcore_ai_settings_editable_configuration", methods={"POST"})
-     *
-     *
+     * @Route("/load-defaults", name="pimcore_ai_settings_load_defaults", methods={"POST"})
      */
-    public function editableConfigurationAction(Request $request): JsonResponse
+    public function loadDefaultsAction(): JsonResponse
     {
         $this->checkPermission('pimcore_ai');
 
+        $defaultsConfiguration = AiDefaultsConfiguration::getById(1);
+        if (!$defaultsConfiguration instanceof AiDefaultsConfiguration) {
+            $defaultsConfiguration = new AiDefaultsConfiguration();
+            $defaultsConfiguration->setTextProvider('openAi');
+            $defaultsConfiguration->save();
+        }
+
+        return $this->jsonResponse([
+            'success' => true,
+            'data' => $defaultsConfiguration->getData()
+        ]);
+    }
+
+    /**
+     * @Route("/save-defaults", name="pimcore_ai_settings_save_defaults", methods={"POST"})
+     */
+    public function saveDefaultsAction(Request $request): JsonResponse
+    {
+        $this->checkPermission('pimcore_ai');
+
+        $data = $request->request->all();
+
+        $defaultsConfiguration = AiDefaultsConfiguration::getById(1);
+        if (!$defaultsConfiguration instanceof AiDefaultsConfiguration) {
+            return $this->jsonResponse(['success' => false]);
+        }
+
+        $defaultsConfiguration->setValues($data);
+        $defaultsConfiguration->save();
+
+        return $this->jsonResponse(['success' => true]);
+    }
+
+    /**
+     * @Route("/sync-editables", name="pimcore_ai_settings_sync_editables", methods={"POST"})
+     */
+    public function syncEditablesAction(): JsonResponse
+    {
+        return $this->jsonResponse(['success' => true]);
+    }
+
+    /**
+     * @Route("/sync-objects", name="pimcore_ai_settings_sync_objects", methods={"POST"})
+     */
+    public function syncObjectsAction(): JsonResponse
+    {
+        $classesList = new ClassDefinition\Listing();
+        $classesList->setOrderKey('name');
+        $classesList->setOrder('asc');
+        $classes = $classesList->load();
+
+        // Get all AiWysiwyg fields from class definitions
+        $aiFields = [];
+        foreach ($classes as $class) {
+            $fields = $class->getFieldDefinitions();
+
+            foreach ($fields as $field) {
+                if ($field instanceof AiWysiwyg) {
+                    $aiFields[$class->getName()][] = $field->getName();
+                }
+            }
+        }
+
+        // Get all AiObjectConfigurations from database
+        $list = new AiObjectConfiguration\Listing();
+        $list->load();
+
+        // Check if config already exists
+        $configsToCreate = $aiFields;
+        foreach ($list->getObjectConfigurations() as $objectConfiguration) {
+            $configuration = $objectConfiguration->getData();
+            $className = $configuration['className'];
+            $fieldName = $configuration['fieldName'];
+
+            // Ai field and config exists: Unset value in aiFields array
+            if (\array_key_exists($className, $aiFields) &&
+                ($key = \array_search($fieldName, $aiFields[$className], true)) !== false) {
+                unset($configsToCreate[$className][$key]);
+
+                continue;
+            }
+
+            // Config should not exist: delete
+            $objectConfiguration->delete();
+        }
+
+        // Create new configs
+        foreach ($configsToCreate as $className => $fields) {
+            foreach ($fields as $fieldName) {
+                $this->createAiObjectConfiguration($className, $fieldName, 'text_create');
+                $this->createAiObjectConfiguration($className, $fieldName, 'text_optimize');
+                $this->createAiObjectConfiguration($className, $fieldName, 'text_correction');
+            }
+        }
+
+        return $this->jsonResponse(['success' => true]);
+    }
+
+    /**
+     * @Route("/editable-configuration", name="pimcore_ai_settings_editable_configuration", methods={"POST"})
+     */
+    public function editableConfigurationAction(Request $request): JsonResponse
+    {
         if ($request->get('data')) {
             Cache::clearTag('pimcore_ai_editable');
 
@@ -95,13 +199,9 @@ final class SettingsController extends UserAwareController
 
     /**
      * @Route("/object-configuration", name="pimcore_ai_settings_object_configuration", methods={"POST"})
-     *
-     *
      */
     public function objectConfigurationAction(Request $request): JsonResponse
     {
-        $this->checkPermission('pimcore_ai');
-
         if ($request->get('data')) {
             Cache::clearTag('pimcore_ai_objects');
 
@@ -151,5 +251,14 @@ final class SettingsController extends UserAwareController
         }
 
         return $this->jsonResponse(['success' => false]);
+    }
+
+    private function createAiObjectConfiguration(string $className, string $fieldName, string $type): void
+    {
+        $objectConfiguration = new AiObjectConfiguration();
+        $objectConfiguration->setClassName($className);
+        $objectConfiguration->setFieldName($fieldName);
+        $objectConfiguration->setType($type);
+        $objectConfiguration->save();
     }
 }
