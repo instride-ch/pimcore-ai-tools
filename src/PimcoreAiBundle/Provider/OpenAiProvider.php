@@ -14,6 +14,11 @@ class OpenAiProvider extends AbstractProvider implements TextProviderInterface, 
         $this->apiKey = $apiKey;
     }
 
+    public static function getName(): string
+    {
+        return 'OpenAi';
+    }
+
     public function getClient(): OpenAI\Client
     {
         return OpenAI::client($this->apiKey);

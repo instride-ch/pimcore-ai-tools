@@ -29,6 +29,11 @@ class MidjourneyProvider extends AbstractProvider implements ImageProviderInterf
         $this->authKey = $authKey;
     }
 
+    public static function getName(): string
+    {
+        return 'Midjourney';
+    }
+
     public function getClient(): Midjourney
     {
         return new Midjourney($this->channelId, $this->authKey);

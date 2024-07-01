@@ -14,6 +14,7 @@ pimcore.registerNS("pimcore.bundle.pimcore_ai.settings");
 pimcore.bundle.pimcore_ai.settings = Class.create({
 
     initialize: function () {
+        this.initializeProviderStores();
         this.getTabPanel();
     },
 
@@ -61,13 +62,6 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
     },
 
     getDefaultsEditor: function () {
-        var textProviderStore = new Ext.data.Store({
-            fields: ['value', 'name'],
-            data: [
-                {"value": "openAi", "name": "OpenAi"},
-            ],
-        });
-
         this.defaultsForm = Ext.create('Ext.form.Panel', {
             title: t("pimcore_ai_defaults_configuration"),
             url: '/admin/pimcore-ai/settings/save-defaults',
@@ -83,7 +77,7 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
                 fieldLabel: t("pimcore_ai_defaults_text_provider"),
                 name: 'textProvider',
                 xtype: 'combobox',
-                store: textProviderStore,
+                store: this.textProviderStore,
                 displayField: 'name',
                 valueField: 'value',
             },{
@@ -160,7 +154,7 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
                 'type',
                 {name: 'prompt', allowBlank: true},
                 {name: 'options', allowBlank: true},
-                {name: 'provider', allowBlank: true}
+                {name: 'provider', allowBlank: true},
             ],
             itemsPerPage,
             { storeId: 'pimcoreAiEditableStore' }
@@ -184,15 +178,28 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
 
         this.pagingtoolbar = pimcore.helpers.grid.buildDefaultPagingToolbar(this.editableStore);
 
+        var textProviderEditor = new Ext.form.ComboBox({
+            store: this.textProviderStore,
+            displayField: 'name',
+            valueField: 'value',
+            emptyText: t("pimcore_ai_provider_default"),
+        });
+
         var typesColumns = [
             {text: t("pimcore_ai_editableId"), flex: 1, sortable: true, dataIndex: 'editableId', editable: false},
             {text: t("pimcore_ai_type"), flex: 1, sortable: true, dataIndex: 'type', editable: false},
             {text: t("pimcore_ai_prompt"), flex: 3, sortable: true, dataIndex: 'prompt',
-                editor: new Ext.form.TextField({})},
+                emptyCellText: t("pimcore_ai_prompt_default"), editor: Ext.form.field.TextArea()},
             {text: t("pimcore_ai_options"), flex: 3, sortable: true, dataIndex: 'options',
-                editor: new Ext.form.TextField({})},
-            {text: t("pimcore_ai_provider"), flex: 1, sortable: true, dataIndex: 'provider',
-                emptyCellText: t("pimcore_ai_provider_default"), editor: new Ext.form.TextField({})},
+                emptyCellText: t("pimcore_ai_options_default"), editor: Ext.form.field.TextArea()},
+            {text: t("pimcore_ai_provider"), flex: 1, sortable: true, dataIndex: 'provider', editor: textProviderEditor,
+                renderer: function(value) {
+                    if (value.length !== 0) {
+                        return value.split("\\").pop();
+                    }
+                    return t("pimcore_ai_provider_default");
+                }
+            },
         ];
 
         this.editableRowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
@@ -296,7 +303,7 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
                 'type',
                 {name: 'prompt', allowBlank: true},
                 {name: 'options', allowBlank: true},
-                {name: 'provider', allowBlank: true}
+                {name: 'provider', allowBlank: true},
             ],
             itemsPerPage,
             { storeId: 'pimcoreAiObjectStore' }
@@ -320,15 +327,8 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
 
         this.pagingtoolbar = pimcore.helpers.grid.buildDefaultPagingToolbar(this.objectStore);
 
-        var providerStore = new Ext.data.Store({
-            fields: ['value', 'name'],
-            data: [
-                {"value": "", "name": t("pimcore_ai_provider_default")},
-                {"value": "openAi", "name": "OpenAi"},
-            ],
-        });
-        var providerEditor = new Ext.form.ComboBox({
-            store: providerStore,
+        var textProviderEditor = new Ext.form.ComboBox({
+            store: this.textProviderStore,
             displayField: 'name',
             valueField: 'value',
             emptyText: t("pimcore_ai_provider_default"),
@@ -343,8 +343,14 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
                 emptyCellText: t("pimcore_ai_prompt_default"), editor: Ext.form.field.TextArea()},
             {text: t("pimcore_ai_options"), flex: 3, sortable: true, dataIndex: 'options',
                 emptyCellText: t("pimcore_ai_options_default"), editor: Ext.form.field.TextArea()},
-            {text: t("pimcore_ai_provider"), flex: 1, sortable: true, dataIndex: 'provider',
-                emptyCellText: t("pimcore_ai_provider_default"), editor: providerEditor},
+            {text: t("pimcore_ai_provider"), flex: 1, sortable: true, dataIndex: 'provider', editor: textProviderEditor,
+                renderer: function(value) {
+                    if (value && value.length !== 0) {
+                        return value.split("\\").pop();
+                    }
+                    return t("pimcore_ai_provider_default");
+                }
+            },
         ];
 
         this.objectRowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
@@ -435,4 +441,38 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
             }
         })
     },
+
+    initializeProviderStores: function () {
+        this.textProviderStore = new Ext.data.Store({
+            model: Ext.define('textProviderModel', {
+                extend: 'Ext.data.Model',
+                fields: ['value', 'name'],
+            }),
+            proxy: {
+                type: 'ajax',
+                url: '/admin/pimcore-ai/settings/get-text-providers',
+                reader: {
+                    type: 'json'
+                },
+            },
+            fields: ['value', 'name'],
+            autoLoad: true,
+        });
+
+        this.imageProviderStore = new Ext.data.Store({
+            model: Ext.define('imageProviderModel', {
+                extend: 'Ext.data.Model',
+                fields: ['value', 'name'],
+            }),
+            proxy: {
+                type: 'ajax',
+                url: '/admin/pimcore-ai/settings/get-image-providers',
+                reader: {
+                    type: 'json'
+                },
+            },
+            fields: ['value', 'name'],
+            autoLoad: true,
+        });
+    }
 });

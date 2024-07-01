@@ -15,29 +15,58 @@ declare(strict_types=1);
 
 namespace Instride\Bundle\PimcoreAiBundle\Services;
 
+use Instride\Bundle\PimcoreAiBundle\Provider\ImageProviderInterface;
 use Instride\Bundle\PimcoreAiBundle\Provider\TextProviderInterface;
+use ReflectionClass;
+use ReflectionException;
 
 final class AiService
 {
-    private TextProviderInterface $defaultTextProvider;
+    private array $textProviders = [];
+    private array $imageProviders = [];
 
-    public function __construct(TextProviderInterface $defaultTextProvider)
+    /**
+     * @throws ReflectionException
+     */
+    public function setProviders(array $providerNames): void
     {
-        $this->defaultTextProvider = $defaultTextProvider;
+        foreach ($providerNames as $providerName) {
+            $provider = new ReflectionClass($providerName);
+
+            if ($provider->implementsInterface(TextProviderInterface::class)) {
+                $data = [
+                    'class' => $provider->getName(),
+                    'name' => $provider->newInstanceWithoutConstructor()->getName(),
+                ];
+                $this->textProviders[] = $data;
+            }
+
+            if ($provider->implementsInterface(ImageProviderInterface::class)) {
+                $data = [
+                    'class' => $provider->getName(),
+                    'name' => $provider->newInstanceWithoutConstructor()->getName(),
+                ];
+                $this->imageProviders[] = $data;
+            }
+        }
+    }
+
+    public function getTextProviders(): array
+    {
+        return $this->textProviders;
+    }
+
+    public function getImageProviders(): array
+    {
+        return $this->imageProviders;
     }
 
     public function getText(
+        TextProviderInterface $textProvider,
         string $prompt,
         array $options = [],
-        TextProviderInterface $customTextProvider = null
     ): string
     {
-        $textProvider = $this->defaultTextProvider;
-
-        if ($customTextProvider && $customTextProvider !== $this->defaultTextProvider) {
-            $textProvider = $customTextProvider;
-        }
-
         $options['prompt'] = $prompt;
 
         $response = $textProvider->getText($options);

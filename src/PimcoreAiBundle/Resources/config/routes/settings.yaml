@@ -33,3 +33,15 @@ pimcore_ai_settings_object_configuration:
     defaults: { _controller: Instride\Bundle\PimcoreAiBundle\Controller\Admin\SettingsController::objectConfigurationAction }
     methods:
         - POST
+
+pimcore_ai_settings_get_text_providers:
+    path: /get-text-providers
+    defaults: { _controller: Instride\Bundle\PimcoreAiBundle\Controller\Admin\SettingsController::getTextProvidersAction }
+    methods:
+        - GET
+
+pimcore_ai_settings_get_image_providers:
+    path: /get-image-providers
+    defaults: { _controller: Instride\Bundle\PimcoreAiBundle\Controller\Admin\SettingsController::getImageProvidersAction }
+    methods:
+        - GET

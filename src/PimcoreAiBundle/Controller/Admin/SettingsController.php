@@ -19,12 +19,14 @@ use Instride\Bundle\PimcoreAiBundle\Model\AiDefaultsConfiguration;
 use Instride\Bundle\PimcoreAiBundle\Model\AiEditableConfiguration;
 use Instride\Bundle\PimcoreAiBundle\Model\AiObjectConfiguration;
 use Instride\Bundle\PimcoreAiBundle\Model\DataObject\ClassDefinition\Data\AiWysiwyg;
+use Instride\Bundle\PimcoreAiBundle\Services\AiService;
 use Pimcore\Bundle\AdminBundle\Helper\QueryParams;
 use Pimcore\Cache;
 use Pimcore\Controller\Traits\JsonHelperTrait;
 use Pimcore\Controller\UserAwareController;
 use Pimcore\Extension\Bundle\Exception\AdminClassicBundleNotFoundException;
 use Pimcore\Model\DataObject\ClassDefinition;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
@@ -52,7 +54,7 @@ final class SettingsController extends UserAwareController
 
         return $this->jsonResponse([
             'success' => true,
-            'data' => $defaultsConfiguration->getData()
+            'data' => $defaultsConfiguration->getData(),
         ]);
     }
 
@@ -251,6 +253,42 @@ final class SettingsController extends UserAwareController
         }
 
         return $this->jsonResponse(['success' => false]);
+    }
+
+    /**
+     * @Route("/get-text-providers", name="pimcore_ai_settings_get_text_providers", methods={"GET"})
+     */
+    public function getTextProvidersAction(AiService $aiService): JsonResponse
+    {
+        $textProviders = $aiService->getTextProviders();
+
+        $data = [];
+        foreach ($textProviders as $textProvider) {
+            $data[] = [
+                'value' => $textProvider['class'],
+                'name' => $textProvider['name'],
+            ];
+        }
+
+        return $this->jsonResponse($data);
+    }
+
+    /**
+     * @Route("/get-image-providers", name="pimcore_ai_settings_get_image_providers", methods={"GET"})
+     */
+    public function getImageProvidersAction(AiService $aiService): JsonResponse
+    {
+        $imageProviders = $aiService->getImageProviders();
+
+        $data = [];
+        foreach ($imageProviders as $imageProvider) {
+            $data[] = [
+                'value' => $imageProvider['class'],
+                'name' => $imageProvider['name'],
+            ];
+        }
+
+        return $this->jsonResponse($data);
     }
 
     private function createAiObjectConfiguration(string $className, string $fieldName, string $type): void
