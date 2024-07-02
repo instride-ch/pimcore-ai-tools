@@ -3,7 +3,6 @@
 namespace Instride\Bundle\PimcoreAiBundle\Provider;
 
 use OpenAI;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class OpenAiProvider extends AbstractProvider implements TextProviderInterface, ImageProviderInterface
 {
@@ -24,7 +23,7 @@ class OpenAiProvider extends AbstractProvider implements TextProviderInterface, 
         return OpenAI::client($this->apiKey);
     }
 
-    public function getText(array $options): OpenAI\Responses\Chat\CreateResponse
+    public function getText(array $options): string
     {
         if (!\array_key_exists('prompt', $options)) {
             throw new \RuntimeException('No text prompt given.');
@@ -37,10 +36,12 @@ class OpenAiProvider extends AbstractProvider implements TextProviderInterface, 
             'content' => $options['prompt']
         ];
 
-        return $this->getClient()->chat()->create([
+        $response = $this->getClient()->chat()->create([
             'model' => $options['model'] ?? 'gpt-4',
             'messages' => $messages,
         ]);
+
+        return $response['choices'][0]['message']['content'];
     }
 
     public function getImage(array $options): OpenAI\Responses\Images\CreateResponse

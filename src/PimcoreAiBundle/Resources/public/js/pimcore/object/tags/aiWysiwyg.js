@@ -179,7 +179,7 @@ pimcore.object.tags.aiWysiwyg = Class.create(pimcore.object.tags.abstract, {
             menu: new Ext.menu.Menu({
                items: [
                    {
-                       text: t('pimcore_ai_button_text_create'),
+                       text: t('pimcore_ai_button_text_creation'),
                        iconCls: 'pimcore_ai_icon_ai_wysiwyg',
                        handler: this.startTextCreation.bind(this)
                    },
@@ -189,7 +189,7 @@ pimcore.object.tags.aiWysiwyg = Class.create(pimcore.object.tags.abstract, {
                        handler: this.startTextCorrection.bind(this)
                    },
                    {
-                       text: t('pimcore_ai_button_text_optimize'),
+                       text: t('pimcore_ai_button_text_optimization'),
                        iconCls: 'pimcore_ai_icon_ai_wysiwyg',
                        handler: this.startTextOptimization.bind(this)
                    }
@@ -264,24 +264,101 @@ pimcore.object.tags.aiWysiwyg = Class.create(pimcore.object.tags.abstract, {
     },
 
     startTextCreation: function() {
-        console.log('startTextCreation');
+        var loadingMask = new Ext.LoadMask(this.component, {msg: t("pimcore_ai_prompt_loading_mask_text")});
+        loadingMask.show();
+        Ext.Ajax.request({
+            url: '/admin/pimcore-ai/prompts/text-creation',
+            method: 'POST',
+            params: {
+                id: this.editableDivId,
+                text: this.getValue(),
+                class: this.object.data.general.className,
+                field: this.fieldConfig.name,
+            },
+            success: function(response){
+                var text = JSON.parse(response.responseText).result;
+                var id = JSON.parse(response.responseText).id;
+
+                Ext.Msg.confirm(
+                    t("pimcore_ai_prompt_change_confirm_title"),
+                    t("pimcore_ai_prompt_change_confirm_intro") + ":<br><strong>" + text
+                        + "</strong><br>" + t("pimcore_ai_prompt_change_confirm_message"),
+                    function(btn) {
+                        if (btn === 'yes') {
+                            var editable = document.getElementById(id);
+                            editable.innerHTML = text;
+                            editable.dispatchEvent(new Event('focus'));
+                        }
+                        loadingMask.hide();
+                    }
+                );
+            }
+        });
     },
 
     startTextCorrection: function() {
+        var loadingMask = new Ext.LoadMask(this.component, {msg:"Please wait..."});
+        loadingMask.show();
         Ext.Ajax.request({
-            url: '/admin/pimcore-ai/text-correction',
+            url: '/admin/pimcore-ai/prompts/text-correction',
             method: 'POST',
             params: {
-                text: this.data
+                id: this.editableDivId,
+                text: this.getValue(),
+                class: this.object.data.general.className,
+                field: this.fieldConfig.name,
             },
             success: function(response){
-                var text = response.responseText;
-                console.log(text);
+                var text = JSON.parse(response.responseText).result;
+                var id = JSON.parse(response.responseText).id;
+
+                Ext.Msg.confirm(
+                    t("pimcore_ai_prompt_change_confirm_title"),
+                    t("pimcore_ai_prompt_change_confirm_intro") + ":<br><strong>" + text
+                        + "</strong><br>" + t("pimcore_ai_prompt_change_confirm_message"),
+                    function(btn) {
+                        if (btn === 'yes') {
+                            var editable = document.getElementById(id);
+                            editable.innerHTML = text;
+                            editable.dispatchEvent(new Event('focus'));
+                        }
+                        loadingMask.hide();
+                    }
+                );
             }
         });
     },
 
     startTextOptimization: function() {
-        console.log('startTextOptimization');
+        var loadingMask = new Ext.LoadMask(this.component, {msg:"Please wait..."});
+        loadingMask.show();
+        Ext.Ajax.request({
+            url: '/admin/pimcore-ai/prompts/text-optimization',
+            method: 'POST',
+            params: {
+                id: this.editableDivId,
+                text: this.getValue(),
+                class: this.object.data.general.className,
+                field: this.fieldConfig.name,
+            },
+            success: function(response){
+                var text = JSON.parse(response.responseText).result;
+                var id = JSON.parse(response.responseText).id;
+
+                Ext.Msg.confirm(
+                    t("pimcore_ai_prompt_change_confirm_title"),
+                    t("pimcore_ai_prompt_change_confirm_intro") + ":<br><strong>" + text
+                        + "</strong><br>" + t("pimcore_ai_prompt_change_confirm_message"),
+                    function(btn) {
+                        if (btn === 'yes') {
+                            var editable = document.getElementById(id);
+                            editable.innerHTML = text;
+                            editable.dispatchEvent(new Event('focus'));
+                        }
+                        loadingMask.hide();
+                    }
+                );
+            }
+        });
     }
 });

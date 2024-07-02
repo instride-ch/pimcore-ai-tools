@@ -15,18 +15,18 @@ declare(strict_types=1);
 
 namespace Instride\Bundle\PimcoreAiBundle\Controller\Admin;
 
+use Instride\Bundle\PimcoreAiBundle\Locator\ProviderLocator;
 use Instride\Bundle\PimcoreAiBundle\Model\AiDefaultsConfiguration;
 use Instride\Bundle\PimcoreAiBundle\Model\AiEditableConfiguration;
 use Instride\Bundle\PimcoreAiBundle\Model\AiObjectConfiguration;
 use Instride\Bundle\PimcoreAiBundle\Model\DataObject\ClassDefinition\Data\AiWysiwyg;
-use Instride\Bundle\PimcoreAiBundle\Services\AiService;
+use Instride\Bundle\PimcoreAiBundle\Services\ConfigurationService;
 use Pimcore\Bundle\AdminBundle\Helper\QueryParams;
 use Pimcore\Cache;
 use Pimcore\Controller\Traits\JsonHelperTrait;
 use Pimcore\Controller\UserAwareController;
 use Pimcore\Extension\Bundle\Exception\AdminClassicBundleNotFoundException;
 use Pimcore\Model\DataObject\ClassDefinition;
-use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
@@ -134,8 +134,8 @@ final class SettingsController extends UserAwareController
         // Create new configs
         foreach ($configsToCreate as $className => $fields) {
             foreach ($fields as $fieldName) {
-                $this->createAiObjectConfiguration($className, $fieldName, 'text_create');
-                $this->createAiObjectConfiguration($className, $fieldName, 'text_optimize');
+                $this->createAiObjectConfiguration($className, $fieldName, 'text_creation');
+                $this->createAiObjectConfiguration($className, $fieldName, 'text_optimization');
                 $this->createAiObjectConfiguration($className, $fieldName, 'text_correction');
             }
         }
@@ -258,15 +258,15 @@ final class SettingsController extends UserAwareController
     /**
      * @Route("/get-text-providers", name="pimcore_ai_settings_get_text_providers", methods={"GET"})
      */
-    public function getTextProvidersAction(AiService $aiService): JsonResponse
+    public function getTextProvidersAction(ProviderLocator $providerLocator): JsonResponse
     {
-        $textProviders = $aiService->getTextProviders();
+        $textProviders = $providerLocator->getTextProviders();
 
         $data = [];
         foreach ($textProviders as $textProvider) {
             $data[] = [
-                'value' => $textProvider['class'],
-                'name' => $textProvider['name'],
+                'value' => $textProvider,
+                'name' => $textProvider,
             ];
         }
 
@@ -276,15 +276,15 @@ final class SettingsController extends UserAwareController
     /**
      * @Route("/get-image-providers", name="pimcore_ai_settings_get_image_providers", methods={"GET"})
      */
-    public function getImageProvidersAction(AiService $aiService): JsonResponse
+    public function getImageProvidersAction(ProviderLocator $providerLocator): JsonResponse
     {
-        $imageProviders = $aiService->getImageProviders();
+        $imageProviders = $providerLocator->getImageProviders();
 
         $data = [];
         foreach ($imageProviders as $imageProvider) {
             $data[] = [
-                'value' => $imageProvider['class'],
-                'name' => $imageProvider['name'],
+                'value' => $imageProvider,
+                'name' => $imageProvider,
             ];
         }
 

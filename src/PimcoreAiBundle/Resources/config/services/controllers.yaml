@@ -1,5 +1,0 @@
-services:
-
-    # Settings Controller
-    Instride\Bundle\PimcoreAiBundle\Controller\Admin\SettingsController:
-        tags: ['controller.service_arguments']

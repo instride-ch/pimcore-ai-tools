@@ -17,24 +17,15 @@ declare(strict_types=1);
 
 namespace Instride\Bundle\PimcoreAiBundle;
 
-use Instride\Bundle\PimcoreAiBundle\DependencyInjection\Compiler\ProvidersPass;
 use Pimcore\Extension\Bundle\AbstractPimcoreBundle;
 use Pimcore\Extension\Bundle\PimcoreBundleAdminClassicInterface;
 use Pimcore\Extension\Bundle\Traits\BundleAdminClassicTrait;
 use Pimcore\Extension\Bundle\Traits\PackageVersionTrait;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class PimcoreAiBundle extends AbstractPimcoreBundle implements PimcoreBundleAdminClassicInterface
 {
     use BundleAdminClassicTrait;
     use PackageVersionTrait;
-
-    public function build(ContainerBuilder $container): void
-    {
-        parent::build($container);
-
-        $container->addCompilerPass(new ProvidersPass());
-    }
 
     /**
      * {@inheritDoc}

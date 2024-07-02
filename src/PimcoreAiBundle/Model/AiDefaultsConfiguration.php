@@ -30,17 +30,17 @@ class AiDefaultsConfiguration extends AbstractModel
 
     private ?string $textProvider = null;
 
-    private ?string $textModuleCreate = null;
+    private ?string $moduleTextCreation = null;
 
-    private ?string $textModuleOptimize = null;
+    private ?string $moduleTextOptimization = null;
 
-    private ?string $textModuleCorrect = null;
+    private ?string $moduleTextCorrection = null;
 
-    private ?string $textObjectCreate = null;
+    private ?string $objectTextCreation = null;
 
-    private ?string $textObjectOptimize = null;
+    private ?string $objectTextOptimization = null;
 
-    private ?string $textObjectCorrect = null;
+    private ?string $objectTextCorrection = null;
 
 
     public static function getById(int $id): ?self
@@ -87,64 +87,64 @@ class AiDefaultsConfiguration extends AbstractModel
         $this->textProvider = $textProvider;
     }
 
-    public function getTextModuleCreate(): ?string
+    public function getModuleTextCreation(): ?string
     {
-        return $this->textModuleCreate;
+        return $this->moduleTextCreation;
     }
 
-    public function setTextModuleCreate(?string $textModuleCreate): void
+    public function setModuleTextCreation(?string $moduleTextCreation): void
     {
-        $this->textModuleCreate = $textModuleCreate;
+        $this->moduleTextCreation = $moduleTextCreation;
     }
 
-    public function getTextModuleOptimize(): ?string
+    public function getModuleTextOptimization(): ?string
     {
-        return $this->textModuleOptimize;
+        return $this->moduleTextOptimization;
     }
 
-    public function setTextModuleOptimize(?string $textModuleOptimize): void
+    public function setModuleTextOptimization(?string $moduleTextOptimization): void
     {
-        $this->textModuleOptimize = $textModuleOptimize;
+        $this->moduleTextOptimization = $moduleTextOptimization;
     }
 
-    public function getTextModuleCorrect(): ?string
+    public function getModuleTextCorrection(): ?string
     {
-        return $this->textModuleCorrect;
+        return $this->moduleTextCorrection;
     }
 
-    public function setTextModuleCorrect(?string $textModuleCorrect): void
+    public function setModuleTextCorrection(?string $moduleTextCorrection): void
     {
-        $this->textModuleCorrect = $textModuleCorrect;
+        $this->moduleTextCorrection = $moduleTextCorrection;
     }
 
-    public function getTextObjectCreate(): ?string
+    public function getObjectTextCreation(): ?string
     {
-        return $this->textObjectCreate;
+        return $this->objectTextCreation;
     }
 
-    public function setTextObjectCreate(?string $textObjectCreate): void
+    public function setObjectTextCreation(?string $objectTextCreation): void
     {
-        $this->textObjectCreate = $textObjectCreate;
+        $this->objectTextCreation = $objectTextCreation;
     }
 
-    public function getTextObjectOptimize(): ?string
+    public function getObjectTextOptimization(): ?string
     {
-        return $this->textObjectOptimize;
+        return $this->objectTextOptimization;
     }
 
-    public function setTextObjectOptimize(?string $textObjectOptimize): void
+    public function setObjectTextOptimization(?string $objectTextOptimization): void
     {
-        $this->textObjectOptimize = $textObjectOptimize;
+        $this->objectTextOptimization = $objectTextOptimization;
     }
 
-    public function getTextObjectCorrect(): ?string
+    public function getObjectTextCorrection(): ?string
     {
-        return $this->textObjectCorrect;
+        return $this->objectTextCorrection;
     }
 
-    public function setTextObjectCorrect(?string $textObjectCorrect): void
+    public function setObjectTextCorrection(?string $objectTextCorrection): void
     {
-        $this->textObjectCorrect = $textObjectCorrect;
+        $this->objectTextCorrection = $objectTextCorrection;
     }
 
     public function getData(): array
@@ -152,12 +152,12 @@ class AiDefaultsConfiguration extends AbstractModel
         return [
             'id' => $this->getId(),
             'textProvider' => $this->getTextProvider(),
-            'textModuleCreate' => $this->getTextModuleCreate(),
-            'textModuleOptimize' => $this->getTextModuleOptimize(),
-            'textModuleCorrect' => $this->getTextModuleCorrect(),
-            'textObjectCreate' => $this->getTextObjectCreate(),
-            'textObjectOptimize' => $this->getTextObjectOptimize(),
-            'textObjectCorrect' => $this->getTextObjectCorrect(),
+            'moduleTextCreation' => $this->getModuleTextCreation(),
+            'moduleTextOptimization' => $this->getModuleTextOptimization(),
+            'moduleTextCorrection' => $this->getModuleTextCorrection(),
+            'objectTextCreation' => $this->getObjectTextCreation(),
+            'objectTextOptimization' => $this->getObjectTextOptimization(),
+            'objectTextCorrection' => $this->getObjectTextCorrection(),
         ];
     }
 }

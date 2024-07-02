@@ -15,45 +15,92 @@ declare(strict_types=1);
 
 namespace Instride\Bundle\PimcoreAiBundle\Controller\Admin;
 
-use Instride\Bundle\PimcoreAiBundle\Services\AiService;
+use Instride\Bundle\PimcoreAiBundle\Services\PromptService;
+use Instride\Bundle\PimcoreAiBundle\Services\ConfigurationService;
 use Pimcore\Controller\Controller;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 final class PromptController extends Controller
 {
-    private AiService $aiService;
+    private PromptService $promptService;
+    private ConfigurationService $configurationService;
 
-    public function __construct(AiService $aiService)
+    public function __construct(PromptService $promptService, ConfigurationService $configurationService)
     {
-        $this->aiService = $aiService;
+        $this->promptService = $promptService;
+        $this->configurationService = $configurationService;
     }
 
     public function textCreationAction(Request $request): JsonResponse
     {
+        $text = $request->get('text');
+        $className = $request->get('class');
+        $fieldName = $request->get('field');
+
+        $configuration = $this->configurationService->getObjectConfiguration(
+            $className,
+            $fieldName,
+            'text_creation'
+        );
+
+        $prompt = $configuration['prompt'] . $text;
+        // ToDo: Get options from configuration and set it as third parameter (needs to be an array)
+        $result = $this->promptService->getText($configuration['provider'], $prompt);
+
         return $this->json([
-            'success' => true
+            'result' => $result,
+            'id' => $request->get('id'),
         ]);
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function textCorrectionAction(Request $request): JsonResponse
     {
         $text = $request->get('text');
+        $className = $request->get('class');
+        $fieldName = $request->get('field');
 
-        // ToDo: Get prompt and options from config
-        $prompt = "Bitte korrigere folgenden Text und behalte alle html tags bei: " . $text;
-        $result = $this->aiService->getText($prompt);
+        $configuration = $this->configurationService->getObjectConfiguration(
+            $className,
+            $fieldName,
+            'text_correction'
+        );
+
+        $prompt = $configuration['prompt'] . $text;
+        // ToDo: Get options from configuration and set it as third parameter (needs to be an array)
+        $result = $this->promptService->getText($configuration['provider'], $prompt);
 
         return $this->json([
-            'result' => $result
+            'result' => $result,
+            'id' => $request->get('id'),
         ]);
     }
 
     public function textOptimizationAction(Request $request): JsonResponse
     {
+        $text = $request->get('text');
+        $className = $request->get('class');
+        $fieldName = $request->get('field');
+
+        $configuration = $this->configurationService->getObjectConfiguration(
+            $className,
+            $fieldName,
+            'text_optimization'
+        );
+
+        $prompt = $configuration['prompt'] . $text;
+        // ToDo: Get options from configuration and set it as third parameter (needs to be an array)
+        $result = $this->promptService->getText($configuration['provider'], $prompt);
+
         return $this->json([
-            'success' => true,
-            'test' => 'hallo'
+            'result' => $result,
+            'id' => $request->get('id'),
         ]);
     }
 }

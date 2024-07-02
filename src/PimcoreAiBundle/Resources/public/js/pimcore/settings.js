@@ -86,17 +86,17 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
                 layout: 'anchor',
                 defaults: {anchor: '100%', labelWidth: 150},
                 items: [{
-                    fieldLabel: t("pimcore_ai_defaults_text_module_create"),
+                    fieldLabel: t("pimcore_ai_defaults_module_text_creation"),
                     xtype: 'textareafield',
-                    name: 'textModuleCreate',
+                    name: 'moduleTextCreation',
                 },{
-                    fieldLabel: t("pimcore_ai_defaults_text_module_optimize"),
+                    fieldLabel: t("pimcore_ai_defaults_module_text_optimization"),
                     xtype: 'textareafield',
-                    name: 'textModuleOptimize',
+                    name: 'moduleTextOptimization',
                 },{
-                    fieldLabel: t("pimcore_ai_defaults_text_module_correct"),
+                    fieldLabel: t("pimcore_ai_defaults_module_text_correction"),
                     xtype: 'textareafield',
-                    name: 'textModuleCorrect',
+                    name: 'moduleTextCorrection',
                 }],
             },{
                 xtype: 'fieldset',
@@ -104,17 +104,17 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
                 layout: 'anchor',
                 defaults: {anchor: '100%', labelWidth: 150},
                 items: [{
-                    fieldLabel: t("pimcore_ai_defaults_text_object_create"),
+                    fieldLabel: t("pimcore_ai_defaults_object_text_creation"),
                     xtype: 'textareafield',
-                    name: 'textObjectCreate',
+                    name: 'objectTextCreation',
                 },{
-                    fieldLabel: t("pimcore_ai_defaults_text_object_optimize"),
+                    fieldLabel: t("pimcore_ai_defaults_object_text_optimization"),
                     xtype: 'textareafield',
-                    name: 'textObjectOptimize',
+                    name: 'objectTextOptimization',
                 },{
-                    fieldLabel: t("pimcore_ai_defaults_text_object_correct"),
+                    fieldLabel: t("pimcore_ai_defaults_object_text_correction"),
                     xtype: 'textareafield',
-                    name: 'textObjectCorrect',
+                    name: 'objectTextCorrection',
                 }],
             }],
             buttons: [{
@@ -126,10 +126,14 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
                     if (form.isValid()) {
                         form.submit({
                             success: function(form, action) {
-                               Ext.Msg.alert(t("pimcore_ai_defaults_form_success"), t("pimcore_ai_defaults_form_success_text"));
+                               Ext.Msg.alert(
+                                 t("pimcore_ai_defaults_form_success"),
+                                 t("pimcore_ai_defaults_form_success_text"));
                             },
                             failure: function(form, action) {
-                                Ext.Msg.alert(t("pimcore_ai_defaults_form_failure"), t("pimcore_ai_defaults_form_failure_text"));
+                                Ext.Msg.alert(
+                                  t("pimcore_ai_defaults_form_failure"),
+                                  t("pimcore_ai_defaults_form_failure_text"));
                             }
                         });
                     }

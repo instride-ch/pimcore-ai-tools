@@ -2,19 +2,6 @@ pimcore_ai_settings:
     resource: 'settings.yaml'
     prefix: 'settings'
 
-
-pimcore_ai_text_create:
-    path: /text-create
-    defaults: { _controller: Instride\Bundle\PimcoreAiBundle\Controller\Admin\PromptController::textCreationAction }
-    methods: [GET, POST]
-
-pimcore_ai_text_correction:
-    path: /text-correct
-    defaults: { _controller: Instride\Bundle\PimcoreAiBundle\Controller\Admin\PromptController::textCorrectionAction }
-    methods:
-        - POST
-
-pimcore_ai_text_optimization:
-    path: /text-optimize
-    defaults: { _controller: Instride\Bundle\PimcoreAiBundle\Controller\Admin\PromptController::textOptimizationAction }
-    methods: [GET, POST]
+pimcore_ai_prompts:
+    resource: 'prompts.yaml'
+    prefix: 'prompts'
