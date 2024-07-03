@@ -1,4 +1,0 @@
-doctrine_migrations:
-    connection: ~
-    migrations_paths:
-        'Instride\Bundle\PimcoreAiBundle\Migrations': '@PimcoreAiBundle/Migrations'

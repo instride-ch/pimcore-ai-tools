@@ -1,7 +1,0 @@
-pimcore_ai_settings:
-    resource: 'settings.yaml'
-    prefix: 'settings'
-
-pimcore_ai_prompts:
-    resource: 'prompts.yaml'
-    prefix: 'prompts'
