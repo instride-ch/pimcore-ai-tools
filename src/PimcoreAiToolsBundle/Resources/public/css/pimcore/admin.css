@@ -1,0 +1,6 @@
+.pimcore_ai_tools_button_menu_container {
+    position: absolute;
+    right: 4px;
+    top: 4px;
+    z-index: 3;
+}

@@ -1,5 +1,5 @@
 {
-  "name": "instride/pimcore-ai-bundle",
+  "name": "instride/pimcore-ai-tools",
   "type": "pimcore-bundle",
   "license": "GPL-3.0-or-later",
   "description": "AI Bundle for Pimcore",
@@ -7,7 +7,7 @@
     "pimcore",
     "pimcore-bundle"
   ],
-  "homepage": "https://github.com/instride/PimcoreAiBundle",
+  "homepage": "https://github.com/instride-ch/pimcore-ai-tools",
   "minimum-stability": "dev",
   "authors": [
     {
@@ -30,13 +30,13 @@
   },
   "autoload": {
     "psr-4": {
-      "Instride\\Bundle\\PimcoreAiBundle\\": "src/PimcoreAiBundle/"
+      "Instride\\Bundle\\PimcoreAiToolsBundle\\": "src/PimcoreAiToolsBundle/"
     }
   },
   "extra": {
     "pimcore": {
       "bundles": [
-        "Instride\\Bundle\\PimcoreAiBundle\\PimcoreAiBundle"
+        "Instride\\Bundle\\PimcoreAiToolsBundle\\PimcoreAiToolsBundle"
       ]
     },
     "branch-alias": {

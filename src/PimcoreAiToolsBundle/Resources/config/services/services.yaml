@@ -1,0 +1,13 @@
+services:
+
+    # Configuration Service
+    Instride\Bundle\PimcoreAiToolsBundle\Services\ConfigurationService:
+        tags:
+            - { name: pimcore_ai_tools.services.configuration }
+        arguments:
+          [ '@Instride\Bundle\PimcoreAiToolsBundle\Locator\ProviderLocator' ]
+
+    # Prompt Service
+    Instride\Bundle\PimcoreAiToolsBundle\Services\PromptService:
+        tags:
+            - { name: pimcore_ai_tools.services.ai }

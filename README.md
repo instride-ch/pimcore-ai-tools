@@ -1,13 +1,13 @@
-![Pimcore AI Bundle](docs/images/github_banner.png "Pimcore AI Bundle")
+![Pimcore AI-Tools Bundle](docs/images/github_banner.png "Pimcore AI-Tools")
 
 [![Software License](https://img.shields.io/badge/license-GPLv3-brightgreen.svg?style=flat-square)](LICENSE.md)
 
-This bundle provides nothing
+This bundle provides AI tools for pimcore
 
 ## Features
-- new Pimcore object data type "AiWysiwyg???"
-- new Symfony form field type "AiTextWizard???"
-- new Document editable "AiTextWizard???"
+- new Pimcore object data type "AiWysiwyg"
+- new Document editable "AiWysiwyg"
+- new Symfony form field type "AiWysiwyg"
 - list of all used data/field types and editables and possibility to configure prompt and AI provider 
 
 ## License

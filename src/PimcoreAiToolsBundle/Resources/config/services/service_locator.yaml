@@ -1,0 +1,15 @@
+services:
+
+    # Provider Locator
+    Instride\Bundle\PimcoreAiToolsBundle\Locator\ProviderLocator:
+        arguments:
+            $locator: '@pimcore_ai_tools.provider_locator'
+        tags: ['controller.service_arguments']
+
+    pimcore_ai_tools.provider_locator:
+        class: Symfony\Component\DependencyInjection\ServiceLocator
+        arguments:
+            -
+                OpenAi: '@pimcore_ai_tools.provider.open_ai'
+                Midjourney: '@pimcore_ai_tools.provider.midjourney'
+        tags: ['container.service_locator']

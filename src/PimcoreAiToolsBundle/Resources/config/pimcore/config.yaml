@@ -1,0 +1,13 @@
+imports:
+    - { resource: "@PimcoreAiToolsBundle/Resources/config/packages/doctrine_migrations.yaml" }
+
+pimcore:
+    documents:
+        editables:
+            map:
+                ai_wysiwyg: Instride\Bundle\PimcoreAiToolsBundle\Model\Document\Editable\AiWysiwyg
+    objects:
+        class_definitions:
+            data:
+                map:
+                  aiWysiwyg: Instride\Bundle\PimcoreAiToolsBundle\Model\DataObject\ClassDefinition\Data\AiWysiwyg

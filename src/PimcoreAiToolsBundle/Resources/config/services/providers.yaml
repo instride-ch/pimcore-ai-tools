@@ -1,0 +1,18 @@
+services:
+
+    # Open AI Provider
+    pimcore_ai_tools.provider.open_ai:
+        class: Instride\Bundle\PimcoreAiToolsBundle\Provider\OpenAiProvider
+        tags:
+            - { name: 'pimcore_ai_tools.provider', key: 'open_ai' }
+        arguments:
+            - '%pimcore_ai_tools.providers.open_ai.api_key%'
+
+    # Midjourney Provider
+    pimcore_ai_tools.provider.midjourney:
+        class: Instride\Bundle\PimcoreAiToolsBundle\Provider\MidjourneyProvider
+        tags:
+            - { name: 'pimcore_ai_tools.provider', key: 'midjourney' }
+        arguments:
+            - '%pimcore_ai_tools.providers.midjourney.channel_id%'
+            - '%pimcore_ai_tools.providers.midjourney.auth_key%'
