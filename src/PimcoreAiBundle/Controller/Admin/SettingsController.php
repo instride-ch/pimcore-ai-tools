@@ -20,7 +20,6 @@ use Instride\Bundle\PimcoreAiBundle\Model\AiDefaultsConfiguration;
 use Instride\Bundle\PimcoreAiBundle\Model\AiEditableConfiguration;
 use Instride\Bundle\PimcoreAiBundle\Model\AiObjectConfiguration;
 use Instride\Bundle\PimcoreAiBundle\Model\DataObject\ClassDefinition\Data\AiWysiwyg;
-use Instride\Bundle\PimcoreAiBundle\Services\ConfigurationService;
 use Pimcore\Bundle\AdminBundle\Helper\QueryParams;
 use Pimcore\Cache;
 use Pimcore\Controller\Traits\JsonHelperTrait;
@@ -83,6 +82,40 @@ final class SettingsController extends UserAwareController
      */
     public function syncEditablesAction(): JsonResponse
     {
+        $editables = \json_decode($this->getParameter('pimcore_ai.editables'), true, 512, JSON_THROW_ON_ERROR);
+
+        // Get all AiEditableConfiguration from database
+        $list = new AiEditableConfiguration\Listing();
+        $list->load();
+
+        // Check if config already exists
+        $configsToCreate = $editables;
+        foreach ($list->getEditableConfigurations() as $editableConfiguration) {
+            $configuration = $editableConfiguration->getData();
+            $areabrick = $configuration['areabrick'];
+            $editableId = $configuration['editable'];
+
+            // Ai field and config exists: Unset value in aiFields array
+            if (\array_key_exists($areabrick, $editables) &&
+                ($key = \array_search($editableId, $editables[$areabrick], true)) !== false) {
+                unset($configsToCreate[$areabrick][$key]);
+
+                continue;
+            }
+
+            // Config should not exist: delete
+            $editableConfiguration->delete();
+        }
+
+        // Create new configs
+        foreach ($configsToCreate as $areabrick => $editables) {
+            foreach ($editables as $editableId) {
+                $this->createAiEditableConfiguration($areabrick, $editableId, 'text_creation');
+                $this->createAiEditableConfiguration($areabrick, $editableId, 'text_optimization');
+                $this->createAiEditableConfiguration($areabrick, $editableId, 'text_correction');
+            }
+        }
+
         return $this->jsonResponse(['success' => true]);
     }
 
@@ -183,7 +216,7 @@ final class SettingsController extends UserAwareController
             }
 
             if ($request->get('filter')) {
-                $list->setCondition('`editableId` LIKE ' . $list->quote('%'.$request->get('filter').'%'));
+                $list->setCondition('`areabrick` LIKE ' . $list->quote('%'.$request->get('filter').'%'));
             }
 
             $list->load();
@@ -289,6 +322,15 @@ final class SettingsController extends UserAwareController
         }
 
         return $this->jsonResponse($data);
+    }
+
+    private function createAiEditableConfiguration(string $areabrick, string $editable, string $type): void
+    {
+        $objectConfiguration = new AiEditableConfiguration();
+        $objectConfiguration->setAreabrick($areabrick);
+        $objectConfiguration->setEditable($editable);
+        $objectConfiguration->setType($type);
+        $objectConfiguration->save();
     }
 
     private function createAiObjectConfiguration(string $className, string $fieldName, string $type): void

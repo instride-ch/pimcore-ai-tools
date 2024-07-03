@@ -30,11 +30,11 @@ class AiDefaultsConfiguration extends AbstractModel
 
     private ?string $textProvider = null;
 
-    private ?string $moduleTextCreation = null;
+    private ?string $editableTextCreation = null;
 
-    private ?string $moduleTextOptimization = null;
+    private ?string $editableTextOptimization = null;
 
-    private ?string $moduleTextCorrection = null;
+    private ?string $editableTextCorrection = null;
 
     private ?string $objectTextCreation = null;
 
@@ -87,34 +87,34 @@ class AiDefaultsConfiguration extends AbstractModel
         $this->textProvider = $textProvider;
     }
 
-    public function getModuleTextCreation(): ?string
+    public function getEditableTextCreation(): ?string
     {
-        return $this->moduleTextCreation;
+        return $this->editableTextCreation;
     }
 
-    public function setModuleTextCreation(?string $moduleTextCreation): void
+    public function setEditableTextCreation(?string $editableTextCreation): void
     {
-        $this->moduleTextCreation = $moduleTextCreation;
+        $this->editableTextCreation = $editableTextCreation;
     }
 
-    public function getModuleTextOptimization(): ?string
+    public function getEditableTextOptimization(): ?string
     {
-        return $this->moduleTextOptimization;
+        return $this->editableTextOptimization;
     }
 
-    public function setModuleTextOptimization(?string $moduleTextOptimization): void
+    public function setEditableTextOptimization(?string $editableTextOptimization): void
     {
-        $this->moduleTextOptimization = $moduleTextOptimization;
+        $this->editableTextOptimization = $editableTextOptimization;
     }
 
-    public function getModuleTextCorrection(): ?string
+    public function getEditableTextCorrection(): ?string
     {
-        return $this->moduleTextCorrection;
+        return $this->editableTextCorrection;
     }
 
-    public function setModuleTextCorrection(?string $moduleTextCorrection): void
+    public function setEditableTextCorrection(?string $editableTextCorrection): void
     {
-        $this->moduleTextCorrection = $moduleTextCorrection;
+        $this->editableTextCorrection = $editableTextCorrection;
     }
 
     public function getObjectTextCreation(): ?string
@@ -152,9 +152,9 @@ class AiDefaultsConfiguration extends AbstractModel
         return [
             'id' => $this->getId(),
             'textProvider' => $this->getTextProvider(),
-            'moduleTextCreation' => $this->getModuleTextCreation(),
-            'moduleTextOptimization' => $this->getModuleTextOptimization(),
-            'moduleTextCorrection' => $this->getModuleTextCorrection(),
+            'editableTextCreation' => $this->getEditableTextCreation(),
+            'editableTextOptimization' => $this->getEditableTextOptimization(),
+            'editableTextCorrection' => $this->getEditableTextCorrection(),
             'objectTextCreation' => $this->getObjectTextCreation(),
             'objectTextOptimization' => $this->getObjectTextOptimization(),
             'objectTextCorrection' => $this->getObjectTextCorrection(),

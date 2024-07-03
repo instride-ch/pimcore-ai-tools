@@ -18,6 +18,9 @@ namespace Instride\Bundle\PimcoreAiBundle\Services;
 use Instride\Bundle\PimcoreAiBundle\Locator\ProviderLocator;
 use Instride\Bundle\PimcoreAiBundle\Model\AiDefaultsConfiguration;
 use Instride\Bundle\PimcoreAiBundle\Model\AiObjectConfiguration;
+use Instride\Bundle\PimcoreAiBundle\Model\AiEditableConfiguration;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 final class ConfigurationService
 {
@@ -37,7 +40,37 @@ final class ConfigurationService
         $list->load();
 
         $configuration = $list->getData()[0]->getData();
-        $key = 'object' . implode('', array_map('ucfirst', explode('_', $type)));
+        $key = 'object' . \implode('', \array_map('ucfirst', \explode('_', $type)));
+
+        if (empty($configuration['provider'])) {
+            $configuration['provider'] = $this->defaultConfiguration['textProvider'];
+        }
+
+        if (empty($configuration['prompt'])) {
+            $configuration['prompt'] = $this->defaultConfiguration[$key];
+        }
+
+        $provider = $this->providerLocator->getProvider($configuration['provider']);
+
+        return [
+            'provider' => $provider,
+            'prompt' => $configuration['prompt'],
+            'options' => $configuration['options'],
+        ];
+    }
+
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function getEditableConfiguration(string $areabrick, string $editable, string $type): array
+    {
+        $list = new AiEditableConfiguration\Listing();
+        $list->setCondition('`areabrick` LIKE "%' . $areabrick . '%" AND `editable` LIKE "%' . $editable . '%" AND `type` = "' . $type . '"');
+        $list->load();
+
+        $configuration = $list->getData()[0]->getData();
+        $key = 'editable' . \implode('', \array_map('ucfirst', \explode('_', $type)));
 
         if (empty($configuration['provider'])) {
             $configuration['provider'] = $this->defaultConfiguration['textProvider'];

@@ -9,20 +9,21 @@ pimcore_ai_defaults_form_failure_text: Your changes could not be saved
 pimcore_ai_defaults_form_submit: Save
 pimcore_ai_defaults_form_success: Success
 pimcore_ai_defaults_form_success_text: Your changes have been saved
-pimcore_ai_defaults_module_text_correction: Correct text
-pimcore_ai_defaults_module_text_creation: Create text
-pimcore_ai_defaults_module_text_optimization: Optimize text
+pimcore_ai_defaults_editable_text_correction: Correct text
+pimcore_ai_defaults_editable_text_creation: Create text
+pimcore_ai_defaults_editable_text_optimization: Optimize text
 pimcore_ai_defaults_object_text_correction: Correct text
 pimcore_ai_defaults_object_text_creation: Create text
 pimcore_ai_defaults_object_text_optimization: Optimize text
-pimcore_ai_defaults_text_modules: Modules
+pimcore_ai_defaults_text_editables: Areabricks
 pimcore_ai_defaults_text_objects: Data objects
 pimcore_ai_defaults_text_provider: Text provider
-pimcore_ai_editableId: Module name
-pimcore_ai_editable_configuration: modules
+pimcore_ai_areabrick: Areabrick name
+pimcore_ai_editable: Editable ID
+pimcore_ai_editable_configuration: Areabricks
 pimcore_ai_fieldName: Field
 pimcore_ai_navigation: AI Settings
-pimcore_ai_object_configuration: data objects
+pimcore_ai_object_configuration: Data objects
 pimcore_ai_options: Options
 pimcore_ai_options_default: Default
 pimcore_ai_prompt: Prompt
@@ -33,7 +34,7 @@ pimcore_ai_prompt_default: Default
 pimcore_ai_prompt_loading_mask_text: Please wait
 pimcore_ai_provider: Provider
 pimcore_ai_provider_default: Default
-pimcore_ai_sync_editables: Synchronize modules
+pimcore_ai_sync_editables: Synchronize areabricks
 pimcore_ai_sync_objects: Synchronize data objects
 pimcore_ai_type: Type
 pimcore_ai_type_text_correction: Correct Text

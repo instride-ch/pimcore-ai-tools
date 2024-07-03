@@ -37,13 +37,25 @@ class PimcoreAiExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         // Register parameters
-        foreach ($config as $configName => $aiConfig) {
-            foreach ($aiConfig as $subConfigName => $confValue) {
-                $container->setParameter(
-                    \sprintf('pimcore_ai.%s.%s', $configName, $subConfigName),
-                    $confValue
-                );
+        $editables = [];
+        foreach ($config as $configName => $subConfig) {
+            if ($configName === 'providers') {
+                foreach ($subConfig as $subConfigName => $subSubConfig) {
+                    foreach ($subSubConfig as $subSubConfigName => $confValue) {
+                        $container->setParameter(
+                            \sprintf('pimcore_ai.%s.%s.%s', $configName, $subConfigName, $subSubConfigName),
+                            $confValue
+                        );
+                    }
+                }
+            }
+            if ($configName === 'editables') {
+                foreach ($subConfig as $subConfigName => $subSubConfig) {
+                    $editables[$subConfigName] = $subSubConfig;
+                }
             }
         }
+
+        $container->setParameter('pimcore_ai.editables', \json_encode($editables, JSON_THROW_ON_ERROR));
     }
 }

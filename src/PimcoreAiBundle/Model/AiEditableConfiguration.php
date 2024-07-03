@@ -28,7 +28,9 @@ class AiEditableConfiguration extends AbstractModel
 {
     private ?int $id = null;
 
-    private ?string $editableId = null;
+    private ?string $areabrick = null;
+
+    private ?string $editable = null;
 
     private ?string $type = null;
 
@@ -73,14 +75,24 @@ class AiEditableConfiguration extends AbstractModel
         return $this;
     }
 
-    public function getEditableId(): ?string
+    public function getAreabrick(): ?string
     {
-        return $this->editableId;
+        return $this->areabrick;
     }
 
-    public function setEditableId(string $editableId): void
+    public function setAreabrick(string $areabrick): void
     {
-        $this->editableId = $editableId;
+        $this->areabrick = $areabrick;
+    }
+
+    public function getEditable(): ?string
+    {
+        return $this->editable;
+    }
+
+    public function setEditable(string $editable): void
+    {
+        $this->editable = $editable;
     }
 
     public function getType(): ?string
@@ -127,7 +139,8 @@ class AiEditableConfiguration extends AbstractModel
     {
         return [
             'id' => $this->getId(),
-            'editableId' => $this->getEditableId(),
+            'areabrick' => $this->getAreabrick(),
+            'editable' => $this->getEditable(),
             'type' => $this->getType(),
             'prompt' => $this->getPrompt(),
             'options' => $this->getOptions(),

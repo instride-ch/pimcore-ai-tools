@@ -18,8 +18,6 @@ namespace Instride\Bundle\PimcoreAiBundle\Controller\Admin;
 use Instride\Bundle\PimcoreAiBundle\Services\PromptService;
 use Instride\Bundle\PimcoreAiBundle\Services\ConfigurationService;
 use Pimcore\Controller\Controller;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -34,17 +32,14 @@ final class PromptController extends Controller
         $this->configurationService = $configurationService;
     }
 
-    public function textCreationAction(Request $request): JsonResponse
+    public function textAction(Request $request): JsonResponse
     {
+        $id = $request->get('id');
         $text = $request->get('text');
-        $className = $request->get('class');
-        $fieldName = $request->get('field');
+        $type = $request->get('type');
+        $promptType = $request->get('promptType');
 
-        $configuration = $this->configurationService->getObjectConfiguration(
-            $className,
-            $fieldName,
-            'text_creation'
-        );
+        $configuration = $this->getConfiguration($type, $promptType, $request);
 
         $prompt = $configuration['prompt'] . $text;
         // ToDo: Get options from configuration and set it as third parameter (needs to be an array)
@@ -52,55 +47,34 @@ final class PromptController extends Controller
 
         return $this->json([
             'result' => $result,
-            'id' => $request->get('id'),
+            'id' => $id,
         ]);
     }
 
-    /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    public function textCorrectionAction(Request $request): JsonResponse
+    private function getConfiguration(string $type, string $promptType, Request $request): array
     {
-        $text = $request->get('text');
-        $className = $request->get('class');
-        $fieldName = $request->get('field');
+        if ($type === 'object') {
+            $className = $request->get('class');
+            $fieldName = $request->get('field');
 
-        $configuration = $this->configurationService->getObjectConfiguration(
-            $className,
-            $fieldName,
-            'text_correction'
-        );
+            return $this->configurationService->getObjectConfiguration(
+                $className,
+                $fieldName,
+                $promptType,
+            );
+        }
 
-        $prompt = $configuration['prompt'] . $text;
-        // ToDo: Get options from configuration and set it as third parameter (needs to be an array)
-        $result = $this->promptService->getText($configuration['provider'], $prompt);
+        if ($type === 'editable') {
+            $areabrick = $request->get('areabrick');
+            $editable = $request->get('editable');
 
-        return $this->json([
-            'result' => $result,
-            'id' => $request->get('id'),
-        ]);
-    }
+            return $this->configurationService->getEditableConfiguration(
+                $areabrick,
+                $editable,
+                $promptType,
+            );
+        }
 
-    public function textOptimizationAction(Request $request): JsonResponse
-    {
-        $text = $request->get('text');
-        $className = $request->get('class');
-        $fieldName = $request->get('field');
-
-        $configuration = $this->configurationService->getObjectConfiguration(
-            $className,
-            $fieldName,
-            'text_optimization'
-        );
-
-        $prompt = $configuration['prompt'] . $text;
-        // ToDo: Get options from configuration and set it as third parameter (needs to be an array)
-        $result = $this->promptService->getText($configuration['provider'], $prompt);
-
-        return $this->json([
-            'result' => $result,
-            'id' => $request->get('id'),
-        ]);
+        return [];
     }
 }

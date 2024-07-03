@@ -47,7 +47,7 @@ class PimcoreAiBundle extends AbstractPimcoreBundle implements PimcoreBundleAdmi
     {
         return [
           '/bundles/pimcoreai/css/pimcore/admin.css',
-          '/bundles/pimcoreai/css/pimcore/icons.css'
+          '/bundles/pimcoreai/css/pimcore/icons.css',
         ];
     }
 
@@ -57,7 +57,22 @@ class PimcoreAiBundle extends AbstractPimcoreBundle implements PimcoreBundleAdmi
           '/bundles/pimcoreai/js/pimcore/startup.js',
           '/bundles/pimcoreai/js/pimcore/settings.js',
           '/bundles/pimcoreai/js/pimcore/object/classes/data/aiWysiwyg.js',
-          '/bundles/pimcoreai/js/pimcore/object/tags/aiWysiwyg.js'
+          '/bundles/pimcoreai/js/pimcore/object/tags/aiWysiwyg.js',
+        ];
+    }
+
+    public function getEditmodeCssPaths(): array
+    {
+        return [
+          '/bundles/pimcoreai/css/pimcore/editmode.css',
+          '/bundles/pimcoreai/css/pimcore/icons.css',
+        ];
+    }
+
+    public function getEditmodeJsPaths(): array
+    {
+        return [
+          '/bundles/pimcoreai/js/pimcore/document/editables/aiWysiwyg.js',
         ];
     }
 }

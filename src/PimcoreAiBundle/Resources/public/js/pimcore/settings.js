@@ -82,21 +82,21 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
                 valueField: 'value',
             },{
                 xtype: 'fieldset',
-                title: t("pimcore_ai_defaults_text_modules"),
+                title: t("pimcore_ai_defaults_text_editables"),
                 layout: 'anchor',
                 defaults: {anchor: '100%', labelWidth: 150},
                 items: [{
-                    fieldLabel: t("pimcore_ai_defaults_module_text_creation"),
+                    fieldLabel: t("pimcore_ai_defaults_editable_text_creation"),
                     xtype: 'textareafield',
-                    name: 'moduleTextCreation',
+                    name: 'editableTextCreation',
                 },{
-                    fieldLabel: t("pimcore_ai_defaults_module_text_optimization"),
+                    fieldLabel: t("pimcore_ai_defaults_editable_text_optimization"),
                     xtype: 'textareafield',
-                    name: 'moduleTextOptimization',
+                    name: 'editableTextOptimization',
                 },{
-                    fieldLabel: t("pimcore_ai_defaults_module_text_correction"),
+                    fieldLabel: t("pimcore_ai_defaults_editable_text_correction"),
                     xtype: 'textareafield',
-                    name: 'moduleTextCorrection',
+                    name: 'editableTextCorrection',
                 }],
             },{
                 xtype: 'fieldset',
@@ -154,7 +154,8 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
             '/admin/pimcore-ai/settings/editable-configuration',
             [
                 'id',
-                'editableId',
+                'areabrick',
+                'editable',
                 'type',
                 {name: 'prompt', allowBlank: true},
                 {name: 'options', allowBlank: true},
@@ -190,15 +191,17 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
         });
 
         var typesColumns = [
-            {text: t("pimcore_ai_editableId"), flex: 1, sortable: true, dataIndex: 'editableId', editable: false},
-            {text: t("pimcore_ai_type"), flex: 1, sortable: true, dataIndex: 'type', editable: false},
+            {text: t("pimcore_ai_areabrick"), flex: 1, sortable: true, dataIndex: 'areabrick', editable: false},
+            {text: t("pimcore_ai_editable"), flex: 1, sortable: true, dataIndex: 'editable', editable: false},
+            {text: t("pimcore_ai_type"), flex: 1, sortable: true, dataIndex: 'type', editable: false,
+                renderer: (value) => {return t(`pimcore_ai_type_${value}`)}},
             {text: t("pimcore_ai_prompt"), flex: 3, sortable: true, dataIndex: 'prompt',
                 emptyCellText: t("pimcore_ai_prompt_default"), editor: Ext.form.field.TextArea()},
             {text: t("pimcore_ai_options"), flex: 3, sortable: true, dataIndex: 'options',
                 emptyCellText: t("pimcore_ai_options_default"), editor: Ext.form.field.TextArea()},
             {text: t("pimcore_ai_provider"), flex: 1, sortable: true, dataIndex: 'provider', editor: textProviderEditor,
                 renderer: function(value) {
-                    if (value.length !== 0) {
+                    if (value && value.length !== 0) {
                         return value.split("\\").pop();
                     }
                     return t("pimcore_ai_provider_default");
@@ -290,7 +293,7 @@ pimcore.bundle.pimcore_ai.settings = Class.create({
             url: '/admin/pimcore-ai/settings/sync-editables',
             method: 'POST',
             success: function(){
-                this.editableStore.sync();
+                Ext.getStore('pimcoreAiEditableStore').reload();
             }
         })
     },

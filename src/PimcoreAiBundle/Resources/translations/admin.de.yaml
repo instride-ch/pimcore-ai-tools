@@ -10,16 +10,17 @@ pimcore_ai_defaults_form_failure_text: Deine Änderungen konnten nicht gespeich
 pimcore_ai_defaults_form_submit: Speichern
 pimcore_ai_defaults_form_success: Erfolgreich
 pimcore_ai_defaults_form_success_text: Deine Änderungen wurden gespeichert.
-pimcore_ai_defaults_module_text_correction: Text korrigieren
-pimcore_ai_defaults_module_text_creation: Text erstellen
-pimcore_ai_defaults_module_text_optimization: Text optimieren
+pimcore_ai_defaults_editable_text_correction: Text korrigieren
+pimcore_ai_defaults_editable_text_creation: Text erstellen
+pimcore_ai_defaults_editable_text_optimization: Text optimieren
 pimcore_ai_defaults_object_text_correction: Text korrigieren
 pimcore_ai_defaults_object_text_creation: Text erstellen
 pimcore_ai_defaults_object_text_optimization: Text optimieren
-pimcore_ai_defaults_text_modules: Module
+pimcore_ai_defaults_text_editables: Module
 pimcore_ai_defaults_text_objects: Datenobjekte
 pimcore_ai_defaults_text_provider: Text-Provider
-pimcore_ai_editableId: Modul-Name
+pimcore_ai_areabrick: Modul-Name
+pimcore_ai_editable: ID
 pimcore_ai_editable_configuration: Module
 pimcore_ai_fieldName: Feld
 pimcore_ai_navigation: KI Konfiguration

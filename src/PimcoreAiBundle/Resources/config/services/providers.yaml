@@ -6,7 +6,7 @@ services:
         tags:
             - { name: 'pimcore_ai.provider', key: 'open_ai' }
         arguments:
-            - '%pimcore_ai.open_ai.api_key%'
+            - '%pimcore_ai.providers.open_ai.api_key%'
 
     # Midjourney Provider
     pimcore_ai.provider.midjourney:
@@ -14,5 +14,5 @@ services:
         tags:
             - { name: 'pimcore_ai.provider', key: 'midjourney' }
         arguments:
-            - '%pimcore_ai.midjourney.channel_id%'
-            - '%pimcore_ai.midjourney.auth_key%'
+            - '%pimcore_ai.providers.midjourney.channel_id%'
+            - '%pimcore_ai.providers.midjourney.auth_key%'

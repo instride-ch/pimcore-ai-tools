@@ -1,0 +1,11 @@
+.pimcore_editable_ai_wysiwyg {
+    position: relative;
+    margin-top: 50px;
+}
+
+.pimcore_ai_button_menu_container {
+    position: absolute;
+    right: -7px;
+    top: -42px;
+    z-index: 3;
+}

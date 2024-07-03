@@ -1,17 +1,5 @@
-pimcore_ai_text_create:
-    path: /text-creation
-    defaults: { _controller: Instride\Bundle\PimcoreAiBundle\Controller\Admin\PromptController::textCreationAction }
-    methods:
-        - POST
-
-pimcore_ai_text_correction:
-    path: /text-correction
-    defaults: { _controller: Instride\Bundle\PimcoreAiBundle\Controller\Admin\PromptController::textCorrectionAction }
-    methods:
-        - POST
-
-pimcore_ai_text_optimization:
-    path: /text-optimization
-    defaults: { _controller: Instride\Bundle\PimcoreAiBundle\Controller\Admin\PromptController::textOptimizationAction }
+pimcore_ai_prompt_text:
+    path: /text
+    defaults: { _controller: Instride\Bundle\PimcoreAiBundle\Controller\Admin\PromptController::textAction }
     methods:
         - POST

@@ -13,7 +13,7 @@ pimcore.registerNS("pimcore.object.tags.aiWysiwyg");
 /**
  * @private
  */
-pimcore.object.tags.aiWysiwyg = Class.create(pimcore.object.tags.abstract, {
+pimcore.object.tags.aiWysiwyg = Class.create(pimcore.object.tags.wysiwyg, {
 
     type: "aiWysiwyg",
 
@@ -25,31 +25,6 @@ pimcore.object.tags.aiWysiwyg = Class.create(pimcore.object.tags.abstract, {
         this.fieldConfig = fieldConfig;
         this.editableDivId = "object_ai_wysiwyg_" + uniqid();
         this.dirty = false;
-    },
-
-    getGridColumnConfig: function (field) {
-        var renderer = function (key, value, metaData, record) {
-            this.applyPermissionStyle(key, value, metaData, record);
-
-            try {
-                if (record.data.inheritedFields && record.data.inheritedFields[key] && record.data.inheritedFields[key].inherited == true) {
-                    metaData.tdCls += " grid_value_inherited";
-                }
-            } catch (e) {
-                console.log(e);
-            }
-            return value;
-
-        }.bind(this, field.key);
-
-        return {
-            text: t(field.label), sortable: true, dataIndex: field.key, renderer: renderer,
-            getEditor: this.getWindowCellEditor.bind(this, field)
-        };
-    },
-
-    getGridColumnFilter: function (field) {
-        return {type: 'string', dataIndex: field.key};
     },
 
     getLayout: function () {
@@ -83,33 +58,6 @@ pimcore.object.tags.aiWysiwyg = Class.create(pimcore.object.tags.abstract, {
         }
 
         this.component = new Ext.Panel(pConf);
-    },
-
-    getLayoutShow: function () {
-        this.getLayout();
-        this.component.on("afterrender", function() {
-            Ext.get(this.editableDivId).dom.setAttribute("contenteditable", "false");
-        }.bind(this));
-        this.component.disable();
-        return this.component;
-    },
-
-    getLayoutEdit: function () {
-        this.getLayout();
-        this.component.on("afterlayout", this.startWysiwygEditor.bind(this));
-
-        if(this.ddWysiwyg) {
-            this.component.on("beforedestroy", function () {
-                const beforeDestroyWysiwyg = new CustomEvent(pimcore.events.beforeDestroyWysiwyg, {
-                    detail: {
-                        context: "object",
-                    },
-                });
-                document.dispatchEvent(beforeDestroyWysiwyg);
-            }.bind(this));
-        }
-
-        return this.component;
     },
 
     startWysiwygEditor: function () {
@@ -173,24 +121,24 @@ pimcore.object.tags.aiWysiwyg = Class.create(pimcore.object.tags.abstract, {
         // Add AI button
         Ext.create('Ext.button.Split', {
             text: t('pimcore_ai_button'),
-            iconCls: 'pimcore_ai_icon_ai_wysiwyg',
+            iconCls: 'pimcore_ai_icon_ai_wysiwyg_white',
             renderTo: Ext.get(this.editableDivId).parent().parent().parent().parent(),
             cls: 'pimcore_ai_button_menu_container',
             menu: new Ext.menu.Menu({
                items: [
                    {
                        text: t('pimcore_ai_button_text_creation'),
-                       iconCls: 'pimcore_ai_icon_ai_wysiwyg',
+                       iconCls: 'pimcore_ai_icon_ai_wysiwyg_white',
                        handler: this.startTextCreation.bind(this)
                    },
                    {
                        text: t('pimcore_ai_button_text_correction'),
-                       iconCls: 'pimcore_ai_icon_ai_wysiwyg',
+                       iconCls: 'pimcore_ai_icon_ai_wysiwyg_white',
                        handler: this.startTextCorrection.bind(this)
                    },
                    {
                        text: t('pimcore_ai_button_text_optimization'),
-                       iconCls: 'pimcore_ai_icon_ai_wysiwyg',
+                       iconCls: 'pimcore_ai_icon_ai_wysiwyg_white',
                        handler: this.startTextOptimization.bind(this)
                    }
                ]
@@ -198,82 +146,19 @@ pimcore.object.tags.aiWysiwyg = Class.create(pimcore.object.tags.abstract, {
         });
     },
 
-    onNodeDrop: function (target, dd, e, data) {
-        if (!pimcore.helpers.dragAndDropValidateSingleItem(data) || !this.dndAllowed(data.records[0].data) || this.inherited) {
-            return false;
-        }
-
-        const onDropWysiwyg = new CustomEvent(pimcore.events.onDropWysiwyg, {
-            detail: {
-                target: target,
-                dd: dd,
-                e: e,
-                data: data,
-                context: "object",
-            },
-        });
-
-        document.dispatchEvent(onDropWysiwyg);
-    },
-
-    dndAllowed: function(data) {
-
-        if (data.elementType == "document" && (data.type=="page"
-            || data.type=="hardlink" || data.type=="link")){
-            return true;
-        } else if (data.elementType=="asset" && data.type != "folder"){
-            return true;
-        } else if (data.elementType=="object" && data.type != "folder"){
-            return true;
-        }
-
-        return false;
-    },
-
-    getValue: function () {
-        return this.data;
-    },
-
-    setValue: function (value) {
-        this.dirty = true;
-        this.data = value;
-    },
-
-    getName: function () {
-        return this.fieldConfig.name;
-    },
-
-    isDirty: function() {
-        if(!this.isRendered()) {
-            return false;
-        }
-
-        return this.dirty;
-    },
-
-    getWindowCellEditor: function (field, record) {
-        return new pimcore.element.helpers.gridCellEditor({
-                fieldInfo: field,
-                elementType: "object"
-            }
-        );
-    },
-
-    getCellEditValue: function () {
-        return this.getValue();
-    },
-
     startTextCreation: function() {
         var loadingMask = new Ext.LoadMask(this.component, {msg: t("pimcore_ai_prompt_loading_mask_text")});
         loadingMask.show();
         Ext.Ajax.request({
-            url: '/admin/pimcore-ai/prompts/text-creation',
+            url: '/admin/pimcore-ai/prompts/text',
             method: 'POST',
             params: {
                 id: this.editableDivId,
                 text: this.getValue(),
                 class: this.object.data.general.className,
                 field: this.fieldConfig.name,
+                type: 'object',
+                promptType: 'text_creation',
             },
             success: function(response){
                 var text = JSON.parse(response.responseText).result;
@@ -281,8 +166,8 @@ pimcore.object.tags.aiWysiwyg = Class.create(pimcore.object.tags.abstract, {
 
                 Ext.Msg.confirm(
                     t("pimcore_ai_prompt_change_confirm_title"),
-                    t("pimcore_ai_prompt_change_confirm_intro") + ":<br><strong>" + text
-                        + "</strong><br>" + t("pimcore_ai_prompt_change_confirm_message"),
+                    t("pimcore_ai_prompt_change_confirm_intro") + ":<br><br><strong>" + text
+                        + "</strong><br><br>" + t("pimcore_ai_prompt_change_confirm_message"),
                     function(btn) {
                         if (btn === 'yes') {
                             var editable = document.getElementById(id);
@@ -297,16 +182,18 @@ pimcore.object.tags.aiWysiwyg = Class.create(pimcore.object.tags.abstract, {
     },
 
     startTextCorrection: function() {
-        var loadingMask = new Ext.LoadMask(this.component, {msg:"Please wait..."});
+        var loadingMask = new Ext.LoadMask(this.component, {msg: t("pimcore_ai_prompt_loading_mask_text")});
         loadingMask.show();
         Ext.Ajax.request({
-            url: '/admin/pimcore-ai/prompts/text-correction',
+            url: '/admin/pimcore-ai/prompts/text',
             method: 'POST',
             params: {
                 id: this.editableDivId,
                 text: this.getValue(),
                 class: this.object.data.general.className,
                 field: this.fieldConfig.name,
+                type: 'object',
+                promptType: 'text_correction',
             },
             success: function(response){
                 var text = JSON.parse(response.responseText).result;
@@ -330,16 +217,18 @@ pimcore.object.tags.aiWysiwyg = Class.create(pimcore.object.tags.abstract, {
     },
 
     startTextOptimization: function() {
-        var loadingMask = new Ext.LoadMask(this.component, {msg:"Please wait..."});
+        var loadingMask = new Ext.LoadMask(this.component, {msg: t("pimcore_ai_prompt_loading_mask_text")});
         loadingMask.show();
         Ext.Ajax.request({
-            url: '/admin/pimcore-ai/prompts/text-optimization',
+            url: '/admin/pimcore-ai/prompts/text',
             method: 'POST',
             params: {
                 id: this.editableDivId,
                 text: this.getValue(),
                 class: this.object.data.general.className,
                 field: this.fieldConfig.name,
+                type: 'object',
+                promptType: 'text_optimization',
             },
             success: function(response){
                 var text = JSON.parse(response.responseText).result;
