@@ -6,7 +6,7 @@ use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
-class Configuration implements ConfigurationInterface
+final class Configuration implements ConfigurationInterface
 {
     public function getConfigTreeBuilder(): TreeBuilder
     {
@@ -15,6 +15,7 @@ class Configuration implements ConfigurationInterface
 
         $this->addProvidersSection($rootNode);
         $this->addEditableSection($rootNode);
+        $this->addFrontendSection($rootNode);
 
         return $treeBuilder;
     }
@@ -50,9 +51,19 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('editables')
                     ->useAttributeAsKey('name')
                     ->arrayPrototype()
-                        ->scalarPrototype()
-                        ->end()
+                        ->scalarPrototype()->end()
                     ->end()
+                ->end()
+            ->end()
+        ;
+    }
+
+    private function addFrontendSection(ArrayNodeDefinition $node): void
+    {
+        $node
+            ->children()
+                ->arrayNode('frontend')
+                    ->scalarPrototype()->end()
                 ->end()
             ->end()
         ;

@@ -21,7 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
-class PimcoreAiToolsExtension extends Extension
+final class PimcoreAiToolsExtension extends Extension
 {
     /**
      * {@inheritdoc}
@@ -38,12 +38,13 @@ class PimcoreAiToolsExtension extends Extension
 
         // Register parameters
         $editables = [];
+        $frontend = [];
         foreach ($config as $configName => $subConfig) {
             if ($configName === 'providers') {
                 foreach ($subConfig as $subConfigName => $subSubConfig) {
                     foreach ($subSubConfig as $subSubConfigName => $confValue) {
                         $container->setParameter(
-                            \sprintf('pimcore_ai.%s.%s.%s', $configName, $subConfigName, $subSubConfigName),
+                            \sprintf('pimcore_ai_tools.%s.%s.%s', $configName, $subConfigName, $subSubConfigName),
                             $confValue
                         );
                     }
@@ -54,8 +55,12 @@ class PimcoreAiToolsExtension extends Extension
                     $editables[$subConfigName] = $subSubConfig;
                 }
             }
+            if ($configName === 'frontend') {
+                $frontend = $subConfig;
+            }
         }
 
-        $container->setParameter('pimcore_ai.editables', \json_encode($editables, JSON_THROW_ON_ERROR));
+        $container->setParameter('pimcore_ai_tools.editables', \json_encode($editables, JSON_THROW_ON_ERROR));
+        $container->setParameter('pimcore_ai_tools.frontend', \json_encode($frontend, JSON_THROW_ON_ERROR));
     }
 }

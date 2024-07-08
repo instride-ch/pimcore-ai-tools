@@ -1,0 +1,10 @@
+pimcore_ai_tools.form.button.label: KI-Helfer
+pimcore_ai_tools.form.loading: Bitte warten...
+pimcore_ai_tools.form.text_correct: Korrigiere Text
+pimcore_ai_tools.form.text_create: Erstelle Text
+pimcore_ai_tools.form.text_optimize: Optimiere Text
+pimcore_ai_tools.modal.accept: Übernehmen
+pimcore_ai_tools.modal.cancel: Abbrechen
+pimcore_ai_tools.modal.message_confirm: Möchten Sie diesen Vorschlag übernehmen?
+pimcore_ai_tools.modal.intro: Vorschlag
+pimcore_ai_tools.modal.title: Änderung übernehmen?

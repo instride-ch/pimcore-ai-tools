@@ -1,46 +1,58 @@
-pimcore_ai_tools_settings_load_defaults:
+pimcore_ai_tools_admin_settings_load_defaults:
     path: /load-defaults
     defaults: { _controller: Instride\Bundle\PimcoreAiToolsBundle\Controller\Admin\SettingsController::loadDefaultsAction }
     methods:
         - POST
 
-pimcore_ai_tools_settings_save_defaults:
+pimcore_ai_tools_admin_settings_save_defaults:
     path: /save-defaults
     defaults: { _controller: Instride\Bundle\PimcoreAiToolsBundle\Controller\Admin\SettingsController::saveDefaultsAction }
     methods:
         - POST
 
-pimcore_ai_tools_settings_sync_editables:
+pimcore_ai_tools_admin_settings_sync_editables:
     path: /sync-editables
     defaults: { _controller: Instride\Bundle\PimcoreAiToolsBundle\Controller\Admin\SettingsController::syncEditablesAction }
     methods:
         - POST
 
-pimcore_ai_tools_settings_sync_objects:
+pimcore_ai_tools_admin_settings_sync_objects:
     path: /sync-objects
     defaults: { _controller: Instride\Bundle\PimcoreAiToolsBundle\Controller\Admin\SettingsController::syncObjectsAction }
     methods:
         - POST
 
-pimcore_ai_tools_settings_editable_configuration:
+pimcore_ai_tools_admin_settings_sync_frontend:
+    path: /sync-frontend
+    defaults: { _controller: Instride\Bundle\PimcoreAiToolsBundle\Controller\Admin\SettingsController::syncFrontendAction }
+    methods:
+        - POST
+
+pimcore_ai_tools_admin_settings_editable_configuration:
     path: /editable-configuration
     defaults: { _controller: Instride\Bundle\PimcoreAiToolsBundle\Controller\Admin\SettingsController::editableConfigurationAction }
     methods:
         - POST
 
-pimcore_ai_tools_settings_object_configuration:
+pimcore_ai_tools_admin_settings_object_configuration:
     path: /object-configuration
     defaults: { _controller: Instride\Bundle\PimcoreAiToolsBundle\Controller\Admin\SettingsController::objectConfigurationAction }
     methods:
         - POST
 
-pimcore_ai_tools_settings_get_text_providers:
+pimcore_ai_tools_admin_settings_frontend_configuration:
+    path: /frontend-configuration
+    defaults: { _controller: Instride\Bundle\PimcoreAiToolsBundle\Controller\Admin\SettingsController::frontendConfigurationAction }
+    methods:
+        - POST
+
+pimcore_ai_tools_admin_settings_get_text_providers:
     path: /get-text-providers
     defaults: { _controller: Instride\Bundle\PimcoreAiToolsBundle\Controller\Admin\SettingsController::getTextProvidersAction }
     methods:
         - GET
 
-pimcore_ai_tools_settings_get_image_providers:
+pimcore_ai_tools_admin_settings_get_image_providers:
     path: /get-image-providers
     defaults: { _controller: Instride\Bundle\PimcoreAiToolsBundle\Controller\Admin\SettingsController::getImageProvidersAction }
     methods:

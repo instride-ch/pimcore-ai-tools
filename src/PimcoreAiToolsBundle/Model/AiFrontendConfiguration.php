@@ -15,7 +15,7 @@ declare(strict_types=1);
 
 namespace Instride\Bundle\PimcoreAiToolsBundle\Model;
 
-use Instride\Bundle\PimcoreAiToolsBundle\Model\AiEditableConfiguration\Dao;
+use Instride\Bundle\PimcoreAiToolsBundle\Model\AiFrontendConfiguration\Dao;
 use Pimcore\Model\AbstractModel;
 use Pimcore\Model\Exception\NotFoundException;
 
@@ -24,13 +24,11 @@ use Pimcore\Model\Exception\NotFoundException;
  * @method void delete()
  * @method void save()
  */
-final class AiEditableConfiguration extends AbstractModel
+final class AiFrontendConfiguration extends AbstractModel
 {
     private ?int $id = null;
 
-    private ?string $areabrick = null;
-
-    private ?string $editable = null;
+    private ?string $name = null;
 
     private ?string $type = null;
 
@@ -75,24 +73,14 @@ final class AiEditableConfiguration extends AbstractModel
         return $this;
     }
 
-    public function getAreabrick(): ?string
+    public function getName(): ?string
     {
-        return $this->areabrick;
+        return $this->name;
     }
 
-    public function setAreabrick(string $areabrick): void
+    public function setName(string $name): void
     {
-        $this->areabrick = $areabrick;
-    }
-
-    public function getEditable(): ?string
-    {
-        return $this->editable;
-    }
-
-    public function setEditable(string $editable): void
-    {
-        $this->editable = $editable;
+        $this->name = $name;
     }
 
     public function getType(): ?string
@@ -139,8 +127,7 @@ final class AiEditableConfiguration extends AbstractModel
     {
         return [
             'id' => $this->getId(),
-            'areabrick' => $this->getAreabrick(),
-            'editable' => $this->getEditable(),
+            'name' => $this->getName(),
             'type' => $this->getType(),
             'prompt' => $this->getPrompt(),
             'options' => $this->getOptions(),

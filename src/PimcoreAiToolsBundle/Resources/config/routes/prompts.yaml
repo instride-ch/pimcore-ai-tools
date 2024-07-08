@@ -1,5 +1,5 @@
 pimcore_ai_tools_prompt_text:
     path: /text
-    defaults: { _controller: Instride\Bundle\PimcoreAiToolsBundle\Controller\Admin\PromptController::textAction }
+    defaults: { _controller: Instride\Bundle\PimcoreAiToolsBundle\Controller\PromptController::textAction }
     methods:
         - POST

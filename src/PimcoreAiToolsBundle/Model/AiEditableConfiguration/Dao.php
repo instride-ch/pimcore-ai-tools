@@ -22,7 +22,7 @@ use Pimcore\Model\Exception\NotFoundException;
 /**
  * @property AiEditableConfiguration $model
  */
-class Dao extends AbstractDao
+final class Dao extends AbstractDao
 {
     protected string $tableName = 'pimcore_ai_tools_editable_configuration';
 

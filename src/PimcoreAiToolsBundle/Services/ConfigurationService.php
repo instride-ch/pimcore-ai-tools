@@ -17,8 +17,9 @@ namespace Instride\Bundle\PimcoreAiToolsBundle\Services;
 
 use Instride\Bundle\PimcoreAiToolsBundle\Locator\ProviderLocator;
 use Instride\Bundle\PimcoreAiToolsBundle\Model\AiDefaultsConfiguration;
-use Instride\Bundle\PimcoreAiToolsBundle\Model\AiObjectConfiguration;
 use Instride\Bundle\PimcoreAiToolsBundle\Model\AiEditableConfiguration;
+use Instride\Bundle\PimcoreAiToolsBundle\Model\AiFrontendConfiguration;
+use Instride\Bundle\PimcoreAiToolsBundle\Model\AiObjectConfiguration;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -71,6 +72,36 @@ final class ConfigurationService
 
         $configuration = $list->getData()[0]->getData();
         $key = 'editable' . \implode('', \array_map('ucfirst', \explode('_', $type)));
+
+        if (empty($configuration['provider'])) {
+            $configuration['provider'] = $this->defaultConfiguration['textProvider'];
+        }
+
+        if (empty($configuration['prompt'])) {
+            $configuration['prompt'] = $this->defaultConfiguration[$key];
+        }
+
+        $provider = $this->providerLocator->getProvider($configuration['provider']);
+
+        return [
+            'provider' => $provider,
+            'prompt' => $configuration['prompt'],
+            'options' => $configuration['options'],
+        ];
+    }
+
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function getFrontendConfiguration(string $name, string $type): array
+    {
+        $list = new AiFrontendConfiguration\Listing();
+        $list->setCondition('`name` LIKE "%' . $name . '%" AND `type` = "' . $type . '"');
+        $list->load();
+
+        $configuration = $list->getData()[0]->getData();
+        $key = 'frontend' . \implode('', \array_map('ucfirst', \explode('_', $type)));
 
         if (empty($configuration['provider'])) {
             $configuration['provider'] = $this->defaultConfiguration['textProvider'];

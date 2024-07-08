@@ -1,0 +1,79 @@
+{% block ai_textarea_buttons -%}
+    <div class="uk-button-group">
+        <div class="uk-inline">
+            <button class="uk-button uk-button-default" type="button">
+                <span class="uk-margin-small-right">{{ 'pimcore_ai_tools.form.button.label'|trans }}</span>
+                <span data-uk-icon="triangle-down"></span>
+            </button>
+            <div data-uk-dropdown="mode: click; target: !.uk-button-group;">
+                <ul class="uk-nav uk-dropdown-nav">
+                    <li>
+                        <a data-uk-ai-helper="
+                            promptType: text_creation;
+                            textareaId: #{{ id }};
+                            aiToolsId: {{ ai_tools_id }};
+                            spinnerId: #pimcore-ai-tools-spinner;"
+                           href="#">
+                            {{ 'pimcore_ai_tools.form.text_create'|trans }}
+                        </a>
+                    </li>
+                    <li>
+                        <a data-uk-ai-helper="
+                            promptType: text_optimization;
+                            textareaId: #{{ id }};
+                            aiToolsId: {{ ai_tools_id }};
+                            spinnerId: #pimcore-ai-tools-spinner;"
+                           href="#">
+                            {{ 'pimcore_ai_tools.form.text_optimize'|trans }}
+                        </a>
+                    </li>
+                    <li>
+                        <a data-uk-ai-helper="
+                            promptType: text_correction;
+                            textareaId: #{{ id }};
+                            aiToolsId: {{ ai_tools_id }};
+                            spinnerId: #pimcore-ai-tools-spinner;"
+                           href="#">
+                            {{ 'pimcore_ai_tools.form.text_correct'|trans }}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+{%- endblock %}
+
+{% block ai_textarea_widget -%}
+    {% set attr = attr|merge({'class': (attr.class|default('') ~ ' uk-textarea')|trim}) %}
+    <div class="pimcore-ai-tools-container uk-position-relative uk-margin-bottom">
+        <div class="pimcore-ai-tools-textarea-container">
+            <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
+            <div class="pimcore-ai-tools-button-container uk-margin-small-top">
+                {{ block('ai_textarea_buttons') }}
+            </div>
+        </div>
+
+        <div id="pimcore-ai-tools-spinner"
+             class="pimcore-ai-tools-spinner uk-hidden uk-position-absolute uk-position-cover uk-flex uk-flex-middle
+             uk-flex-center uk-flex-column">
+            <div data-uk-spinner></div>
+            <span class="uk-margin-small-top">{{ 'pimcore_ai_tools.form.loading'|trans }}</span>
+        </div>
+    </div>
+    <div id="{{ id }}-modal" data-uk-modal>
+        <div class="uk-modal-dialog uk-modal-body">
+            <h2 class="uk-modal-title">{{ 'pimcore_ai_tools.modal.title'|trans }}</h2>
+            <p>{{ 'pimcore_ai_tools.modal.intro'|trans }}<p>
+            <p id="{{ id }}-text" class="uk-text-bold"></p>
+            <p>{{ 'pimcore_ai_tools.modal.message_confirm'|trans }}</p>
+            <p class="uk-text-right">
+                <button class="uk-button uk-button-default uk-modal-close uk-margin-small-right" type="button">
+                    {{ 'pimcore_ai_tools.modal.cancel'|trans }}
+                </button>
+                <button id="{{ id }}-accept-button" class="uk-button uk-button-primary" type="button">
+                    {{ 'pimcore_ai_tools.modal.accept'|trans }}
+                </button>
+            </p>
+        </div>
+    </div>
+{%- endblock ai_textarea_widget %}

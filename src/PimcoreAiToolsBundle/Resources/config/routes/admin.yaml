@@ -1,0 +1,3 @@
+pimcore_ai_tools_admin_settings:
+    resource: 'admin/settings.yaml'
+    prefix: 'settings'

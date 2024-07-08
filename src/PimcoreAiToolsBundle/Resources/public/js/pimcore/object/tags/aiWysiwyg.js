@@ -150,7 +150,7 @@ pimcore.object.tags.aiWysiwyg = Class.create(pimcore.object.tags.wysiwyg, {
         var loadingMask = new Ext.LoadMask(this.component, {msg: t("pimcore_ai_tools_prompt_loading_mask_text")});
         loadingMask.show();
         Ext.Ajax.request({
-            url: '/admin/pimcore-ai-tools/prompts/text',
+            url: '/pimcore-ai-tools/prompts/text',
             method: 'POST',
             params: {
                 id: this.editableDivId,
@@ -185,7 +185,7 @@ pimcore.object.tags.aiWysiwyg = Class.create(pimcore.object.tags.wysiwyg, {
         var loadingMask = new Ext.LoadMask(this.component, {msg: t("pimcore_ai_tools_prompt_loading_mask_text")});
         loadingMask.show();
         Ext.Ajax.request({
-            url: '/admin/pimcore-ai-tools/prompts/text',
+            url: '/pimcore-ai-tools/prompts/text',
             method: 'POST',
             params: {
                 id: this.editableDivId,
@@ -220,7 +220,7 @@ pimcore.object.tags.aiWysiwyg = Class.create(pimcore.object.tags.wysiwyg, {
         var loadingMask = new Ext.LoadMask(this.component, {msg: t("pimcore_ai_tools_prompt_loading_mask_text")});
         loadingMask.show();
         Ext.Ajax.request({
-            url: '/admin/pimcore-ai-tools/prompts/text',
+            url: '/pimcore-ai-tools/prompts/text',
             method: 'POST',
             params: {
                 id: this.editableDivId,

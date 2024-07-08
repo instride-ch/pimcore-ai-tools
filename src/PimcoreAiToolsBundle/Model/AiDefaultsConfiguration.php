@@ -24,7 +24,7 @@ use Pimcore\Model\Exception\NotFoundException;
  * @method void delete()
  * @method void save()
  */
-class AiDefaultsConfiguration extends AbstractModel
+final class AiDefaultsConfiguration extends AbstractModel
 {
     private ?int $id = null;
 
@@ -41,6 +41,12 @@ class AiDefaultsConfiguration extends AbstractModel
     private ?string $objectTextOptimization = null;
 
     private ?string $objectTextCorrection = null;
+
+    private ?string $frontendTextCreation = null;
+
+    private ?string $frontendTextOptimization = null;
+
+    private ?string $frontendTextCorrection = null;
 
 
     public static function getById(int $id): ?self
@@ -147,6 +153,36 @@ class AiDefaultsConfiguration extends AbstractModel
         $this->objectTextCorrection = $objectTextCorrection;
     }
 
+    public function getFrontendTextCreation(): ?string
+    {
+        return $this->frontendTextCreation;
+    }
+
+    public function setFrontendTextCreation(?string $frontendTextCreation): void
+    {
+        $this->frontendTextCreation = $frontendTextCreation;
+    }
+
+    public function getFrontendTextOptimization(): ?string
+    {
+        return $this->frontendTextOptimization;
+    }
+
+    public function setFrontendTextOptimization(?string $frontendTextOptimization): void
+    {
+        $this->frontendTextOptimization = $frontendTextOptimization;
+    }
+
+    public function getFrontendTextCorrection(): ?string
+    {
+        return $this->frontendTextCorrection;
+    }
+
+    public function setFrontendTextCorrection(?string $frontendTextCorrection): void
+    {
+        $this->frontendTextCorrection = $frontendTextCorrection;
+    }
+
     public function getData(): array
     {
         return [
@@ -158,6 +194,9 @@ class AiDefaultsConfiguration extends AbstractModel
             'objectTextCreation' => $this->getObjectTextCreation(),
             'objectTextOptimization' => $this->getObjectTextOptimization(),
             'objectTextCorrection' => $this->getObjectTextCorrection(),
+            'frontendTextCreation' => $this->getFrontendTextCreation(),
+            'frontendTextOptimization' => $this->getFrontendTextOptimization(),
+            'frontendTextCorrection' => $this->getFrontendTextCorrection(),
         ];
     }
 }

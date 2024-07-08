@@ -24,7 +24,7 @@ use Pimcore\Model\Exception\NotFoundException;
  * @method void delete()
  * @method void save()
  */
-class AiObjectConfiguration extends AbstractModel
+final class AiObjectConfiguration extends AbstractModel
 {
     private ?int $id = null;
 

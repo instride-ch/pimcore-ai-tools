@@ -1,3 +1,7 @@
 pimcore_ai_tools:
     resource: '../routes/pimcore_ai_tools.yaml'
+    prefix: '/pimcore-ai-tools'
+
+pimcore_ai_tools_admin:
+    resource: '../routes/admin.yaml'
     prefix: '/admin/pimcore-ai-tools'

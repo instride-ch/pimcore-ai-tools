@@ -73,7 +73,7 @@ pimcore.document.editables.ai_wysiwyg = Class.create(pimcore.document.editables.
         pimcore.helpers.loadingShow();
 
         Ext.Ajax.request({
-            url: '/admin/pimcore-ai-tools/prompts/text',
+            url: '/pimcore-ai-tools/prompts/text',
             method: 'POST',
             params: {
                 id: this.id,
@@ -108,7 +108,7 @@ pimcore.document.editables.ai_wysiwyg = Class.create(pimcore.document.editables.
         pimcore.helpers.loadingShow();
 
         Ext.Ajax.request({
-            url: '/admin/pimcore-ai-tools/prompts/text',
+            url: '/pimcore-ai-tools/prompts/text',
             method: 'POST',
             params: {
                 id: this.id,
@@ -143,7 +143,7 @@ pimcore.document.editables.ai_wysiwyg = Class.create(pimcore.document.editables.
         pimcore.helpers.loadingShow();
 
         Ext.Ajax.request({
-            url: '/admin/pimcore-ai-tools/prompts/text',
+            url: '/pimcore-ai-tools/prompts/text',
             method: 'POST',
             params: {
                 id: this.id,

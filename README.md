@@ -2,12 +2,12 @@
 
 [![Software License](https://img.shields.io/badge/license-GPLv3-brightgreen.svg?style=flat-square)](LICENSE.md)
 
-This bundle provides AI tools for pimcore
+This bundle provides simple AI tools for pimcore
 
 ## Features
 - new Pimcore object data type "AiWysiwyg"
 - new Document editable "AiWysiwyg"
-- new Symfony form field type "AiWysiwyg"
+- new Symfony form field type "AiTextarea"
 - list of all used data/field types and editables and possibility to configure prompt and AI provider 
 
 ## License

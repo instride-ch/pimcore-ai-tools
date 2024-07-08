@@ -1,0 +1,10 @@
+pimcore_ai_tools.form.button.label: AI Helper
+pimcore_ai_tools.form.loading: Loading...
+pimcore_ai_tools.form.text_correct: Correct text
+pimcore_ai_tools.form.text_create: Create text
+pimcore_ai_tools.form.text_optimize: Optimize text
+pimcore_ai_tools.modal.accept: Adopt changes
+pimcore_ai_tools.modal.cancel: Cancel
+pimcore_ai_tools.modal.message_confirm: Would you like to adopt this suggestion?
+pimcore_ai_tools.modal.intro: Suggestion
+pimcore_ai_tools.modal.title: Adopt changes?

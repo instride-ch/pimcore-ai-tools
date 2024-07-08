@@ -32,7 +32,7 @@ final class Version20240627132635 extends AbstractMigration
         }
 
         $this->addSql('
-            CREATE TABLE pimcore_ai_tools_defaults_configuration (id INT AUTO_INCREMENT NOT NULL, textProvider VARCHAR(255) NOT NULL, editableTextCreation LONGTEXT DEFAULT NULL, editableTextOptimization LONGTEXT DEFAULT NULL, editableTextCorrection LONGTEXT DEFAULT NULL, objectTextCreation LONGTEXT DEFAULT NULL, objectTextOptimization LONGTEXT DEFAULT NULL, objectTextCorrection LONGTEXT DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8MB4 COLLATE `utf8mb4_general_ci` ENGINE = InnoDB;
+            CREATE TABLE pimcore_ai_tools_defaults_configuration (id INT AUTO_INCREMENT NOT NULL, textProvider VARCHAR(255) NOT NULL, editableTextCreation LONGTEXT DEFAULT NULL, editableTextOptimization LONGTEXT DEFAULT NULL, editableTextCorrection LONGTEXT DEFAULT NULL, objectTextCreation LONGTEXT DEFAULT NULL, objectTextOptimization LONGTEXT DEFAULT NULL, objectTextCorrection LONGTEXT DEFAULT NULL, frontendTextCreation LONGTEXT DEFAULT NULL, frontendTextOptimization LONGTEXT DEFAULT NULL, frontendTextCorrection LONGTEXT DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8MB4 COLLATE `utf8mb4_general_ci` ENGINE = InnoDB;
         ');
     }
 }

@@ -18,7 +18,7 @@ namespace Instride\Bundle\PimcoreAiToolsBundle\Model\DataObject\ClassDefinition\
 
 use Pimcore\Model\DataObject\ClassDefinition\Data\Wysiwyg;
 
-class AiWysiwyg extends Wysiwyg
+final class AiWysiwyg extends Wysiwyg
 {
     public function getFieldType(): string
     {

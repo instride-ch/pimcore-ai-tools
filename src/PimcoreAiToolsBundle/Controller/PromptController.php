@@ -13,15 +13,15 @@ declare(strict_types=1);
  * @copyright Copyright (c) 2024 instride AG (https://instride.ch)
  */
 
-namespace Instride\Bundle\PimcoreAiToolsBundle\Controller\Admin;
+namespace Instride\Bundle\PimcoreAiToolsBundle\Controller;
 
-use Instride\Bundle\PimcoreAiToolsBundle\Services\PromptService;
 use Instride\Bundle\PimcoreAiToolsBundle\Services\ConfigurationService;
+use Instride\Bundle\PimcoreAiToolsBundle\Services\PromptService;
 use Pimcore\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
-final class PromptController extends Controller
+class PromptController extends Controller
 {
     private PromptService $promptService;
     private ConfigurationService $configurationService;
@@ -71,6 +71,15 @@ final class PromptController extends Controller
             return $this->configurationService->getEditableConfiguration(
                 $areabrick,
                 $editable,
+                $promptType,
+            );
+        }
+
+        if ($type === 'frontend') {
+            $name = $request->get('name');
+
+            return $this->configurationService->getFrontendConfiguration(
+                $name,
                 $promptType,
             );
         }

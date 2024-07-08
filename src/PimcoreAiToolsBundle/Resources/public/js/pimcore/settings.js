@@ -43,6 +43,7 @@ pimcore.bundle.pimcore_ai_tools.settings = Class.create({
                         this.getDefaultsEditor(),
                         this.getEditableRowEditor(),
                         this.getObjectRowEditor(),
+                        this.getFrontendRowEditor(),
                     ]
                 })]
             });
@@ -115,6 +116,24 @@ pimcore.bundle.pimcore_ai_tools.settings = Class.create({
                     fieldLabel: t("pimcore_ai_tools_defaults_object_text_correction"),
                     xtype: 'textareafield',
                     name: 'objectTextCorrection',
+                }],
+            },{
+                xtype: 'fieldset',
+                title: t("pimcore_ai_tools_defaults_text_frontend"),
+                layout: 'anchor',
+                defaults: {anchor: '100%', labelWidth: 150},
+                items: [{
+                    fieldLabel: t("pimcore_ai_tools_defaults_frontend_text_creation"),
+                    xtype: 'textareafield',
+                    name: 'frontendTextCreation',
+                },{
+                    fieldLabel: t("pimcore_ai_tools_defaults_frontend_text_optimization"),
+                    xtype: 'textareafield',
+                    name: 'frontendTextOptimization',
+                },{
+                    fieldLabel: t("pimcore_ai_tools_defaults_frontend_text_correction"),
+                    xtype: 'textareafield',
+                    name: 'frontendTextCorrection',
                 }],
             }],
             buttons: [{
@@ -299,7 +318,6 @@ pimcore.bundle.pimcore_ai_tools.settings = Class.create({
     },
 
     getObjectRowEditor: function () {
-
         var itemsPerPage = pimcore.helpers.grid.getDefaultPageSize();
         this.objectStore = pimcore.helpers.grid.buildDefaultStore(
             '/admin/pimcore-ai-tools/settings/object-configuration',
@@ -445,6 +463,154 @@ pimcore.bundle.pimcore_ai_tools.settings = Class.create({
             method: 'POST',
             success: function(){
                 Ext.getStore('pimcoreAiToolsObjectStore').reload();
+            }
+        })
+    },
+
+    getFrontendRowEditor: function () {
+        var itemsPerPage = pimcore.helpers.grid.getDefaultPageSize();
+        this.frontendStore = pimcore.helpers.grid.buildDefaultStore(
+            '/admin/pimcore-ai-tools/settings/frontend-configuration',
+            [
+                'id',
+                'name',
+                'type',
+                {name: 'prompt', allowBlank: true},
+                {name: 'options', allowBlank: true},
+                {name: 'provider', allowBlank: true},
+            ],
+            itemsPerPage,
+            { storeId: 'pimcoreAiToolsFrontendStore' }
+        );
+
+        this.frontendFilterField = Ext.create("Ext.form.TextField", {
+            width: 200,
+            style: "margin: 0 10px 0 0;",
+            enableKeyEvents: true,
+            listeners: {
+                "keydown" : function (field, key) {
+                    if (key.getKey() == key.ENTER) {
+                        var input = field;
+                        var proxy = this.frontendStore.getProxy();
+                        proxy.extraParams.filter = input.getValue();
+                        this.frontendStore.load();
+                    }
+                }.bind(this)
+            }
+        });
+
+        this.pagingtoolbar = pimcore.helpers.grid.buildDefaultPagingToolbar(this.frontendStore);
+
+        var textProviderEditor = new Ext.form.ComboBox({
+            store: this.textProviderStore,
+            displayField: 'name',
+            valueField: 'value',
+            emptyText: t("pimcore_ai_tools_provider_default"),
+        });
+
+        var typesColumns = [
+            {text: t("pimcore_ai_tools_name"), flex: 1, sortable: true, dataIndex: 'name', editable: false},
+            {text: t("pimcore_ai_tools_type"), flex: 1, sortable: true, dataIndex: 'type', editable: false,
+                renderer: (value) => {return t(`pimcore_ai_tools_type_${value}`)}},
+            {text: t("pimcore_ai_tools_prompt"), flex: 3, sortable: true, dataIndex: 'prompt',
+                emptyCellText: t("pimcore_ai_tools_prompt_default"), editor: Ext.form.field.TextArea()},
+            {text: t("pimcore_ai_tools_options"), flex: 3, sortable: true, dataIndex: 'options',
+                emptyCellText: t("pimcore_ai_tools_options_default"), editor: Ext.form.field.TextArea()},
+            {text: t("pimcore_ai_tools_provider"), flex: 1, sortable: true, dataIndex: 'provider', editor: textProviderEditor,
+                renderer: function(value) {
+                    if (value && value.length !== 0) {
+                        return value.split("\\").pop();
+                    }
+                    return t("pimcore_ai_tools_provider_default");
+                }
+            },
+        ];
+
+        this.frontendRowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
+            clicksToEdit: 1,
+            clicksToMoveEditor: 1,
+        });
+
+        var updateFrontendButton = Ext.create('Ext.Button', {
+            text: t("pimcore_ai_tools_sync_frontend"),
+            scale: 'medium',
+            iconCls: 'pimcore_icon_update',
+            handler: this.updateFrontend.bind(this)
+        });
+
+        var toolbar = Ext.create('Ext.Toolbar', {
+            cls: 'pimcore_main_toolbar',
+            items: [
+                {
+                    text: t("filter") + "/" + t("search"),
+                    xtype: "tbtext",
+                    style: "margin: 0 10px 0 0;"
+                },
+                this.frontendFilterField,
+                '->',
+                updateFrontendButton,
+            ]
+        });
+
+        this.frontendGrid = Ext.create('Ext.grid.Panel', {
+            title: t("pimcore_ai_tools_frontend_configuration"),
+            autoScroll: true,
+            store: this.frontendStore,
+            columns: {
+                items: typesColumns,
+                defaults: {
+                    renderer: Ext.util.Format.htmlEncode
+                },
+            },
+            selModel: Ext.create('Ext.selection.RowModel', {}),
+            plugins: [
+                this.frontendRowEditing
+            ],
+            trackMouseOver: true,
+            columnLines: true,
+            bbar: this.pagingtoolbar,
+            bodyCls: "pimcore_editable_grid",
+            stripeRows: true,
+            tbar: toolbar,
+            flex: 1,
+            viewConfig: {
+                forceFit: true,
+                listeners: {
+                    rowupdated: this.updateFrontendRows.bind(this),
+                    refresh: this.updateFrontendRows.bind(this)
+                }
+            }
+        });
+
+        this.frontendStore.on("update", this.updateFrontendRows.bind(this));
+        this.frontendGrid.on("viewready", this.updateFrontendRows.bind(this));
+
+        this.frontendStore.load();
+
+        return this.frontendGrid;
+    },
+
+    updateFrontendRows: function () {
+        var rows = Ext.get(this.frontendGrid.getEl().dom).query(".x-grid-row");
+
+        for (var i = 0; i < rows.length; i++) {
+
+            let dd = new Ext.dd.DropZone(rows[i], {
+                ddGroup: "element",
+
+                getTargetFromEvent: function(e) {
+                    return this.getEl();
+                },
+            });
+        }
+    },
+
+    updateFrontend: function () {
+        Ext.Ajax.request({
+            url: '/admin/pimcore-ai-tools/settings/sync-frontend',
+            method: 'POST',
+            success: function(){
+                Ext.getStore('pimcoreAiToolsFrontendStore').reload();
             }
         })
     },
