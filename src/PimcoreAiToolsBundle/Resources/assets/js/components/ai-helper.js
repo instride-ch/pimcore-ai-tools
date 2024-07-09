@@ -78,8 +78,12 @@ export default {
         e.preventDefault();
 
         // Set value and hide modal
-        this.textarea.value = this.resultText;
-        UIkit.modal(this.modal).hide();
+        if (this.resultText) {
+          this.textarea.value = this.resultText;
+          UIkit.modal(this.modal).hide();
+
+          this.resultText = null;
+        }
       },
     },
   ],
