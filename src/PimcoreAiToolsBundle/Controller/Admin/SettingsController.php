@@ -49,7 +49,7 @@ final class SettingsController extends UserAwareController
         $defaultsConfiguration = AiDefaultsConfiguration::getById(1);
         if (!$defaultsConfiguration instanceof AiDefaultsConfiguration) {
             $defaultsConfiguration = new AiDefaultsConfiguration();
-            $defaultsConfiguration->setTextProvider('openAi');
+            $defaultsConfiguration->setTextProvider('OpenAi');
             $defaultsConfiguration->save();
         }
 

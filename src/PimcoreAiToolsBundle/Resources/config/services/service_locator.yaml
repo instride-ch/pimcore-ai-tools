@@ -10,6 +10,6 @@ services:
         class: Symfony\Component\DependencyInjection\ServiceLocator
         arguments:
             -
-                openAi: '@pimcore_ai_tools.provider.open_ai'
+                OpenAi: '@pimcore_ai_tools.provider.open_ai'
 #                midjourney: '@pimcore_ai_tools.provider.midjourney'
         tags: ['container.service_locator']
