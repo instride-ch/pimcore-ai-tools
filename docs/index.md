@@ -1,1 +1,0 @@
-Pimcore AI-Tools Bundle
