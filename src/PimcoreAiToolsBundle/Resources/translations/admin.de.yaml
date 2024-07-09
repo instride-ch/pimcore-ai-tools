@@ -1,4 +1,4 @@
-pimcore_ai_tools: Pimcore AI Tools
+pimcore_ai_tools: Pimcore AI-Tools
 pimcore_ai_tools_areabrick: Modul-Name
 pimcore_ai_tools_button: KI Helfer
 pimcore_ai_tools_button_text_correction: Text korrigieren
@@ -22,13 +22,13 @@ pimcore_ai_tools_defaults_object_text_correction: Text korrigieren
 pimcore_ai_tools_defaults_object_text_creation: Text erstellen
 pimcore_ai_tools_defaults_object_text_optimization: Text optimieren
 pimcore_ai_tools_defaults_text_editables: Module
-pimcore_ai_tools_defaults_text_frontend: Formulare
+pimcore_ai_tools_defaults_text_frontend: Frontend
 pimcore_ai_tools_defaults_text_objects: Datenobjekte
 pimcore_ai_tools_defaults_text_provider: Text-Provider
 pimcore_ai_tools_editable: ID
 pimcore_ai_tools_editable_configuration: Module
 pimcore_ai_tools_fieldName: Feld
-pimcore_ai_tools_frontend_configuration: Formular-Felder
+pimcore_ai_tools_frontend_configuration: Frontend-Felder
 pimcore_ai_tools_name: Name
 pimcore_ai_tools_navigation: KI Konfiguration
 pimcore_ai_tools_object_configuration: Datenobjekte
@@ -43,7 +43,7 @@ pimcore_ai_tools_prompt_loading_mask_text: Bitte warten...
 pimcore_ai_tools_provider: Provider
 pimcore_ai_tools_provider_default: Standard
 pimcore_ai_tools_sync_editables: Module synchronisieren
-pimcore_ai_tools_sync_frontend: Formulare synchronisieren
+pimcore_ai_tools_sync_frontend: Felder synchronisieren
 pimcore_ai_tools_sync_objects: Datenobjekte synchronisieren
 pimcore_ai_tools_type: Typ
 pimcore_ai_tools_type_text_correction: Text korrigieren

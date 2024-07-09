@@ -50,7 +50,7 @@ pimcore.object.classes.data.aiWysiwyg = Class.create(pimcore.object.classes.data
     },
 
     getIconClass: function () {
-        return "pimcore_ai_tools_icon_ai_wysiwyg";
+        return "pimcore_ai_tools_icon_ai_wysiwyg_grey";
     },
 
     getLayout: function ($super) {
