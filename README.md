@@ -1,6 +1,7 @@
 ![Pimcore AI-Tools Bundle](docs/images/github_banner.png "Pimcore AI-Tools")
 
 [![Software License](https://img.shields.io/badge/license-GPLv3-brightgreen.svg?style=flat-square)](LICENSE.md)
+[![Latest Stable Version](https://img.shields.io/packagist/v/instride/pimcore-ai-tools.svg?style=flat-square)](https://packagist.org/packages/instride/pimcore-ai-tools)
 
 This bundle provides simple AI tools for pimcore. 
 Currently, there are three prompt types (Text creation, optimization and correction) integrated.
