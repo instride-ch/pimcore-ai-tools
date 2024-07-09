@@ -42,8 +42,7 @@ class PromptController extends Controller
         $configuration = $this->getConfiguration($type, $promptType, $request);
 
         $prompt = $configuration['prompt'] . $text;
-        // ToDo: Get options from configuration and set it as third parameter (needs to be an array)
-        $result = $this->promptService->getText($configuration['provider'], $prompt);
+        $result = $this->promptService->getText($configuration['provider'], $prompt, $configuration['options']);
 
         return $this->json([
             'result' => $result,

@@ -22,7 +22,7 @@ final class PromptService
     public function getText(
         TextProviderInterface $textProvider,
         string $prompt,
-        array $options = [],
+        ?array $options = null,
     ): string
     {
         $options['prompt'] = $prompt;

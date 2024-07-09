@@ -44,19 +44,25 @@ final class ConfigurationService
         $key = 'object' . \implode('', \array_map('ucfirst', \explode('_', $type)));
 
         if (empty($configuration['provider'])) {
+            // Get default provider if not set
             $configuration['provider'] = $this->defaultConfiguration['textProvider'];
         }
 
         if (empty($configuration['prompt'])) {
+            // Get default prompt if not set
             $configuration['prompt'] = $this->defaultConfiguration[$key];
         }
 
+        // Get provider
         $provider = $this->providerLocator->getProvider($configuration['provider']);
+
+        // Convert options from string to array
+        $optionsArray = $this->getOptionsArray($configuration['options']);
 
         return [
             'provider' => $provider,
             'prompt' => $configuration['prompt'],
-            'options' => $configuration['options'],
+            'options' => $optionsArray,
         ];
     }
 
@@ -73,20 +79,27 @@ final class ConfigurationService
         $configuration = $list->getData()[0]->getData();
         $key = 'editable' . \implode('', \array_map('ucfirst', \explode('_', $type)));
 
+
         if (empty($configuration['provider'])) {
+            // Get default provider if not set
             $configuration['provider'] = $this->defaultConfiguration['textProvider'];
         }
 
         if (empty($configuration['prompt'])) {
+            // Get default prompt if not set
             $configuration['prompt'] = $this->defaultConfiguration[$key];
         }
 
+        // Get provider
         $provider = $this->providerLocator->getProvider($configuration['provider']);
+
+        // Convert options from string to array
+        $optionsArray = $this->getOptionsArray($configuration['options']);
 
         return [
             'provider' => $provider,
             'prompt' => $configuration['prompt'],
-            'options' => $configuration['options'],
+            'options' => $optionsArray,
         ];
     }
 
@@ -104,19 +117,45 @@ final class ConfigurationService
         $key = 'frontend' . \implode('', \array_map('ucfirst', \explode('_', $type)));
 
         if (empty($configuration['provider'])) {
+            // Get default provider if not set
             $configuration['provider'] = $this->defaultConfiguration['textProvider'];
         }
 
         if (empty($configuration['prompt'])) {
+            // Get default prompt if not set
             $configuration['prompt'] = $this->defaultConfiguration[$key];
         }
 
+        // Get provider
         $provider = $this->providerLocator->getProvider($configuration['provider']);
+
+        // Convert options from string to array
+        $optionsArray = $this->getOptionsArray($configuration['options']);
 
         return [
             'provider' => $provider,
             'prompt' => $configuration['prompt'],
-            'options' => $configuration['options'],
+            'options' => $optionsArray,
         ];
+    }
+
+    private function getOptionsArray(?string $optionsString = null): ?array
+    {
+        if (!$optionsString) {
+            return null;
+        }
+
+        $optionsArray = [];
+        $options = \array_map('trim', \explode(';', $optionsString));
+        foreach($options as $option) {
+            if (empty($option)) {
+                continue;
+            }
+
+            $parts = \array_map('trim', \explode(':', $option));
+            $optionsArray[$parts[0]] = $parts[1];
+        }
+
+        return $optionsArray;
     }
 }

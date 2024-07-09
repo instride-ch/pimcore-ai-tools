@@ -20,14 +20,14 @@ pimcore.bundle.pimcore_ai_tools.settings = Class.create({
 
     activate: function () {
         var tabPanel = Ext.getCmp("pimcore_panel_tabs");
-        tabPanel.setActiveItem("pimcore_pimcore_ai_tools");
+        tabPanel.setActiveItem("bundle_pimcore_ai_tools");
     },
 
     getTabPanel: function () {
 
         if (!this.panel) {
             this.panel = new Ext.Panel({
-                id: "pimcore_pimcore_ai_tools",
+                id: "bundle_pimcore_ai_tools",
                 iconCls: "pimcore_ai_tools_nav_icon",
                 title: t("pimcore_ai_tools_configuration"),
                 border: false,
@@ -50,7 +50,7 @@ pimcore.bundle.pimcore_ai_tools.settings = Class.create({
 
             var tabPanel = Ext.getCmp("pimcore_panel_tabs");
             tabPanel.add(this.panel);
-            tabPanel.setActiveItem("pimcore_pimcore_ai_tools");
+            tabPanel.setActiveItem("bundle_pimcore_ai_tools");
 
             this.panel.on("destroy", function () {
                 pimcore.globalmanager.remove("bundle_pimcore_ai_tools");

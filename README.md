@@ -26,8 +26,9 @@ Currently, there are three prompt types (Text creation, optimization and correct
 - [DataObject Type](docs/02-data-objects.md)
 - [UIkit AiHelper](docs/03-uikit-ai-helper.md)
 - [Symfony Form Type](docs/04-form-type.md)
-- [Add additional providers](docs/05-additional-providers.md)
-- [Admin user permission](docs/06-user-permission.md)
+- [Add Additional Providers](docs/05-additional-providers.md)
+- [Admin Uuser Permission](docs/06-user-permission.md)
+- [OpenAi Provider Options](docs/07-open-ai-options.md)
 
 ## Possible planned features
 
