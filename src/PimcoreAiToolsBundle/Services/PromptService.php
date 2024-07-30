@@ -27,6 +27,11 @@ final class PromptService
     {
         $options['prompt'] = $prompt;
 
-        return $textProvider->getText($options);
+        return $this->refineText($textProvider->getText($options));
+    }
+
+    private function refineText(string $text): string
+    {
+        return trim($text, "\"");
     }
 }
