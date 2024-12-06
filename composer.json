@@ -20,8 +20,8 @@
   "require": {
     "php": ">=8.2",
     "pimcore/pimcore": "^11",
-    "openai-php/client": "dev-main",
-    "ferranfg/midjourney-php": "dev-main"
+    "openai-php/client": "^v0.10",
+    "ferranfg/midjourney-php": "^v2.2"
   },
   "require-dev": {
     "phpstan/phpstan": "^1.11",
