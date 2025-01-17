@@ -2,7 +2,7 @@
 
 ### Requirements
 
-- Get [UIkit AI-Helper Component](03-uikit-ai-helper.md) to work
+- Get [AI-Helper Component](03-ai-helper.md) to work
 
 ### Add form field
 

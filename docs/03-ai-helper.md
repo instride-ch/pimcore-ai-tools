@@ -1,10 +1,16 @@
-# UIkit AI-Helper Component
+# UIkit or Tailwind AI-Helper Component
 
 ### Requirements
 
-- UIkit with activated dropdown, modal and spinner components
+- UIkit or Tailwind with activated dropdown, modal and spinner components
 
-### Load JavaScript
+### Configure
+Define the environment variable to set the preferred "Framework".
+```dotenv
+FRONTEND_FRAMEWORK="tailwind" // or FRONTEND_FRAMEWORK="uikit"
+```
+
+### Load JavaScript for Uikit
 
 Add the pimcore-ai-tools.js (vendor/instride/pimcore-ai-tools/src/PimcoreAiToolsBundle/Resources/assets/js/) to your project:
 
@@ -18,6 +24,14 @@ const paths = {
 };
 ... 
     .addEntry('js/pimcore-ai-tools', `${paths.pimcoreAiTools}/js/pimcore-ai-tools.js`)
+
+    .addPlugin(
+      new webpack.DefinePlugin({
+        FRONTEND_FRAMEWORK: JSON.stringify(
+          process.env.FRONTEND_FRAMEWORK || "tailwind",
+        ),
+      }),
+    )
 ```
 
 and include it in your template (webpack encore):
@@ -28,6 +42,8 @@ and include it in your template (webpack encore):
 
 ### Usage
 
+#### Uikit example
+
 ```html
 <a data-uk-ai-helper="
     promptType: text_creation;
@@ -35,6 +51,18 @@ and include it in your template (webpack encore):
     aiToolsId: myNewAiTextarea;
     spinnerId: #my-uikit-spinner;"
    href="#">
+    {{ 'pimcore_ai_tools.form.text_create'|trans }}
+</a>
+```
+
+#### Tailwind example
+```html
+<a href="#"
+   class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+   data-prompt-type="text_creation"
+   data-textarea-id="#{{ id }}"
+   data-spinner-id="#pimcore-ai-tools-spinner"
+   data-ai-tools-id="{{ ai_tools_id }}">
     {{ 'pimcore_ai_tools.form.text_create'|trans }}
 </a>
 ```
@@ -49,6 +77,7 @@ and include it in your template (webpack encore):
 #### Example Usage
 
 See [Example usage](../src/PimcoreAiToolsBundle/Resources/views/form/uikit_3_layout.html.twig)
+See [Example usage](../src/PimcoreAiToolsBundle/Resources/views/form/tailwind_layout.html.twig)
 
 ### Register "frontend" items
 
