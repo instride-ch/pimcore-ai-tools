@@ -75,6 +75,8 @@ pimcore.document.editables.ai_wysiwyg = Class.create(pimcore.document.editables.
     },
 
     startTextCreation: function() {
+        if (!this.validateInput(this.getValue())) return;
+
         pimcore.helpers.loadingShow();
 
         Ext.Ajax.request({
@@ -184,6 +186,8 @@ pimcore.document.editables.ai_wysiwyg = Class.create(pimcore.document.editables.
     },
 
     sendRefinementRequest: function(editableId, currentMainText, refineText, oldWindow) {
+        if (!this.validateInput(refineText)) return;
+
         pimcore.helpers.loadingShow();
         const combined = currentMainText + "\n" + refineText;
 
@@ -211,6 +215,8 @@ pimcore.document.editables.ai_wysiwyg = Class.create(pimcore.document.editables.
     },
 
     startTextCorrection: function() {
+        if (!this.validateInput(this.getValue())) return;
+
         pimcore.helpers.loadingShow();
 
         Ext.Ajax.request({
@@ -250,6 +256,8 @@ pimcore.document.editables.ai_wysiwyg = Class.create(pimcore.document.editables.
     },
 
     startTextOptimization: function() {
+        if (!this.validateInput(this.getValue())) return;
+
         pimcore.helpers.loadingShow();
 
         Ext.Ajax.request({
@@ -286,5 +294,18 @@ pimcore.document.editables.ai_wysiwyg = Class.create(pimcore.document.editables.
                 );
             }.bind(this)
         });
+    },
+
+    validateInput: function($prompt) {
+        if (!$prompt) {
+            Ext.Msg.alert(
+              t("pimcore_ai_tools_prompt_warning_title"),
+              t("pimcore_ai_tools_prompt_empty_warning_message")
+            );
+
+            return false;
+        }
+
+        return true;
     }
 });

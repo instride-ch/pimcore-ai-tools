@@ -42,8 +42,8 @@ pimcore_ai_tools_prompt_default: Standard
 pimcore_ai_tools_prompt_loading_mask_text: Bitte warten...
 pimcore_ai_tools_prompt_refine_placeholder: Text verfeinern
 pimcore_ai_tools_prompt_refine_button: Verfeinern
-pimcore_ai_tools_prompt_refine_warning_title: Warnung.
-pimcore_ai_tools_prompt_refine_warning_message: Bitte geben Sie einen Text ein, um die Verfeinerung durchzuführen.
+pimcore_ai_tools_prompt_warning_title: Warnung
+pimcore_ai_tools_prompt_empty_warning_message: Bitte geben Sie einen Prompt ein
 pimcore_ai_tools_provider: Provider
 pimcore_ai_tools_provider_default: Standard
 pimcore_ai_tools_sync_editables: Module synchronisieren
