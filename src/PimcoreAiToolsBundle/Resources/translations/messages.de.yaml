@@ -5,6 +5,10 @@ pimcore_ai_tools.form.text_create: Erstelle Text
 pimcore_ai_tools.form.text_optimize: Optimiere Text
 pimcore_ai_tools.modal.accept: Übernehmen
 pimcore_ai_tools.modal.cancel: Abbrechen
+pimcore_ai_tools.modal.refine: Verfeinern
+pimcore_ai_tools.modal.refine_alert: Bitte geben Sie einen Text ein, um die Verfeinerung durchzuführen.
 pimcore_ai_tools.modal.message_confirm: Möchten Sie diesen Vorschlag übernehmen?
+pimcore_ai_tools.modal.ok: OK
 pimcore_ai_tools.modal.intro: Vorschlag
 pimcore_ai_tools.modal.title: Änderung übernehmen?
+pimcore_ai_tools.modal.warning: Warnung

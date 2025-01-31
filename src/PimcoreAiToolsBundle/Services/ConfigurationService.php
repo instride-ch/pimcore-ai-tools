@@ -79,7 +79,6 @@ final class ConfigurationService
         $configuration = $list->getData()[0]->getData();
         $key = 'editable' . \implode('', \array_map('ucfirst', \explode('_', $type)));
 
-
         if (empty($configuration['provider'])) {
             // Get default provider if not set
             $configuration['provider'] = $this->defaultConfiguration['textProvider'];
@@ -107,7 +106,7 @@ final class ConfigurationService
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function getFrontendConfiguration(string $name, string $type): array
+    public function getFrontendConfiguration(string $name, string $type, bool $isRefineText = false): array
     {
         $list = new AiFrontendConfiguration\Listing();
         $list->setCondition('`name` LIKE "%' . $name . '%" AND `type` = "' . $type . '"');
@@ -122,8 +121,11 @@ final class ConfigurationService
         }
 
         if (empty($configuration['prompt'])) {
-            // Get default prompt if not set
-            $configuration['prompt'] = $this->defaultConfiguration[$key];
+            if ($isRefineText) {
+                $configuration['prompt'] = '';
+            } else {
+                $configuration['prompt'] = $this->defaultConfiguration[$key] ?? '';
+            }
         }
 
         // Get provider

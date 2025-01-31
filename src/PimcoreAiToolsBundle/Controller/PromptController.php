@@ -83,6 +83,16 @@ class PromptController extends Controller
             );
         }
 
+        if ($type === 'frontend-refinement') {
+            $name = $request->get('name');
+
+            return $this->configurationService->getFrontendConfiguration(
+                $name,
+                $promptType,
+                true,
+            );
+        }
+
         return [];
     }
 }

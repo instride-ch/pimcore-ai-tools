@@ -40,6 +40,10 @@ pimcore_ai_tools_prompt_change_confirm_message: Would you like to adopt this sug
 pimcore_ai_tools_prompt_change_confirm_title: Adopt changes?
 pimcore_ai_tools_prompt_default: Default
 pimcore_ai_tools_prompt_loading_mask_text: Please wait
+pimcore_ai_tools_prompt_refine_placeholder: Refine Text
+pimcore_ai_tools_prompt_refine_button: Refine
+pimcore_ai_tools_prompt_refine_warning_title: Warning
+pimcore_ai_tools_prompt_refine_warning_message: Please enter a Text, to execute the refinement.
 pimcore_ai_tools_provider: Provider
 pimcore_ai_tools_provider_default: Default
 pimcore_ai_tools_sync_editables: Synchronize editables

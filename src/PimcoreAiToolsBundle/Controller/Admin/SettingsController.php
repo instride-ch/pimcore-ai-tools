@@ -21,7 +21,6 @@ use Instride\Bundle\PimcoreAiToolsBundle\Model\AiEditableConfiguration;
 use Instride\Bundle\PimcoreAiToolsBundle\Model\AiFrontendConfiguration;
 use Instride\Bundle\PimcoreAiToolsBundle\Model\AiObjectConfiguration;
 use Instride\Bundle\PimcoreAiToolsBundle\Model\DataObject\ClassDefinition\Data\AiWysiwyg;
-use JsonException;
 use Pimcore\Bundle\AdminBundle\Helper\QueryParams;
 use Pimcore\Cache;
 use Pimcore\Controller\Traits\JsonHelperTrait;
@@ -53,10 +52,7 @@ final class SettingsController extends UserAwareController
             $defaultsConfiguration->save();
         }
 
-        return $this->jsonResponse([
-            'success' => true,
-            'data' => $defaultsConfiguration->getData(),
-        ]);
+        return $this->jsonSuccess(['data' => $defaultsConfiguration->getData()]);
     }
 
     /**
@@ -76,11 +72,12 @@ final class SettingsController extends UserAwareController
         $defaultsConfiguration->setValues($data);
         $defaultsConfiguration->save();
 
-        return $this->jsonResponse(['success' => true]);
+        return $this->jsonSuccess();
     }
 
     /**
      * @Route("/sync-editables", name="pimcore_ai_tools_settings_sync_editables", methods={"POST"})
+     * @throws \JsonException
      */
     public function syncEditablesAction(): JsonResponse
     {
@@ -115,10 +112,11 @@ final class SettingsController extends UserAwareController
                 $this->createAiEditableConfiguration($areabrick, $editableId, 'text_creation');
                 $this->createAiEditableConfiguration($areabrick, $editableId, 'text_optimization');
                 $this->createAiEditableConfiguration($areabrick, $editableId, 'text_correction');
+                $this->createAiEditableConfiguration($areabrick, $editableId, 'text_refinement');
             }
         }
 
-        return $this->jsonResponse(['success' => true]);
+        return $this->jsonSuccess();
     }
 
     /**
@@ -172,10 +170,11 @@ final class SettingsController extends UserAwareController
                 $this->createAiObjectConfiguration($className, $fieldName, 'text_creation');
                 $this->createAiObjectConfiguration($className, $fieldName, 'text_optimization');
                 $this->createAiObjectConfiguration($className, $fieldName, 'text_correction');
+                $this->createAiObjectConfiguration($className, $fieldName, 'text_refinement');
             }
         }
 
-        return $this->jsonResponse(['success' => true]);
+        return $this->jsonSuccess();
     }
 
     /**
@@ -189,31 +188,35 @@ final class SettingsController extends UserAwareController
         $list = new AiFrontendConfiguration\Listing();
         $list->load();
 
-        // Check if config already exists
-        $configsToCreate = $frontend;
+        $existingConfigs = [];
         foreach ($list->getFrontendConfigurations() as $frontendConfiguration) {
-            $configuration = $frontendConfiguration->getData();
-            $name = $configuration['name'];
+            $data = $frontendConfiguration->getData();
+            $existingConfigs[] = [
+                'name' => $data['name'],
+                'type' => $data['type']
+            ];
+        }
 
-            // Ai field and config exists: Unset value in aiFields array
-            if (\in_array($name, $frontend, true) ) {
-                unset($configsToCreate[\array_search($name, $configsToCreate, true)]);
+        $types = ['text_creation', 'text_optimization', 'text_correction', 'text_refinement'];
+        $configsToCreate = [];
 
-                continue;
+        foreach ($frontend as $name) {
+            foreach ($types as $type) {
+                $configExists = array_filter($existingConfigs, function ($config) use ($name, $type) {
+                    return $config['name'] === $name && $config['type'] === $type;
+                });
+
+                if (empty($configExists)) {
+                    $configsToCreate[] = ['name' => $name, 'type' => $type];
+                }
             }
-
-            // Config should not exist: delete
-            $frontendConfiguration->delete();
         }
 
-        // Create new configs
-        foreach ($configsToCreate as $name) {
-            $this->createAiFrontendConfiguration($name, 'text_creation');
-            $this->createAiFrontendConfiguration($name, 'text_optimization');
-            $this->createAiFrontendConfiguration($name, 'text_correction');
+        foreach ($configsToCreate as $config) {
+            $this->createAiFrontendConfiguration($config['name'], $config['type']);
         }
 
-        return $this->jsonResponse(['success' => true]);
+        return $this->jsonSuccess();
     }
 
     /**
@@ -260,10 +263,13 @@ final class SettingsController extends UserAwareController
                 $editableConfigurations[] = $editableConfiguration->getData();
             }
 
-            return $this->jsonResponse(['data' => $editableConfigurations, 'success' => true, 'total' => $list->getTotalCount()]);
+            return $this->jsonSuccess([
+                'data' => $editableConfigurations,
+                'total' => $list->getTotalCount()
+            ]);
         }
 
-        return $this->jsonResponse(['success' => false]);
+        return $this->jsonError();
     }
 
     /**
@@ -282,7 +288,7 @@ final class SettingsController extends UserAwareController
                 $objectConfiguration->setValues($data);
                 $objectConfiguration->save();
 
-                return $this->jsonResponse(['data' => $objectConfiguration, 'success' => true]);
+                return $this->jsonSuccess(['data' => $objectConfiguration]);
             }
         } else {
             if (!\class_exists(QueryParams::class)) {
@@ -310,10 +316,13 @@ final class SettingsController extends UserAwareController
                 $objectConfigurations[] = $objectConfiguration->getData();
             }
 
-            return $this->jsonResponse(['data' => $objectConfigurations, 'success' => true, 'total' => $list->getTotalCount()]);
+            return $this->jsonSuccess([
+                'data' => $objectConfigurations,
+                'total' => $list->getTotalCount()
+            ]);
         }
 
-        return $this->jsonResponse(['success' => false]);
+        return $this->jsonError();
     }
 
     /**
@@ -360,10 +369,13 @@ final class SettingsController extends UserAwareController
                 $frontendConfigurations[] = $frontendConfiguration->getData();
             }
 
-            return $this->jsonResponse(['data' => $frontendConfigurations, 'success' => true, 'total' => $list->getTotalCount()]);
+            return $this->jsonSuccess([
+                'data' => $frontendConfigurations,
+                'total' => $list->getTotalCount()
+            ]);
         }
 
-        return $this->jsonResponse(['success' => false]);
+        return $this->jsonError();
     }
 
     /**
@@ -381,7 +393,7 @@ final class SettingsController extends UserAwareController
             ];
         }
 
-        return $this->jsonResponse($data);
+        return $this->jsonSuccess($data);
     }
 
     /**
@@ -399,7 +411,7 @@ final class SettingsController extends UserAwareController
             ];
         }
 
-        return $this->jsonResponse($data);
+        return $this->jsonSuccess($data);
     }
 
     private function createAiEditableConfiguration(string $areabrick, string $editable, string $type): void
@@ -426,5 +438,15 @@ final class SettingsController extends UserAwareController
         $frontendConfiguration->setName($name);
         $frontendConfiguration->setType($type);
         $frontendConfiguration->save();
+    }
+
+    private function jsonSuccess(array $data = []): JsonResponse
+    {
+        return $this->jsonResponse(array_merge(['success' => true], $data));
+    }
+
+    private function jsonError(string $message = "An error occurred."): JsonResponse
+    {
+        return $this->jsonResponse(['success' => false, 'error' => $message]);
     }
 }
