@@ -53,3 +53,4 @@ pimcore_ai_tools_type: Typ
 pimcore_ai_tools_type_text_correction: Text korrigieren
 pimcore_ai_tools_type_text_creation: Text erstellen
 pimcore_ai_tools_type_text_optimization: Text optimieren
+pimcore_ai_tools_type_text_refinement: Text verfeinern
