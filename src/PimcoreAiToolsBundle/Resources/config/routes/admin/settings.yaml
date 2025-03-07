@@ -40,6 +40,18 @@ pimcore_ai_tools_admin_settings_object_configuration:
     methods:
         - POST
 
+pimcore_ai_tools_admin_settings_save_translation_object:
+    path: /save-translation-object
+    defaults: { _controller: Instride\Bundle\PimcoreAiToolsBundle\Controller\Admin\SettingsController::saveTranslationObjectAction }
+    methods:
+        - POST
+
+pimcore_ai_tools_admin_settings_translation_object_configuration:
+    path: /translation-object-configuration
+    defaults: { _controller: Instride\Bundle\PimcoreAiToolsBundle\Controller\Admin\SettingsController::translationObjectConfigurationAction }
+    methods:
+        - POST
+
 pimcore_ai_tools_admin_settings_frontend_configuration:
     path: /frontend-configuration
     defaults: { _controller: Instride\Bundle\PimcoreAiToolsBundle\Controller\Admin\SettingsController::frontendConfigurationAction }

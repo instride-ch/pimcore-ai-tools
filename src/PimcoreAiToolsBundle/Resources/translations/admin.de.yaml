@@ -28,6 +28,9 @@ pimcore_ai_tools_defaults_text_provider: Text-Provider
 pimcore_ai_tools_editable: ID
 pimcore_ai_tools_editable_configuration: Module
 pimcore_ai_tools_fieldName: Feld
+pimcore_ai_tools_object_translation_className: Klasse
+pimcore_ai_tools_object_translation_fields: Felder
+pimcore_ai_tools_object_translation_standardLanguage: Standardsprache
 pimcore_ai_tools_frontend_configuration: Frontend-Felder
 pimcore_ai_tools_name: Name
 pimcore_ai_tools_navigation: KI Konfiguration
@@ -54,3 +57,10 @@ pimcore_ai_tools_type_text_correction: Text korrigieren
 pimcore_ai_tools_type_text_creation: Text erstellen
 pimcore_ai_tools_type_text_optimization: Text optimieren
 pimcore_ai_tools_type_text_refinement: Text verfeinern
+pimcore_ai_tools_add_object_translation: Hinzufügen
+pimcore_ai_tools_add_object_translation_title: Neues Objekt hinzufügen
+pimcore_ai_tools_object_translations_submit: Speichern
+pimcore_ai_tools_object_translations_cancel: Abbrechen
+pimcore_ai_tools_object_translation_class_selection: Objekt auswählen
+pimcore_ai_tools_object_translations_failure_text: Das Objekt konnte nicht gespeichert werden
+pimcore_ai_tools_object_translations_success_text: Das Objekt wurde gespeichert

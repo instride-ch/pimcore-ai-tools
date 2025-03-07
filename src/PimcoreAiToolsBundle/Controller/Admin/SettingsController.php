@@ -20,6 +20,7 @@ use Instride\Bundle\PimcoreAiToolsBundle\Model\AiDefaultsConfiguration;
 use Instride\Bundle\PimcoreAiToolsBundle\Model\AiEditableConfiguration;
 use Instride\Bundle\PimcoreAiToolsBundle\Model\AiFrontendConfiguration;
 use Instride\Bundle\PimcoreAiToolsBundle\Model\AiObjectConfiguration;
+use Instride\Bundle\PimcoreAiToolsBundle\Model\AiTranslationObjectConfiguration;
 use Instride\Bundle\PimcoreAiToolsBundle\Model\DataObject\ClassDefinition\Data\AiWysiwyg;
 use Pimcore\Bundle\AdminBundle\Helper\QueryParams;
 use Pimcore\Cache;
@@ -66,7 +67,7 @@ final class SettingsController extends UserAwareController
 
         $defaultsConfiguration = AiDefaultsConfiguration::getById(1);
         if (!$defaultsConfiguration instanceof AiDefaultsConfiguration) {
-            return $this->jsonResponse(['success' => false]);
+            return $this->jsonError();
         }
 
         $defaultsConfiguration->setValues($data);
@@ -193,7 +194,7 @@ final class SettingsController extends UserAwareController
             $data = $frontendConfiguration->getData();
             $existingConfigs[] = [
                 'name' => $data['name'],
-                'type' => $data['type']
+                'type' => $data['type'],
             ];
         }
 
@@ -265,7 +266,97 @@ final class SettingsController extends UserAwareController
 
             return $this->jsonSuccess([
                 'data' => $editableConfigurations,
-                'total' => $list->getTotalCount()
+                'total' => $list->getTotalCount(),
+            ]);
+        }
+
+        return $this->jsonError();
+    }
+
+    /**
+     * @Route("/save-translation-object", name="pimcore_ai_tools_settings_save_translation_object", methods={"POST"})
+     */
+    public function saveTranslationObjectAction(Request $request): JsonResponse
+    {
+        $this->checkPermission('pimcore_ai');
+        $data = json_decode($request->getContent(), true);
+
+        if (!$data || empty($data['className']) || empty($data['field'])) {
+            return $this->jsonError('Data is incomplete');
+        }
+
+        $fields = is_array($data['field']) ? implode(',', array_map('trim', $data['field'])) : '';
+
+        if (AiTranslationObjectConfiguration::hasExistingClass($data['className'])) {
+            return $this->jsonError('This class is already configured');
+        }
+
+        $translationObjectConfiguration = new AiTranslationObjectConfiguration();
+        $translationObjectConfiguration->setClassName($data['className']);
+        $translationObjectConfiguration->setFields($fields);
+        $translationObjectConfiguration->setStandardLanguage($data['standardLanguage'] ?? '');
+        $translationObjectConfiguration->setProvider($data['provider'] ?? '');
+
+        try {
+            $translationObjectConfiguration->save();
+            return $this->jsonSuccess();
+        } catch (\Exception $error) {
+            return $this->jsonError($error->getMessage());
+        }
+    }
+
+    public function translationObjectConfigurationAction(Request $request): JsonResponse
+    {
+        if ($request->get('data')) {
+            Cache::clearTag('pimcore_ai_translation_object');
+
+            $action = $request->get('xaction');
+            $data = $this->decodeJson($request->get('data'));
+            if (!isset($data['id']) || !is_numeric($data['id'])) {
+                $translationObjectConfiguration = new AiTranslationObjectConfiguration();
+            } else {
+                $translationObjectConfiguration = AiTranslationObjectConfiguration::getById($data['id']);
+            }
+
+            if ($translationObjectConfiguration && $action === 'update') {
+                if (!empty($data['fields']) && is_array($data['fields'])) {
+                    $data['fields'] = implode(',', array_map('trim', $data['fields']));
+                }
+
+                $translationObjectConfiguration->setValues($data);
+                $translationObjectConfiguration->save();
+
+                return $this->jsonResponse(['data' => $translationObjectConfiguration, 'success' => true]);
+            }
+        } else {
+            if (!\class_exists(QueryParams::class)) {
+                throw new AdminClassicBundleNotFoundException('This action requires package "pimcore/admin-ui-classic-bundle" to be installed.');
+            }
+
+            $list = new AiTranslationObjectConfiguration\Listing();
+            $list->setLimit((int) $request->get('limit', 50));
+            $list->setOffset((int) $request->get('start', 0));
+
+            $sortingSettings = QueryParams::extractSortingSettings(\array_merge($request->request->all(), $request->query->all()));
+            if ($sortingSettings['orderKey']) {
+                $list->setOrderKey($sortingSettings['orderKey']);
+                $list->setOrder($sortingSettings['order']);
+            }
+
+            if ($request->get('filter')) {
+                $list->setCondition('`name` LIKE ' . $list->quote('%'.$request->get('filter').'%'));
+            }
+
+            $list->load();
+
+            $translationObjectConfigurations = [];
+            foreach ($list->getTranslationObjectConfigurations() as $translationObjectConfiguration) {
+                $translationObjectConfigurations[] = $translationObjectConfiguration->getData();
+            }
+
+            return $this->jsonSuccess([
+                'data' => $translationObjectConfigurations,
+                'total' => $list->getTotalCount(),
             ]);
         }
 
@@ -318,7 +409,7 @@ final class SettingsController extends UserAwareController
 
             return $this->jsonSuccess([
                 'data' => $objectConfigurations,
-                'total' => $list->getTotalCount()
+                'total' => $list->getTotalCount(),
             ]);
         }
 
@@ -371,7 +462,7 @@ final class SettingsController extends UserAwareController
 
             return $this->jsonSuccess([
                 'data' => $frontendConfigurations,
-                'total' => $list->getTotalCount()
+                'total' => $list->getTotalCount(),
             ]);
         }
 

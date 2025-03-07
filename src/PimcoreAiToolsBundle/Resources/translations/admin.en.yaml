@@ -28,6 +28,9 @@ pimcore_ai_tools_defaults_text_provider: Text provider
 pimcore_ai_tools_editable: Editable ID
 pimcore_ai_tools_editable_configuration: Editables
 pimcore_ai_tools_fieldName: Field
+pimcore_ai_tools_object_translation_className: Class
+pimcore_ai_tools_object_translation_fields: Fields
+pimcore_ai_tools_object_translation_standardLanguage: Standard Language
 pimcore_ai_tools_frontend_configuration: Frontend
 pimcore_ai_tools_name: Name
 pimcore_ai_tools_navigation: AI Configuration
@@ -54,3 +57,10 @@ pimcore_ai_tools_type_text_correction: Correct Text
 pimcore_ai_tools_type_text_creation: Create Text
 pimcore_ai_tools_type_text_optimization: Optimize Text
 pimcore_ai_tools_type_text_refinement: Refine Text
+pimcore_ai_tools_add_object_translation: Add
+pimcore_ai_tools_add_object_translation_title: Add new object
+pimcore_ai_tools_object_translations_submit: Save
+pimcore_ai_tools_object_translations_cancel: Cancel
+pimcore_ai_tools_object_translation_class_selection: Select an object
+pimcore_ai_tools_object_translations_failure_text: Your object could not be saved
+pimcore_ai_tools_object_translations_success_text: Your object has been saved
