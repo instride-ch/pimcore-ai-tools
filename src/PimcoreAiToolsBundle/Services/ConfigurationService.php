@@ -20,6 +20,7 @@ use Instride\Bundle\PimcoreAiToolsBundle\Model\AiDefaultsConfiguration;
 use Instride\Bundle\PimcoreAiToolsBundle\Model\AiEditableConfiguration;
 use Instride\Bundle\PimcoreAiToolsBundle\Model\AiFrontendConfiguration;
 use Instride\Bundle\PimcoreAiToolsBundle\Model\AiObjectConfiguration;
+use Instride\Bundle\PimcoreAiToolsBundle\Model\AiTranslationObjectConfiguration;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -63,6 +64,31 @@ final class ConfigurationService
             'provider' => $provider,
             'prompt' => $configuration['prompt'],
             'options' => $optionsArray,
+        ];
+    }
+
+    public function getTranslationObjectConfiguration(string $className): ?array
+    {
+        $list = new AiTranslationObjectConfiguration\Listing();
+        $list->setCondition('`className` LIKE "%' . $className . '%"');
+        $list->load();
+
+        if (empty($list->getData())) {
+            return null;
+        }
+
+        $configuration = $list->getData()[0]->getData();
+
+        if (empty($configuration['provider'])) {
+            $configuration['provider'] = $this->defaultConfiguration['textProvider'];
+        }
+
+        $provider = $this->providerLocator->getProvider($configuration['provider']);
+
+        return [
+            'provider' => $provider,
+            'fields' => $configuration['fields'],
+            'standardLanguage' => $configuration['standardLanguage'],
         ];
     }
 

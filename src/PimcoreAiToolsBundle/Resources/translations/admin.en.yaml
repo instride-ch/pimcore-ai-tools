@@ -64,3 +64,6 @@ pimcore_ai_tools_object_translations_cancel: Cancel
 pimcore_ai_tools_object_translation_class_selection: Select an object
 pimcore_ai_tools_object_translations_failure_text: Your object could not be saved
 pimcore_ai_tools_object_translations_success_text: Your object has been saved
+pimcore_ai_tools_object_translate: Translate
+pimcore_ai_tools_object_translate_all: Translate all languages
+pimcore_ai_tools_object_translate_to: Translate to

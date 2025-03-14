@@ -1,3 +1,7 @@
 pimcore_ai_tools_prompts:
     resource: 'prompts.yaml'
     prefix: 'prompts'
+
+pimcore_ai_tools_translation:
+    resource: 'translation.yaml'
+    prefix: ''
