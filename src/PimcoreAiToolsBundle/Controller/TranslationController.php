@@ -35,7 +35,6 @@ class TranslationController extends Controller
         $translations = [];
         $errors = [];
         $fieldNamesArray = explode('_', $fieldNames);
-        $prompt = "Translate the following text to $toLanguage. If the translation is the same as the original text, please type the same text.";
 
         foreach ($fieldNamesArray as $fieldName) {
             if (!$this->canTranslateField($object, $fieldName, $toLanguage, $defaultLanguage)) {
