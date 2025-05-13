@@ -40,6 +40,12 @@ pimcore_ai_tools_admin_settings_object_configuration:
     methods:
         - POST
 
+pimcore_ai_tools_admin_settings_delete_translation_object:
+    path: /delete-translation-object
+    defaults: { _controller: Instride\Bundle\PimcoreAiToolsBundle\Controller\Admin\SettingsController::deleteTranslationObjectAction }
+    methods:
+        - POST
+
 pimcore_ai_tools_admin_settings_save_translation_object:
     path: /save-translation-object
     defaults: { _controller: Instride\Bundle\PimcoreAiToolsBundle\Controller\Admin\SettingsController::saveTranslationObjectAction }

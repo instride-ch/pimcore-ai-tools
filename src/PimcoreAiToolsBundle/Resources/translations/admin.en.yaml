@@ -62,8 +62,10 @@ pimcore_ai_tools_add_object_translation_title: Add new object
 pimcore_ai_tools_object_translations_submit: Save
 pimcore_ai_tools_object_translations_cancel: Cancel
 pimcore_ai_tools_object_translation_class_selection: Select an object
-pimcore_ai_tools_object_translations_failure_text: Your object could not be saved
-pimcore_ai_tools_object_translations_success_text: Your object has been saved
+pimcore_ai_tools_object_translations_failure_text: The object could not be saved
+pimcore_ai_tools_object_translations_success_text: The object has been saved
+pimcore_ai_tools_object_translations_delete_success: The object has been deleted
+pimcore_ai_tools_object_translations_deletion: Delete Object?
 pimcore_ai_tools_object_translate: Translate
 pimcore_ai_tools_object_translate_all: Translate all languages
 pimcore_ai_tools_object_translate_to: Translate to

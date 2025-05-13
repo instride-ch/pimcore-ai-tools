@@ -705,7 +705,37 @@ pimcore.bundle.pimcore_ai_tools.settings = Class.create({
             return (value && value.trim().length !== 0) ? value.split("\\").pop() : t("pimcore_ai_tools_provider_default");
           }
         },
+        {
+          xtype: 'actioncolumn',
+          width: 30,
+          items: [{
+            iconCls: 'pimcore_icon_delete',
+            tooltip: t("delete"),
+            handler: function (grid, rowIndex) {
+              const rec = grid.getStore().getAt(rowIndex);
+              Ext.Msg.confirm(t("delete"), t("pimcore_ai_tools_object_translations_deletion"), function (btn) {
+                if (btn === 'yes') {
+                  Ext.Ajax.request({
+                    url: '/admin/pimcore-ai-tools/settings/delete-translation-object',
+                    method: 'POST',
+                    jsonData: { id: rec.get('id') },
+                    success: function () {
+                      grid.getStore().remove(rec);
+                      grid.getStore().reload();
+                    },
+                    failure: function () {
+                      Ext.Msg.alert(
+                        t("pimcore_ai_tools_defaults_form_failure"),
+                        t("pimcore_ai_tools_object_translations_delete_success"));
+                    }
+                  });
+                }
+              });
+            }
+          }]
+        }
       ],
+
       selModel: Ext.create('Ext.selection.RowModel', {}),
       plugins: [{ptype: 'rowediting', clicksToEdit: 1}],
       tbar: toolbar,

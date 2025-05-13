@@ -64,6 +64,8 @@ pimcore_ai_tools_object_translations_cancel: Abbrechen
 pimcore_ai_tools_object_translation_class_selection: Objekt auswählen
 pimcore_ai_tools_object_translations_failure_text: Das Objekt konnte nicht gespeichert werden
 pimcore_ai_tools_object_translations_success_text: Das Objekt wurde gespeichert
+pimcore_ai_tools_object_translations_delete_success: Das Objekt wurde erfolgreich gelöscht
+pimcore_ai_tools_object_translations_deletion: Objekt löschen?
 pimcore_ai_tools_object_translate: Übersetzen
 pimcore_ai_tools_object_translate_all: Alle Sprachen übersetzen
 pimcore_ai_tools_object_translate_to: Übersetzen nach
