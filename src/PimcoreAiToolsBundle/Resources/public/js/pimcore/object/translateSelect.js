@@ -43,7 +43,7 @@ document.addEventListener(pimcore.events.postOpenObject, (event) => {
           })
             .then(response => response.json())
             .then(data => {
-              pimcore.helpers.openObject(objectId, "object");
+              forceReloadObject(objectId);
             })
             .catch(error => {
               console.error("Translation error:", error);
@@ -93,7 +93,17 @@ document.addEventListener(pimcore.events.postOpenObject, (event) => {
   if (object.toolbar && menuItems.length > 0) {
     object.toolbar.add(dropdownButton);
     pimcore.layout.refresh();
-  } else {
-    console.error("No translatable fields found or toolbar not found in object:", object);
+  }
+
+  function forceReloadObject(objectId) {
+    const tabPanel = Ext.getCmp("pimcore_panel_tabs");
+    const tabId = "object_" + objectId;
+    const existingTab = Ext.getCmp(tabId);
+
+    if (existingTab) {
+      tabPanel.remove(existingTab);
+    }
+
+    pimcore.helpers.openObject(objectId, "object");
   }
 });
