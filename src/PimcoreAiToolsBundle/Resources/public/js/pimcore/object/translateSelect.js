@@ -86,8 +86,9 @@ document.addEventListener(pimcore.events.postOpenObject, (event) => {
 
   const dropdownButton = new Ext.button.Button({
     text: t("pimcore_ai_tools_object_translate"),
-    iconCls: "pimcore_icon_dropdown",
+    iconCls: "pimcore_icon_translations",
     menu: languageMenu,
+    arrowAlign: 'right'
   });
 
   if (object.toolbar && menuItems.length > 0) {
