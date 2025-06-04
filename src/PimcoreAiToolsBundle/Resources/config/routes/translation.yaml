@@ -9,9 +9,3 @@ pimcore_ai_tools_translation_all:
     defaults: { _controller: Instride\Bundle\PimcoreAiToolsBundle\Controller\TranslationController::translateAllAction }
     methods:
         - POST
-
-#pimcore_ai_tools_translate_picture:
-#    path:/translate-picture/{objectId}/{toLanguage}
-#    defaults: { _controller: Instride\Bundle\PimcoreAiToolsBundle\Controller\TranslationController::translatePictureAction }
-#    methods:
-#        - POST
