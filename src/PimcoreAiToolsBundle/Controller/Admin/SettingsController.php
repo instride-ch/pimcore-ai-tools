@@ -274,6 +274,31 @@ final class SettingsController extends UserAwareController
     }
 
     /**
+     * @Route("/delete-translation-object", name="pimcore_ai_tools_settings_delete_translation_object", methods={"POST"})
+     */
+    public function deleteTranslationObjectAction(Request $request): JsonResponse
+    {
+        $this->checkPermission('pimcore_ai');
+
+        $data = json_decode($request->getContent(), true);
+        if (!isset($data['id']) || !is_numeric($data['id'])) {
+            return $this->jsonError('No valid ID provided.');
+        }
+
+        $translationObject = AiTranslationObjectConfiguration::getById((int)$data['id']);
+        if (!$translationObject instanceof AiTranslationObjectConfiguration) {
+            return $this->jsonError('Configuration not found.');
+        }
+
+        try {
+            $translationObject->delete();
+            return $this->jsonSuccess();
+        } catch (\Exception $error) {
+            return $this->jsonError('Delete failed: ' . $error->getMessage());
+        }
+    }
+
+    /**
      * @Route("/save-translation-object", name="pimcore_ai_tools_settings_save_translation_object", methods={"POST"})
      */
     public function saveTranslationObjectAction(Request $request): JsonResponse
