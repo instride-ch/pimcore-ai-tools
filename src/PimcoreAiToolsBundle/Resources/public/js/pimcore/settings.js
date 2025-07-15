@@ -672,10 +672,17 @@ pimcore.bundle.pimcore_ai_tools.settings = Class.create({
               children.forEach(function(field) {
                 if (field.fieldtype === "localizedfields") {
                   field.children.forEach(function(localizedField) {
-                    localizedFields.push({
-                      name: localizedField.name,
-                      label: localizedField.title || localizedField.name
-                    });
+                    if (
+                      localizedField.fieldtype === "fieldcontainer" ||
+                      localizedField.fieldtype === "fieldset"
+                    ) {
+                      extractLocalizedFields(localizedField.children);
+                    } else {
+                      localizedFields.push({
+                        name: localizedField.name,
+                        label: localizedField.title || localizedField.name
+                      });
+                    }
                   });
                 } else if (field.children) {
                   extractLocalizedFields(field.children);
