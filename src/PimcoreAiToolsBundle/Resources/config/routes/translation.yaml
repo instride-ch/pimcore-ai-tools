@@ -1,11 +1,11 @@
 pimcore_ai_tools_translation:
-    path: /translate/{objectId}/{className}/{fieldNames}/{toLanguage}
+    path: /translate/{objectId}/{className}/{toLanguage}
     defaults: { _controller: Instride\Bundle\PimcoreAiToolsBundle\Controller\TranslationController::translateAction }
     methods:
         - POST
 
 pimcore_ai_tools_translation_all:
-    path: /translate-all/{objectId}/{className}/{fieldNames}/{toLanguage}
+    path: /translate-all/{objectId}/{className}
     defaults: { _controller: Instride\Bundle\PimcoreAiToolsBundle\Controller\TranslationController::translateAllAction }
     methods:
         - POST

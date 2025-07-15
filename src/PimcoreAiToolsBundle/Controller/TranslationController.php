@@ -7,6 +7,7 @@ use Instride\Bundle\PimcoreAiToolsBundle\Services\ConfigurationService;
 use Instride\Bundle\PimcoreAiToolsBundle\Services\PromptService;
 use Pimcore\Controller\Controller;
 use Pimcore\Model\DataObject;
+use Pimcore\Tool;
 use Symfony\Component\HttpFoundation\JsonResponse;
 class TranslationController extends Controller
 {
@@ -19,7 +20,7 @@ class TranslationController extends Controller
         $this->promptService = $promptService;
     }
 
-    public function translateAction(int $objectId, string $className, string $fieldNames, string $toLanguage): JsonResponse
+    public function translateAction(int $objectId, string $className, string $toLanguage): JsonResponse
     {
         $configuration = $this->configurationService->getTranslationObjectConfiguration($className);
         if (!$configuration) {
@@ -27,6 +28,13 @@ class TranslationController extends Controller
         }
 
         $defaultLanguage = $configuration['standardLanguage'];
+        if ($defaultLanguage === $toLanguage) {
+            return new JsonResponse([
+                'success' => true,
+                'message' => 'Ignore generation for default language',
+            ]);
+        }
+
         $object = DataObject::getById($objectId);
         if (!$object) {
             return $this->jsonErrorResponse('Object not found');
@@ -34,7 +42,8 @@ class TranslationController extends Controller
 
         $translations = [];
         $errors = [];
-        $fieldNamesArray = explode('_', $fieldNames);
+        $fieldNames = $configuration['fields'];
+        $fieldNamesArray = \explode(',', $fieldNames);
 
         foreach ($fieldNamesArray as $fieldName) {
             if (!$this->canTranslateField($object, $fieldName, $toLanguage, $defaultLanguage)) {
@@ -44,7 +53,7 @@ class TranslationController extends Controller
             try {
                 $translatedContent = $this->translateField($object, $fieldName, $defaultLanguage, $toLanguage, $configuration['provider']);
                 if ($translatedContent !== null) {
-                    $setter = 'set' . ucfirst($fieldName);
+                    $setter = 'set' . \ucfirst($fieldName);
                     $object->$setter($translatedContent, $toLanguage);
                     $translations[$fieldName] = $translatedContent;
                 }
@@ -60,9 +69,17 @@ class TranslationController extends Controller
         return $this->jsonResponse($translations, $errors);
     }
 
-    public function translateAllAction(): JsonResponse
+    public function translateAllAction(int $objectId, string $className): JsonResponse
     {
-        return $this->jsonErrorResponse('Not implemented');
+        $validLanguages = Tool::getValidLanguages();
+
+        $response = null;
+        foreach ($validLanguages as $language) {
+            $responsePerLanguage = $this->translateAction($objectId, $className, $language);
+            $response[$language] = $responsePerLanguage->getContent();
+        }
+
+        return new JsonResponse($response);
     }
 
     private function canTranslateField($object, string $fieldName, string $toLanguage, string $defaultLanguage): bool
@@ -75,12 +92,12 @@ class TranslationController extends Controller
         }
 
         $existingTranslation = $object->$getter($toLanguage);
-        if ($existingTranslation !== null && trim((string)$existingTranslation) !== '') {
+        if (!empty($existingTranslation)) {
             return false;
         }
 
         $content = $object->$getter($defaultLanguage);
-        return ($content !== null && trim($content) !== '');
+        return (!empty($content));
     }
 
 

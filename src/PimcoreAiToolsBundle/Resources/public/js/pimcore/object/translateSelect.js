@@ -33,7 +33,7 @@ document.addEventListener(pimcore.events.postOpenObject, (event) => {
         text: `${t("pimcore_ai_tools_object_translate_to")} ${lang}`,
         iconCls: flagIconCls,
         handler: function () {
-          const url = `/pimcore-ai-tools/translate/${objectId}/${className}/${fieldsToTranslate.join("_")}/${lang}`;
+          const url = `/pimcore-ai-tools/translate/${objectId}/${className}/${lang}`;
 
           fetch(url, {
             method: "POST",
@@ -58,24 +58,21 @@ document.addEventListener(pimcore.events.postOpenObject, (event) => {
       text: t("pimcore_ai_tools_object_translate_all"),
       iconCls: "pimcore_icon_world",
       handler: function () {
-        // TODO: Backend für "Alle Sprachen übersetzen" implementieren
-        // `translateAllAction` Methode im TranslationController ergänzen.
+        const url = `/pimcore-ai-tools/translate-all/${objectId}/${className}`;
 
-        // const url = `/pimcore-ai-tools/translate-all/${objectId}/${className}`;
-        //
-        // fetch(url, {
-        //   method: "POST",
-        //   headers: {
-        //     "Content-Type": "application/json",
-        //   },
-        // })
-        //   .then(response => response.json())
-        //   .then(data => {
-        //     pimcore.helpers.openObject(objectId, "object");
-        //   })
-        //   .catch(error => {
-        //     console.error("Translation error:", error);
-        //   });
+        fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then(response => response.json())
+          .then(data => {
+            pimcore.helpers.openObject(objectId, "object");
+          })
+          .catch(error => {
+            console.error("Translation error:", error);
+          });
       },
     });
   }
