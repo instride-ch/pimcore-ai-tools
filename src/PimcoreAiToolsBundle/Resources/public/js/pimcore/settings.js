@@ -104,60 +104,60 @@ pimcore.bundle.pimcore_ai_tools.settings = Class.create({
             }
           }
         }),{
-        xtype: 'fieldset',
-        title: t("pimcore_ai_tools_defaults_text_editables"),
-        layout: 'anchor',
-        defaults: {anchor: '100%', labelWidth: 150},
-        items: [{
-          fieldLabel: t("pimcore_ai_tools_defaults_editable_text_creation"),
-          xtype: 'textareafield',
-          name: 'editableTextCreation',
+          xtype: 'fieldset',
+          title: t("pimcore_ai_tools_defaults_text_editables"),
+          layout: 'anchor',
+          defaults: {anchor: '100%', labelWidth: 150},
+          items: [{
+            fieldLabel: t("pimcore_ai_tools_defaults_editable_text_creation"),
+            xtype: 'textareafield',
+            name: 'editableTextCreation',
+          },{
+            fieldLabel: t("pimcore_ai_tools_defaults_editable_text_optimization"),
+            xtype: 'textareafield',
+            name: 'editableTextOptimization',
+          },{
+            fieldLabel: t("pimcore_ai_tools_defaults_editable_text_correction"),
+            xtype: 'textareafield',
+            name: 'editableTextCorrection',
+          }],
         },{
-          fieldLabel: t("pimcore_ai_tools_defaults_editable_text_optimization"),
-          xtype: 'textareafield',
-          name: 'editableTextOptimization',
+          xtype: 'fieldset',
+          title: t("pimcore_ai_tools_defaults_text_objects"),
+          layout: 'anchor',
+          defaults: {anchor: '100%', labelWidth: 150},
+          items: [{
+            fieldLabel: t("pimcore_ai_tools_defaults_object_text_creation"),
+            xtype: 'textareafield',
+            name: 'objectTextCreation',
+          },{
+            fieldLabel: t("pimcore_ai_tools_defaults_object_text_optimization"),
+            xtype: 'textareafield',
+            name: 'objectTextOptimization',
+          },{
+            fieldLabel: t("pimcore_ai_tools_defaults_object_text_correction"),
+            xtype: 'textareafield',
+            name: 'objectTextCorrection',
+          }],
         },{
-          fieldLabel: t("pimcore_ai_tools_defaults_editable_text_correction"),
-          xtype: 'textareafield',
-          name: 'editableTextCorrection',
+          xtype: 'fieldset',
+          title: t("pimcore_ai_tools_defaults_text_frontend"),
+          layout: 'anchor',
+          defaults: {anchor: '100%', labelWidth: 150},
+          items: [{
+            fieldLabel: t("pimcore_ai_tools_defaults_frontend_text_creation"),
+            xtype: 'textareafield',
+            name: 'frontendTextCreation',
+          },{
+            fieldLabel: t("pimcore_ai_tools_defaults_frontend_text_optimization"),
+            xtype: 'textareafield',
+            name: 'frontendTextOptimization',
+          },{
+            fieldLabel: t("pimcore_ai_tools_defaults_frontend_text_correction"),
+            xtype: 'textareafield',
+            name: 'frontendTextCorrection',
+          }],
         }],
-      },{
-        xtype: 'fieldset',
-        title: t("pimcore_ai_tools_defaults_text_objects"),
-        layout: 'anchor',
-        defaults: {anchor: '100%', labelWidth: 150},
-        items: [{
-          fieldLabel: t("pimcore_ai_tools_defaults_object_text_creation"),
-          xtype: 'textareafield',
-          name: 'objectTextCreation',
-        },{
-          fieldLabel: t("pimcore_ai_tools_defaults_object_text_optimization"),
-          xtype: 'textareafield',
-          name: 'objectTextOptimization',
-        },{
-          fieldLabel: t("pimcore_ai_tools_defaults_object_text_correction"),
-          xtype: 'textareafield',
-          name: 'objectTextCorrection',
-        }],
-      },{
-        xtype: 'fieldset',
-        title: t("pimcore_ai_tools_defaults_text_frontend"),
-        layout: 'anchor',
-        defaults: {anchor: '100%', labelWidth: 150},
-        items: [{
-          fieldLabel: t("pimcore_ai_tools_defaults_frontend_text_creation"),
-          xtype: 'textareafield',
-          name: 'frontendTextCreation',
-        },{
-          fieldLabel: t("pimcore_ai_tools_defaults_frontend_text_optimization"),
-          xtype: 'textareafield',
-          name: 'frontendTextOptimization',
-        },{
-          fieldLabel: t("pimcore_ai_tools_defaults_frontend_text_correction"),
-          xtype: 'textareafield',
-          name: 'frontendTextCorrection',
-        }],
-      }],
       buttons: [{
         text: t("pimcore_ai_tools_defaults_form_submit"),
         formBind: true,
@@ -927,10 +927,22 @@ pimcore.bundle.pimcore_ai_tools.settings = Class.create({
                   children.forEach(function (field) {
                     if (field.fieldtype === "localizedfields") {
                       field.children.forEach(function (localizedField) {
-                        localizedFields.push({
-                          name: localizedField.name,
-                          label: localizedField.title || localizedField.name
-                        });
+                        if (
+                          localizedField.fieldtype === "fieldcontainer" ||
+                          localizedField.fieldtype === "fieldset"
+                        ) {
+                          localizedField.children.forEach((field) => {
+                            localizedFields.push({
+                              name: field.name,
+                              label: field.title || field.name
+                            });
+                          });
+                        } else {
+                          localizedFields.push({
+                            name: localizedField.name,
+                            label: localizedField.title || localizedField.name
+                          });
+                        }
                       });
                     } else if (field.children) {
                       extractLocalizedFields(field.children);
