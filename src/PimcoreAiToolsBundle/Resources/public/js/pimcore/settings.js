@@ -676,8 +676,12 @@ pimcore.bundle.pimcore_ai_tools.settings = Class.create({
                       localizedField.fieldtype === "fieldcontainer" ||
                       localizedField.fieldtype === "fieldset"
                     ) {
-                      extractLocalizedFields(localizedField.children);
-                    } else {
+                      localizedField.children.forEach((field) => {
+                        localizedFields.push({
+                          name: field.name,
+                          label: field.title || field.name
+                        });
+                      });                    } else {
                       localizedFields.push({
                         name: localizedField.name,
                         label: localizedField.title || localizedField.name
