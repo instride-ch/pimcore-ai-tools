@@ -7,7 +7,7 @@ document.addEventListener(pimcore.events.postOpenObject, (event) => {
 
   const languages = pimcore.settings.websiteLanguages;
   const objectId = object.id;
-  const className = object.data.general.className;
+  const className = object.data.general.classId;
   const localizedFields = object.data.data.localizedfields?.data || {};
   let menuItems = [];
 
@@ -33,7 +33,7 @@ document.addEventListener(pimcore.events.postOpenObject, (event) => {
         text: `${t("pimcore_ai_tools_object_translate_to")} ${lang}`,
         iconCls: flagIconCls,
         handler: function () {
-          const url = `/pimcore-ai-tools/translate/${objectId}/${className}/${lang}`;
+          const url = `/pimcore-ai-tools/translate/${objectId}/${className}/${fieldsToTranslate.join("_")}/${lang}`;
 
           fetch(url, {
             method: "POST",

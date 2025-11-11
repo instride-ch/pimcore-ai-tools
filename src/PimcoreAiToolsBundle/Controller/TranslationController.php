@@ -97,6 +97,7 @@ class TranslationController extends Controller
         }
 
         $content = $object->$getter($defaultLanguage);
+
         return (!empty($content));
     }
 

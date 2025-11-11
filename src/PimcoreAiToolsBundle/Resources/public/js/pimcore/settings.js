@@ -130,16 +130,16 @@ pimcore.bundle.pimcore_ai_tools.settings = Class.create({
             fieldLabel: t("pimcore_ai_tools_defaults_object_text_creation"),
             xtype: 'textareafield',
             name: 'objectTextCreation',
-          },{
+          }, {
             fieldLabel: t("pimcore_ai_tools_defaults_object_text_optimization"),
             xtype: 'textareafield',
             name: 'objectTextOptimization',
-          },{
+          }, {
             fieldLabel: t("pimcore_ai_tools_defaults_object_text_correction"),
             xtype: 'textareafield',
             name: 'objectTextCorrection',
           }],
-        },{
+        }, {
           xtype: 'fieldset',
           title: t("pimcore_ai_tools_defaults_text_frontend"),
           layout: 'anchor',
@@ -148,11 +148,11 @@ pimcore.bundle.pimcore_ai_tools.settings = Class.create({
             fieldLabel: t("pimcore_ai_tools_defaults_frontend_text_creation"),
             xtype: 'textareafield',
             name: 'frontendTextCreation',
-          },{
+          }, {
             fieldLabel: t("pimcore_ai_tools_defaults_frontend_text_optimization"),
             xtype: 'textareafield',
             name: 'frontendTextOptimization',
-          },{
+          }, {
             fieldLabel: t("pimcore_ai_tools_defaults_frontend_text_correction"),
             xtype: 'textareafield',
             name: 'frontendTextCorrection',
@@ -161,17 +161,17 @@ pimcore.bundle.pimcore_ai_tools.settings = Class.create({
       buttons: [{
         text: t("pimcore_ai_tools_defaults_form_submit"),
         formBind: true,
-        handler: function() {
+        handler: function () {
           var form = this.up('form').getForm();
 
           if (form.isValid()) {
             form.submit({
-              success: function(form, action) {
+              success: function (form, action) {
                 Ext.Msg.alert(
                   t("pimcore_ai_tools_defaults_form_success"),
                   t("pimcore_ai_tools_defaults_form_success_text"));
               },
-              failure: function(form, action) {
+              failure: function (form, action) {
                 Ext.Msg.alert(
                   t("pimcore_ai_tools_defaults_form_failure"),
                   t("pimcore_ai_tools_defaults_form_failure_text"));
@@ -211,7 +211,7 @@ pimcore.bundle.pimcore_ai_tools.settings = Class.create({
       style: "margin: 0 10px 0 0;",
       enableKeyEvents: true,
       listeners: {
-        "keydown" : function (field, key) {
+        "keydown": function (field, key) {
           if (key.getKey() === key.ENTER) {
             var input = field;
             var proxy = this.editableStore.getProxy();
@@ -809,8 +809,6 @@ pimcore.bundle.pimcore_ai_tools.settings = Class.create({
       autoLoad: true
     });
 
-
-
     this.localizedFieldStore = Ext.create('Ext.data.Store', {
       fields: ['name', 'label'],
       proxy: {
@@ -921,37 +919,54 @@ pimcore.bundle.pimcore_ai_tools.settings = Class.create({
               params: { id: newValue },
               success: function (response) {
                 var data = Ext.decode(response.responseText);
-                var localizedFields = [];
+                let localizedFields = [];
 
-                function extractLocalizedFields(children) {
-                  children.forEach(function (field) {
-                    if (field.fieldtype === "localizedfields") {
-                      field.children.forEach(function (localizedField) {
-                        if (
-                          localizedField.fieldtype === "fieldcontainer" ||
-                          localizedField.fieldtype === "fieldset"
-                        ) {
-                          localizedField.children.forEach((field) => {
-                            localizedFields.push({
-                              name: field.name,
-                              label: field.title || field.name
-                            });
-                          });
-                        } else {
-                          localizedFields.push({
-                            name: localizedField.name,
-                            label: localizedField.title || localizedField.name
-                          });
-                        }
-                      });
-                    } else if (field.children) {
-                      extractLocalizedFields(field.children);
+                function collectLocalizedDataFields(node) {
+                  let results = [];
+
+                  // check if node is a localizedfield block
+                  if (node.fieldtype === "localizedfields" && Array.isArray(node.children)) {
+                    // Recursively collect all datatype='data' fields inside it, as those are the only translatable fields
+                    results = results.concat(collectTranslatableFieldsFromChildren(node.children));
+                  }
+
+                  // Recursevely check children
+                  if (Array.isArray(node.children)) {
+                    for (const child of node.children) {
+                      results = results.concat(collectLocalizedDataFields(child));
                     }
-                  });
+                  }
+
+                  return results;
+                }
+
+                function collectTranslatableFieldsFromChildren(children) {
+                  let dataFields = [];
+
+                  for (const child of children) {
+                    if (
+                      child.datatype === "data" &&
+                      child.fieldtype === "input" ||
+                      child.fieldtype === "textarea" ||
+                      child.fieldtype === "wysiwyg"
+                    ) {
+                      dataFields.push({
+                        name: child.name,
+                        label: child.title || child.name
+                      });
+                    }
+
+                    // If it has children, we need to recurse deeper
+                    if (Array.isArray(child.children) && child.children.length > 0) {
+                      dataFields = dataFields.concat(collectTranslatableFieldsFromChildren(child.children));
+                    }
+                  }
+
+                  return dataFields;
                 }
 
                 if (data.layoutDefinitions && data.layoutDefinitions.children) {
-                  extractLocalizedFields(data.layoutDefinitions.children);
+                  localizedFields = collectLocalizedDataFields(data.layoutDefinitions);
                 }
 
                 this.localizedFieldStore.loadData(localizedFields);
