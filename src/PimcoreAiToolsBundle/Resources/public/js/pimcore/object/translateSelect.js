@@ -33,7 +33,7 @@ document.addEventListener(pimcore.events.postOpenObject, (event) => {
         text: `${t("pimcore_ai_tools_object_translate_to")} ${lang}`,
         iconCls: flagIconCls,
         handler: function () {
-          const url = `/pimcore-ai-tools/translate/${objectId}/${className}/${fieldsToTranslate.join("_")}/${lang}`;
+          const url = `/pimcore-ai-tools/translate/${objectId}/${className}/${lang}`;
 
           fetch(url, {
             method: "POST",
@@ -68,7 +68,7 @@ document.addEventListener(pimcore.events.postOpenObject, (event) => {
         })
           .then(response => response.json())
           .then(data => {
-            pimcore.helpers.openObject(objectId, "object");
+            forceReloadObject(objectId);
           })
           .catch(error => {
             console.error("Translation error:", error);

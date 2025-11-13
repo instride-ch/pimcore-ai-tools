@@ -8,6 +8,7 @@ use Instride\Bundle\PimcoreAiToolsBundle\Services\PromptService;
 use Pimcore\Controller\Controller;
 use Pimcore\Model\DataObject;
 use Pimcore\Tool;
+use Locale;
 use Symfony\Component\HttpFoundation\JsonResponse;
 class TranslationController extends Controller
 {
@@ -106,8 +107,9 @@ class TranslationController extends Controller
     {
         $getter = 'get' . ucfirst($fieldName);
         $content = $object->$getter($defaultLanguage);
+        $toLanguageName = Locale::getDisplayLanguage("$toLanguage", 'en');
 
-        $prompt = "Translate the following text to $toLanguage. If the translation is the same as the original text, please type the same text.";
+        $prompt = "Translate the following text to $toLanguageName. If the translation is the same as the original text, please type the same text.";
         return $this->promptService->getText($provider, $prompt . "\n\n" . $content);
     }
 
