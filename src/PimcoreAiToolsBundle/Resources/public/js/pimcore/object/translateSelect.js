@@ -7,7 +7,7 @@ document.addEventListener(pimcore.events.postOpenObject, (event) => {
 
   const languages = pimcore.settings.websiteLanguages;
   const objectId = object.id;
-  const className = object.data.general.classId;
+  const className = object.data.general.className;
   const localizedFields = object.data.data.localizedfields?.data || {};
   let menuItems = [];
 
