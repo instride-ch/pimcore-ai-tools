@@ -30,6 +30,12 @@ class OpenAiProvider extends AbstractProvider implements TextProviderInterface, 
         }
 
         $messages = $options['messages'] ?? null;
+        $language = $options['language'] ?? null;
+
+        $messages[] = [
+            'role' => 'system',
+            'content' => "You are a professional translator. Translate product names into natural $language, so that they read fluently and idiomatically for an $language customer. Keep brand names and product lines exactly as they are. Only translate common words like colors or product descriptors as needed. Adapt the word order to make it sound natural."
+        ];
 
         $messages[] = [
             'role' => $options['role'] ?? 'user',

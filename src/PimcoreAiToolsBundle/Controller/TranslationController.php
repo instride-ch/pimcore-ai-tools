@@ -109,8 +109,9 @@ class TranslationController extends Controller
         $content = $object->$getter($defaultLanguage);
         $toLanguageName = Locale::getDisplayLanguage("$toLanguage", 'en');
 
-        $prompt = "Translate the following text to $toLanguageName. If the translation is the same as the original text, please type the same text.";
-        return $this->promptService->getText($provider, $prompt . "\n\n" . $content);
+//        $prompt = "Translate the following text to $toLanguageName. If the translation is the same as the original text, please type the same text.";
+        $prompt = "Translate the following text. If the translation is the same as the original text, please type the same text.";
+        return $this->promptService->getText($provider, $prompt . "\n\n" . $content, ['language' => $toLanguageName]);
     }
 
     private function jsonResponse(array $translations, array $errors): JsonResponse
