@@ -111,7 +111,6 @@ class TranslationController extends Controller
         $toLanguageName = Locale::getDisplayLanguage("$toLanguage", 'en');
         $maxLength = $this->getFieldMaxLength($object, $fieldName);
 
-//        $prompt = "Translate the following text to $toLanguageName. If the translation is the same as the original text, please type the same text.";
         $prompt = "Translate the following text. If the translation is the same as the original text, please type the same text.";
 
         if ($maxLength !== null) {
@@ -121,7 +120,6 @@ class TranslationController extends Controller
         $options['language'] = $toLanguageName;
 
         return $this->promptService->getText($provider, $prompt . "\n\n" . $content, $options);
-        //        return $this->promptService->getText($provider, $prompt . "\n\n" . $content, ['language' => $toLanguageName]);
     }
 
     private function jsonResponse(array $translations, array $errors): JsonResponse
