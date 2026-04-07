@@ -10,6 +10,7 @@ use Pimcore\Model\DataObject;
 use Pimcore\Tool;
 use Locale;
 use Symfony\Component\HttpFoundation\JsonResponse;
+
 class TranslationController extends Controller
 {
     private ConfigurationService $configurationService;
@@ -108,10 +109,19 @@ class TranslationController extends Controller
         $getter = 'get' . ucfirst($fieldName);
         $content = $object->$getter($defaultLanguage);
         $toLanguageName = Locale::getDisplayLanguage("$toLanguage", 'en');
+        $maxLength = $this->getFieldMaxLength($object, $fieldName);
 
 //        $prompt = "Translate the following text to $toLanguageName. If the translation is the same as the original text, please type the same text.";
         $prompt = "Translate the following text. If the translation is the same as the original text, please type the same text.";
-        return $this->promptService->getText($provider, $prompt . "\n\n" . $content, ['language' => $toLanguageName]);
+
+        if ($maxLength !== null) {
+            $options['max_length'] = $maxLength;
+        }
+
+        $options['language'] = $toLanguageName;
+
+        return $this->promptService->getText($provider, $prompt . "\n\n" . $content, $options);
+        //        return $this->promptService->getText($provider, $prompt . "\n\n" . $content, ['language' => $toLanguageName]);
     }
 
     private function jsonResponse(array $translations, array $errors): JsonResponse
@@ -132,5 +142,18 @@ class TranslationController extends Controller
             'translations' => [],
             'errors' => []
         ]);
+    }
+
+    private function getFieldMaxLength(DataObject $object, string $fieldName): ?int
+    {
+        $fieldDefinition = $object->getClass()->getFieldDefinition(\strtolower($fieldName));
+
+        if (!$fieldDefinition || !method_exists($fieldDefinition, 'getMaxLength')) {
+            return null;
+        }
+
+        $length = $fieldDefinition->getMaxLength();
+
+        return $length ?: null;
     }
 }

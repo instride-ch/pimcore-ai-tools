@@ -31,10 +31,11 @@ class OpenAiProvider extends AbstractProvider implements TextProviderInterface, 
 
         $messages = $options['messages'] ?? null;
         $language = $options['language'] ?? null;
+        $maxLength = $options['max_length'] ?? 9999;
 
         $messages[] = [
             'role' => 'system',
-            'content' => "You are a professional translator. Translate product names into natural $language, so that they read fluently and idiomatically for an $language customer. Keep brand names and product lines exactly as they are. Only translate common words like colors or product descriptors as needed. Adapt the word order to make it sound natural."
+            'content' => "You are a professional translator. Translate product names into natural $language, so that they read fluently and idiomatically for an $language customer. Keep brand names and product lines exactly as they are. Only translate common words like colors or product descriptors as needed. Adapt the word order to make it sound natural. The translated string can not be no longer than {$maxLength} characters, if it is, make string shorter without changing its meaning."
         ];
 
         $messages[] = [
@@ -43,7 +44,7 @@ class OpenAiProvider extends AbstractProvider implements TextProviderInterface, 
         ];
 
         $response = $this->getClient()->chat()->create([
-            'model' => $options['model'] ?? 'gpt-4',
+            'model' => $options['model'] ?? 'gpt-5.4',
             'messages' => $messages,
         ]);
 
