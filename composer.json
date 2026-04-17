@@ -19,7 +19,7 @@
   ],
   "require": {
     "php": ">=8.2",
-    "pimcore/pimcore": "^11",
+    "open-dxp/opendxp": "^1.3",
     "openai-php/client": "^v0.10",
     "ferranfg/midjourney-php": "^v2.2"
   },
